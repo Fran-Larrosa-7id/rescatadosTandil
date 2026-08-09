@@ -1,0 +1,280 @@
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../../data/rescue-cases.data' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:3:29:
+[37m      3 │ import { RESCUE_CASES } from [32m'../../data/rescue-cases.data'[37m;
+        ╵                              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:13:28:
+[37m      13 │     return this.cases.find(([32mitem[37m) => item.slug === slug);
+         ╵                             [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:17:30:
+[37m      17 │     return this.cases.filter(([32mitem[37m) => item.featured);
+         ╵                               [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:25:30:
+[37m      25 │     return this.cases.filter(([32mitem[37m) => item.status === status);
+         ╵                               [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../../data/rescue-cases.data"[0m
+
+    src/app/core/services/rescue-cases.service.ts:2:29:
+[37m      2 │ import { RESCUE_CASES } from [32m'../../data/rescue-cases.data'[37m;
+        ╵                              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../../data/rescue-cases.data' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:3:29:
+[37m      3 │ import { RESCUE_CASES } from [32m'../../data/rescue-cases.data'[37m;
+        ╵                              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:13:28:
+[37m      13 │     return this.cases.find(([32mitem[37m) => item.slug === slug);
+         ╵                             [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:17:30:
+[37m      17 │     return this.cases.filter(([32mitem[37m) => item.featured);
+         ╵                               [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:25:30:
+[37m      25 │     return this.cases.filter(([32mitem[37m) => item.status === status);
+         ╵                               [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../../data/rescue-cases.data"[0m
+
+    src/app/core/services/rescue-cases.service.ts:2:29:
+[37m      2 │ import { RESCUE_CASES } from [32m'../../data/rescue-cases.data'[37m;
+        ╵                              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../../data/rescue-cases.data' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:3:29:
+[37m      3 │ import { RESCUE_CASES } from [32m'../../data/rescue-cases.data'[37m;
+        ╵                              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:13:28:
+[37m      13 │     return this.cases.find(([32mitem[37m) => item.slug === slug);
+         ╵                             [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:17:30:
+[37m      17 │     return this.cases.filter(([32mitem[37m) => item.featured);
+         ╵                               [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:25:30:
+[37m      25 │     return this.cases.filter(([32mitem[37m) => item.status === status);
+         ╵                               [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../../data/rescue-cases.data"[0m
+
+    src/app/core/services/rescue-cases.service.ts:2:29:
+[37m      2 │ import { RESCUE_CASES } from [32m'../../data/rescue-cases.data'[37m;
+        ╵                              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../../data/rescue-cases.data' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:3:29:
+[37m      3 │ import { RESCUE_CASES } from [32m'../../data/rescue-cases.data'[37m;
+        ╵                              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:13:28:
+[37m      13 │     return this.cases.find(([32mitem[37m) => item.slug === slug);
+         ╵                             [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:17:30:
+[37m      17 │     return this.cases.filter(([32mitem[37m) => item.featured);
+         ╵                               [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:25:30:
+[37m      25 │     return this.cases.filter(([32mitem[37m) => item.status === status);
+         ╵                               [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../../data/rescue-cases.data"[0m
+
+    src/app/core/services/rescue-cases.service.ts:2:29:
+[37m      2 │ import { RESCUE_CASES } from [32m'../../data/rescue-cases.data'[37m;
+        ╵                              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../../data/rescue-cases.data' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:3:29:
+[37m      3 │ import { RESCUE_CASES } from [32m'../../data/rescue-cases.data'[37m;
+        ╵                              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:13:28:
+[37m      13 │     return this.cases.find(([32mitem[37m) => item.slug === slug);
+         ╵                             [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:17:30:
+[37m      17 │     return this.cases.filter(([32mitem[37m) => item.featured);
+         ╵                               [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:25:30:
+[37m      25 │     return this.cases.filter(([32mitem[37m) => item.status === status);
+         ╵                               [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../../data/rescue-cases.data"[0m
+
+    src/app/core/services/rescue-cases.service.ts:2:29:
+[37m      2 │ import { RESCUE_CASES } from [32m'../../data/rescue-cases.data'[37m;
+        ╵                              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../../data/rescue-cases.data' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:3:29:
+[37m      3 │ import { RESCUE_CASES } from [32m'../../data/rescue-cases.data'[37m;
+        ╵                              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:13:28:
+[37m      13 │     return this.cases.find(([32mitem[37m) => item.slug === slug);
+         ╵                             [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:17:30:
+[37m      17 │     return this.cases.filter(([32mitem[37m) => item.featured);
+         ╵                               [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:25:30:
+[37m      25 │     return this.cases.filter(([32mitem[37m) => item.status === status);
+         ╵                               [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../../data/rescue-cases.data"[0m
+
+    src/app/core/services/rescue-cases.service.ts:2:29:
+[37m      2 │ import { RESCUE_CASES } from [32m'../../data/rescue-cases.data'[37m;
+        ╵                              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../../data/rescue-cases.data' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:3:29:
+[37m      3 │ import { RESCUE_CASES } from [32m'../../data/rescue-cases.data'[37m;
+        ╵                              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:13:28:
+[37m      13 │     return this.cases.find(([32mitem[37m) => item.slug === slug);
+         ╵                             [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:17:30:
+[37m      17 │     return this.cases.filter(([32mitem[37m) => item.featured);
+         ╵                               [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:25:30:
+[37m      25 │     return this.cases.filter(([32mitem[37m) => item.status === status);
+         ╵                               [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../../data/rescue-cases.data"[0m
+
+    src/app/core/services/rescue-cases.service.ts:2:29:
+[37m      2 │ import { RESCUE_CASES } from [32m'../../data/rescue-cases.data'[37m;
+        ╵                              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../../data/rescue-cases.data' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:3:29:
+[37m      3 │ import { RESCUE_CASES } from [32m'../../data/rescue-cases.data'[37m;
+        ╵                              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:13:28:
+[37m      13 │     return this.cases.find(([32mitem[37m) => item.slug === slug);
+         ╵                             [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:17:30:
+[37m      17 │     return this.cases.filter(([32mitem[37m) => item.featured);
+         ╵                               [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'item' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/rescue-cases.service.ts:25:30:
+[37m      25 │     return this.cases.filter(([32mitem[37m) => item.status === status);
+         ╵                               [32m~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../../data/rescue-cases.data"[0m
+
+    src/app/core/services/rescue-cases.service.ts:2:29:
+[37m      2 │ import { RESCUE_CASES } from [32m'../../data/rescue-cases.data'[37m;
+        ╵                              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+

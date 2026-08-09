@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Foto del caso</title>
+  <desc id="desc">Placeholder para una foto real pendiente del caso.</desc>
+  <rect width="1200" height="900" fill="#eee8e3"/>
+  <circle cx="600" cy="410" r="116" fill="#f8f3ee" stroke="#d8cbc4" stroke-width="10"/>
+  <circle cx="558" cy="380" r="18" fill="#bd2c30"/>
+  <circle cx="642" cy="380" r="18" fill="#bd2c30"/>
+  <path d="M554 445c32 34 60 34 92 0" fill="none" stroke="#6d625d" stroke-width="14" stroke-linecap="round"/>
+  <path d="M492 312c-64 24-101 76-88 132 63-2 111-42 122-101" fill="#f4efea" stroke="#d8cbc4" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M708 312c64 24 101 76 88 132-63-2-111-42-122-101" fill="#f4efea" stroke="#d8cbc4" stroke-width="10" stroke-linejoin="round"/>
+  <text x="600" y="632" text-anchor="middle" fill="#6d625d" font-family="Arial, sans-serif" font-size="44" font-weight="700">Foto del caso</text>
+</svg>
