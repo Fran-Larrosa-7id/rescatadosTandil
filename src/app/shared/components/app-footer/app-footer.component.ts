@@ -11,7 +11,7 @@ import { IconComponent } from '../icon/icon.component';
     <footer class="border-t border-[var(--color-border)] bg-white pb-24 pt-10 md:pb-10">
       <div class="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
         <a routerLink="/" class="inline-flex items-center gap-2 text-xl font-extrabold text-[var(--color-accent)]">
-          <app-icon name="spark" class="size-5" />
+          <app-icon name="paw" class="size-5" />
           <span>{{ brandName }}</span>
         </a>
 

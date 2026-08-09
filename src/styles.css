@@ -13,6 +13,44 @@
   --color-recovering: #4e3d69;
   --color-recovering-bg: #ebddf8;
   --color-danger-bg: #f9e2e7;
+  --color-card: #ffffff;
+}
+
+:root.dark {
+  --color-bg: #1d1822;
+  --color-surface: #2a2230;
+  --color-surface-strong: #382e42;
+  --color-text: #f8f2f7;
+  --color-text-muted: #cfc4d2;
+  --color-accent: #8a63c6;
+  --color-accent-hover: #a985d8;
+  --color-accent-soft: #f0a1b4;
+  --color-border: #514257;
+  --color-recovering: #99c5a3;
+  --color-recovering-bg: #273b30;
+  --color-danger-bg: #472f3b;
+  --color-card: #251f2b;
+}
+
+.button-primary {
+  background-color: var(--color-accent);
+  color: #ffffff;
+}
+
+.button-primary:hover {
+  background-color: var(--color-accent-hover);
+}
+
+:root.dark .bg-white {
+  background-color: var(--color-card);
+}
+
+:root.dark .bg-white\/95 {
+  background-color: color-mix(in srgb, var(--color-card) 95%, transparent);
+}
+
+:root.dark .border-white {
+  border-color: var(--color-card);
 }
 
 * {

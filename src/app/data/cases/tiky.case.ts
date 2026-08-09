@@ -26,30 +26,30 @@ export const TIKY_CASE = {
     'Tiky tenía apenas 3 meses cuando sufrió una fractura expuesta en una de sus patas traseras. Tras varios días de internación y estabilización, pudo ser operada: la amputación salió muy bien y hoy continúa recuperándose.',
 
   coverImage: {
-    src: '/images/cases/tiky/cover.avif',
+    src: 'images/cases/tiky/cover.avif',
     alt: 'Tiky durante su recuperación',
     objectPosition: '50% 40%',
   },
 
   gallery: [
     {
-      src: '/images/cases/tiky/01.avif',
+      src: 'images/cases/tiky/01.avif',
       alt: 'Tiky durante su internación veterinaria',
     },
     {
-      src: '/images/cases/tiky/02.avif',
+      src: 'images/cases/tiky/02.avif',
       alt: 'Tiky con sus patitas vendadas durante el tratamiento',
     },
     {
-      src: '/images/cases/tiky/04.avif',
+      src: 'images/cases/tiky/04.avif',
       alt: 'Tiky después de la cirugía de amputación',
     },
     {
-      src: '/images/cases/tiky/05.avif',
+      src: 'images/cases/tiky/05.avif',
       alt: 'Tiky durante su recuperación luego de recibir el alta',
     },
     {
-      src: '/images/cases/tiky/06.avif',
+      src: 'images/cases/tiky/06.avif',
       alt: 'Tiky durante su recuperación luego de recibir el alta',
     },
   ],

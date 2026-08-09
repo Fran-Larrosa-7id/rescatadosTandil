@@ -1,6 +1,6 @@
 export const SITE_CONFIG = {
-  brandName: 'Rescate Tandil',
+  brandName: 'Rescatados Tandil',
   location: 'Tandil, Buenos Aires',
   instagramUrl: null,
-  productionUrl: null
+  productionUrl: null,
 } as const;

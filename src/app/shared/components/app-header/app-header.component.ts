@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 import { SITE_CONFIG } from '../../../core/config/site.config';
+import { ThemeService } from '../../../core/services/theme.service';
 import { IconComponent } from '../icon/icon.component';
 
 @Component({
@@ -46,17 +47,34 @@ import { IconComponent } from '../icon/icon.component';
           </a>
         </nav>
 
-        <a
-          [routerLink]="['/transparencia']"
-          fragment="ayudar"
-          class="rounded-full bg-[var(--color-accent)] px-6 py-2 text-sm font-extrabold text-white shadow-sm transition hover:bg-[var(--color-accent-hover)]"
-        >
-          Ayudar
-        </a>
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            class="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text)] transition hover:border-[var(--color-accent)]"
+            [attr.aria-label]="theme.isDark() ? 'Usar modo claro' : 'Usar modo oscuro'"
+            [attr.aria-pressed]="theme.isDark()"
+            [attr.title]="theme.isDark() ? 'Usar modo claro' : 'Usar modo oscuro'"
+            (click)="theme.toggle()"
+          >
+            @if (theme.isDark()) {
+              <app-icon name="sun" class="size-5" />
+            } @else {
+              <app-icon name="moon" class="size-5" />
+            }
+          </button>
+          <a
+            [routerLink]="['/transparencia']"
+            fragment="ayudar"
+            class="button-primary rounded-full px-4 py-2 text-sm font-extrabold shadow-sm transition sm:px-6"
+          >
+            Ayudar
+          </a>
+        </div>
       </div>
     </header>
   `
 })
 export class AppHeaderComponent {
+  protected readonly theme = inject(ThemeService);
   protected readonly brandName = SITE_CONFIG.brandName;
 }

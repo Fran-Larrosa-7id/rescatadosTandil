@@ -1,4 +1,4 @@
-# Rescate Tandil
+# Rescatados Tandil
 
 Aplicación estática Angular 22 + Tailwind CSS para publicar casos de rescate animal y facilitar colaboración por transferencia bancaria.
 
@@ -50,7 +50,14 @@ npm test
 
 El build de Angular genera archivos estáticos en `dist/`. El proyecto incluye `public/_redirects` para que Netlify resuelva deep links del Router como SPA.
 
-Para GitHub Pages, publicá el contenido generado por `npm run build` y configurá el fallback de rutas limpias según el hosting/subpath elegido.
+Para GitHub Pages, generá el build con el subpath del repositorio y luego publicalo:
+
+```bash
+npm run prod
+npm run deploy
+```
+
+`npm run prod` configura el `base href` para `/rescatadosTandil/`, por lo que rutas, favicon e imágenes de `public/` se resuelven correctamente dentro de GitHub Pages.
 
 ## Restricciones de contenido
 

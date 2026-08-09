@@ -17,7 +17,7 @@ import { BottomNavigationComponent } from '../../shared/components/bottom-naviga
       </p>
       <a
         routerLink="/"
-        class="mt-8 inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--color-accent)] px-8 font-extrabold text-white"
+        class="button-primary mt-8 inline-flex min-h-12 items-center justify-center rounded-full px-8 font-extrabold"
       >
         Volver al inicio
       </a>

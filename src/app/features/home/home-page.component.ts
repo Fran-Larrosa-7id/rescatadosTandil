@@ -38,7 +38,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
           class="relative aspect-[4/3] overflow-hidden rounded-xl bg-[var(--color-surface)] shadow-sm"
         >
           <img
-            ngSrc="/images/cases/tiky/cover.avif"
+            ngSrc="images/cases/tiky/cover.avif"
             alt="Foto pendiente para la portada de Rescate Tandil"
             class="aspect-[4/3] h-full w-full object-cover"
             fill
@@ -57,7 +57,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
           <div class="mt-8 grid gap-3 sm:flex">
             <a
               href="#ayudar"
-              class="inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--color-accent)] px-8 font-extrabold text-white shadow-sm hover:bg-[var(--color-accent-hover)]"
+              class="button-primary inline-flex min-h-12 items-center justify-center rounded-full px-8 font-extrabold shadow-sm"
             >
               Quiero ayudar
             </a>
