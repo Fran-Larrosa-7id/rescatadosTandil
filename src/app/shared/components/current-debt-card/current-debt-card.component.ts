@@ -8,7 +8,7 @@ import { formatArs } from '../../../core/utils/format-ars';
   template: `
     <section class="rounded-2xl border border-[var(--color-border)] bg-white p-6 shadow-sm md:p-10">
       <p class="text-xs font-extrabold uppercase tracking-[0.08em] text-[var(--color-accent)]">
-        Ayuda veterinaria actual
+        Deuda actual
       </p>
       <p class="mt-4 break-words text-[clamp(2rem,10vw,3.75rem)] font-black leading-none text-[var(--color-text)]">
         {{ formattedDebt }}

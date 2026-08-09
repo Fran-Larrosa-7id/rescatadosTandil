@@ -131,9 +131,13 @@ export class CaseDetailPageComponent {
     effect(() => {
       const item = this.caseData();
       const pageTitle = item ? `${item.name} | ${SITE_CONFIG.brandName}` : `Caso no encontrado | ${SITE_CONFIG.brandName}`;
-      const description = item?.seoDescription ?? item?.summary ?? 'No encontramos este caso.';
+      const description = item?.seoDescription ?? item?.summary ?? SITE_CONFIG.defaultDescription;
       this.title.setTitle(pageTitle);
       this.meta.updateTag({ name: 'description', content: description });
+      this.meta.updateTag({ property: 'og:title', content: pageTitle });
+      this.meta.updateTag({ property: 'og:description', content: description });
+      this.meta.updateTag({ name: 'twitter:title', content: pageTitle });
+      this.meta.updateTag({ name: 'twitter:description', content: description });
     });
   }
 

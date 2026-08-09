@@ -28,7 +28,7 @@ import { IconComponent } from '../icon/icon.component';
           ariaCurrentWhenActive="page"
           class="flex min-h-12 flex-col items-center justify-center rounded-full px-3 text-xs font-bold text-[var(--color-text)]"
         >
-          <app-icon name="document" class="size-4" />
+          <app-icon name="paw" class="size-4" />
           Casos
         </a>
         <a

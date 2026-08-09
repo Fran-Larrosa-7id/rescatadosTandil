@@ -7,7 +7,7 @@ import { formatDateDayMonth } from '../../../core/utils/format-date';
   selector: 'app-updates-timeline',
   template: `
     <section>
-      <h2 class="text-3xl font-extrabold">Actualizaciones</h2>
+      <h2 class="text-3xl font-extrabold">Historial clínico</h2>
       <div class="mt-7 max-w-[68ch] space-y-12 border-l border-[var(--color-border)] pl-7 md:space-y-14 md:pl-8">
         @for (update of updates(); track update.date + update.title) {
           <article class="relative">
