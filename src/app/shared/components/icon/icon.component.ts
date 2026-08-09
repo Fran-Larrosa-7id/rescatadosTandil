@@ -37,8 +37,15 @@ export type IconName =
       stroke-linecap="round"
       stroke-linejoin="round"
       aria-hidden="true"
-    >
-      <path [attr.d]="paths[name()]" />
+      >
+        @if (name() === 'paw') {
+          <circle cx="11" cy="4" r="2" />
+          <circle cx="18" cy="8" r="2" />
+          <circle cx="20" cy="16" r="2" />
+          <path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z" />
+        } @else {
+          <path [attr.d]="paths[name()]" />
+        }
     </svg>
   `,
   host: { class: 'inline-block size-6 shrink-0' },
@@ -63,7 +70,7 @@ export class IconComponent {
     menu: 'M4 7h16M4 12h16M4 17h16',
     money: 'M4 6h16v12H4V6Zm8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM7 9h.01M17 15h.01',
     moon: 'M20.5 14.3A8 8 0 0 1 9.7 3.5 8.5 8.5 0 1 0 20.5 14.3Z',
-    paw: 'M8.5 10.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm7 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM5.8 16.5c.8-2.4 2.9-4 6.2-4s5.4 1.6 6.2 4c.5 1.5-.6 3-2.2 3H8c-1.6 0-2.7-1.5-2.2-3ZM6.5 7.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm11 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z',
+    paw: 'M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z',
     receipt: 'M6 3h12v18l-3-2-3 2-3-2-3 2V3Zm3 5h6m-6 4h6m-6 4h4',
     shield: 'M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Zm-3-11 2 2 4-4',
     share:
