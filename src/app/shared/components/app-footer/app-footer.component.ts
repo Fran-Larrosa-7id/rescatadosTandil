@@ -16,9 +16,9 @@ import { IconComponent } from '../icon/icon.component';
         </a>
 
         <nav class="mt-8 flex flex-wrap justify-center gap-6 text-sm text-[var(--color-text-muted)]" aria-label="Pie">
-          <a routerLink="/transparencia" fragment="ayudar" class="hover:text-[var(--color-accent)]">Contactanos</a>
-          <a routerLink="/transparencia" fragment="ayudar" class="hover:text-[var(--color-accent)]">Alias bancario</a>
-          <a routerLink="/transparencia" class="hover:text-[var(--color-accent)]">Preguntas frecuentes</a>
+          <a routerLink="/donde-va-tu-ayuda" fragment="ayudar" class="hover:text-[var(--color-accent)]">Contactanos</a>
+          <a routerLink="/donde-va-tu-ayuda" fragment="ayudar" class="hover:text-[var(--color-accent)]">Alias bancario</a>
+          <a routerLink="/donde-va-tu-ayuda" class="hover:text-[var(--color-accent)]">Preguntas frecuentes</a>
         </nav>
 
         <p class="mt-8 text-xs text-[var(--color-text-muted)]">

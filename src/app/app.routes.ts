@@ -19,11 +19,16 @@ export const routes: Routes = [
       )
   },
   {
-    path: 'transparencia',
+    path: 'donde-va-tu-ayuda',
     loadComponent: () =>
       import('./features/transparency/transparency-page.component').then(
         (m) => m.TransparencyPageComponent
       )
+  },
+  {
+    path: 'transparencia',
+    redirectTo: 'donde-va-tu-ayuda',
+    pathMatch: 'full'
   },
   {
     path: '**',

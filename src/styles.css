@@ -41,6 +41,19 @@
   background-color: var(--color-accent-hover);
 }
 
+.mercado-pago-button {
+  background-color: #ffe600;
+  color: #2d3277;
+}
+
+.mercado-pago-button:hover {
+  background-color: #fff159;
+}
+
+.mercado-pago-button img {
+  display: block;
+}
+
 :root.dark .bg-white {
   background-color: var(--color-card);
 }

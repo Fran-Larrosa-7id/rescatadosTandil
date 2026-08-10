@@ -32,13 +32,13 @@ import { IconComponent } from '../icon/icon.component';
           Casos
         </a>
         <a
-          routerLink="/transparencia"
+          routerLink="/donde-va-tu-ayuda"
           routerLinkActive="bg-[var(--color-accent)] text-white"
           ariaCurrentWhenActive="page"
           class="flex min-h-12 flex-col items-center justify-center rounded-full px-3 text-xs font-bold text-[var(--color-text)]"
         >
           <app-icon name="receipt" class="size-4" />
-          Transparencia
+          Ayuda
         </a>
       </div>
     </nav>

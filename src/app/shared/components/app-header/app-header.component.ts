@@ -37,13 +37,13 @@ import { IconComponent } from '../icon/icon.component';
             <span>Casos</span>
           </a>
           <a
-            routerLink="/transparencia"
+            routerLink="/donde-va-tu-ayuda"
             routerLinkActive="border-[var(--color-accent)] bg-[var(--color-recovering-bg)] text-[var(--color-accent)]"
             class="inline-flex items-center gap-1.5 rounded-t-md border-b-2 border-transparent px-2 py-2 text-[var(--color-text)] transition hover:text-[var(--color-accent)]"
             ariaCurrentWhenActive="page"
           >
             <app-icon name="document" class="size-4" />
-            <span>Transparencia</span>
+            <span>Dónde va tu ayuda</span>
           </a>
         </nav>
 
@@ -63,7 +63,7 @@ import { IconComponent } from '../icon/icon.component';
             }
           </button>
           <a
-            [routerLink]="['/transparencia']"
+            [routerLink]="['/donde-va-tu-ayuda']"
             fragment="ayudar"
             class="button-primary rounded-full px-4 py-2 text-sm font-extrabold shadow-sm transition sm:px-6"
           >
