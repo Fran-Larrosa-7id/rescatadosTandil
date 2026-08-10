@@ -626,3 +626,407 @@
          ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
 
 
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../../shared/components/case-gallery/case-gallery.component' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/case-detail/case-detail-page.component.ts:12:37:
+[37m      12 │ ...nt } from [32m'../../shared/components/case-gallery/case-gallery.co[37m...
+         ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/case-detail/case-detail-page.component.ts:27:4:
+[37m      27 │     [32mCaseGalleryComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/features/case-detail/case-detail-page.component.ts:27:4:
+[37m      27 │     [32mCaseGalleryComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../../shared/components/case-gallery/case-gallery.component"[0m
+
+    src/app/features/case-detail/case-detail-page.component.ts:11:37:
+[37m      11 │ ...nt } from [32m'../../shared/components/case-gallery/case-gallery.co[37m...
+         ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS1121: Octal literals are not allowed. Use the syntax '0o5'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/config/donation.config.ts:5:17:
+[37m      5 │   debtUpdatedAt: [32m05[37m/08/2026,
+        ╵                  [32m~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS1489: Decimals with leading zeros are not allowed.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/config/donation.config.ts:5:20:
+[37m      5 │   debtUpdatedAt: 05/[32m08[37m/2026,
+        ╵                     [32m~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mLegacy octal literals cannot be used in an ECMAScript module[0m
+
+    src/app/core/config/donation.config.ts:5:17:
+[37m      5 │   debtUpdatedAt: [32m05[37m/08/2026,
+        ╵                  [32m~~[0m
+
+  This file is considered to be an ECMAScript module because of the "export" keyword here:
+
+    src/app/core/config/donation.config.ts:1:0:
+[37m      1 │ [32mexport[37m const DONATION_CONFIG = {
+        ╵ [32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mLegacy octal literals cannot be used in an ECMAScript module[0m
+
+    src/app/core/config/donation.config.ts:5:20:
+[37m      5 │   debtUpdatedAt: 05/[32m08[37m/2026,
+        ╵                     [32m~~[0m
+
+  This file is considered to be an ECMAScript module because of the "export" keyword here:
+
+    src/app/core/config/donation.config.ts:1:0:
+[37m      1 │ [32mexport[37m const DONATION_CONFIG = {
+        ╵ [32m~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../../shared/components/app-footer/app-footer.component' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/case-detail/case-detail-page.component.ts:10:35:
+[37m      10 │ ...nt } from [32m'../../shared/components/app-footer/app-footer.compon[37m...
+         ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/case-detail/case-detail-page.component.ts:26:4:
+[37m      26 │     [32mAppFooterComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/features/case-detail/case-detail-page.component.ts:26:4:
+[37m      26 │     [32mAppFooterComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../../shared/components/app-footer/app-footer.component' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cases/cases-page.component.ts:8:35:
+[37m      8 │ ...ent } from [32m'../../shared/components/app-footer/app-footer.compon[37m...
+        ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cases/cases-page.component.ts:20:4:
+[37m      20 │     [32mAppFooterComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/features/cases/cases-page.component.ts:20:4:
+[37m      20 │     [32mAppFooterComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../../shared/components/app-footer/app-footer.component' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/home/home-page.component.ts:7:35:
+[37m      7 │ ...ent } from [32m'../../shared/components/app-footer/app-footer.compon[37m...
+        ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/home/home-page.component.ts:22:4:
+[37m      22 │     [32mAppFooterComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/features/home/home-page.component.ts:22:4:
+[37m      22 │     [32mAppFooterComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../../shared/components/app-footer/app-footer.component' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/not-found/not-found-page.component.ts:4:35:
+[37m      4 │ ...ent } from [32m'../../shared/components/app-footer/app-footer.compon[37m...
+        ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/not-found/not-found-page.component.ts:10:44:
+[37m      10 │ ...k, AppHeaderComponent, [32mAppFooterComponent[37m, BottomNavigationComp...
+         ╵                           [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/features/not-found/not-found-page.component.ts:10:44:
+[37m      10 │ ...k, AppHeaderComponent, [32mAppFooterComponent[37m, BottomNavigationComp...
+         ╵                           [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../../shared/components/app-footer/app-footer.component' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/transparency/transparency-page.component.ts:5:35:
+[37m      5 │ ...ent } from [32m'../../shared/components/app-footer/app-footer.compon[37m...
+        ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/transparency/transparency-page.component.ts:15:4:
+[37m      15 │     [32mAppFooterComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/features/transparency/transparency-page.component.ts:15:4:
+[37m      15 │     [32mAppFooterComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../../shared/components/app-footer/app-footer.component"[0m
+
+    src/app/features/case-detail/case-detail-page.component.ts:9:35:
+[37m      9 │ ...ent } from [32m'../../shared/components/app-footer/app-footer.compon[37m...
+        ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../../shared/components/app-footer/app-footer.component"[0m
+
+    src/app/features/cases/cases-page.component.ts:4:35:
+[37m      4 │ ...ent } from [32m'../../shared/components/app-footer/app-footer.compon[37m...
+        ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../../shared/components/app-footer/app-footer.component"[0m
+
+    src/app/features/home/home-page.component.ts:7:35:
+[37m      7 │ ...ent } from [32m'../../shared/components/app-footer/app-footer.compon[37m...
+        ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../../shared/components/app-footer/app-footer.component"[0m
+
+    src/app/features/not-found/not-found-page.component.ts:4:35:
+[37m      4 │ ...ent } from [32m'../../shared/components/app-footer/app-footer.compon[37m...
+        ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../../shared/components/app-footer/app-footer.component"[0m
+
+    src/app/features/transparency/transparency-page.component.ts:5:35:
+[37m      5 │ ...ent } from [32m'../../shared/components/app-footer/app-footer.compon[37m...
+        ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../../shared/components/app-footer/app-footer.component' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/case-detail/case-detail-page.component.ts:10:35:
+[37m      10 │ ...nt } from [32m'../../shared/components/app-footer/app-footer.compon[37m...
+         ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/case-detail/case-detail-page.component.ts:26:4:
+[37m      26 │     [32mAppFooterComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/features/case-detail/case-detail-page.component.ts:26:4:
+[37m      26 │     [32mAppFooterComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../../shared/components/app-footer/app-footer.component' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cases/cases-page.component.ts:8:35:
+[37m      8 │ ...ent } from [32m'../../shared/components/app-footer/app-footer.compon[37m...
+        ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/cases/cases-page.component.ts:20:4:
+[37m      20 │     [32mAppFooterComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/features/cases/cases-page.component.ts:20:4:
+[37m      20 │     [32mAppFooterComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../../shared/components/app-footer/app-footer.component' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/home/home-page.component.ts:7:35:
+[37m      7 │ ...ent } from [32m'../../shared/components/app-footer/app-footer.compon[37m...
+        ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/home/home-page.component.ts:22:4:
+[37m      22 │     [32mAppFooterComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/features/home/home-page.component.ts:22:4:
+[37m      22 │     [32mAppFooterComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../../shared/components/app-footer/app-footer.component' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/not-found/not-found-page.component.ts:4:35:
+[37m      4 │ ...ent } from [32m'../../shared/components/app-footer/app-footer.compon[37m...
+        ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/not-found/not-found-page.component.ts:10:44:
+[37m      10 │ ...k, AppHeaderComponent, [32mAppFooterComponent[37m, BottomNavigationComp...
+         ╵                           [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/features/not-found/not-found-page.component.ts:10:44:
+[37m      10 │ ...k, AppHeaderComponent, [32mAppFooterComponent[37m, BottomNavigationComp...
+         ╵                           [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module '../../shared/components/app-footer/app-footer.component' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/transparency/transparency-page.component.ts:5:35:
+[37m      5 │ ...ent } from [32m'../../shared/components/app-footer/app-footer.compon[37m...
+        ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/transparency/transparency-page.component.ts:15:4:
+[37m      15 │     [32mAppFooterComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    src/app/features/transparency/transparency-page.component.ts:15:4:
+[37m      15 │     [32mAppFooterComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../../shared/components/app-footer/app-footer.component"[0m
+
+    src/app/features/case-detail/case-detail-page.component.ts:9:35:
+[37m      9 │ ...ent } from [32m'../../shared/components/app-footer/app-footer.compon[37m...
+        ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../../shared/components/app-footer/app-footer.component"[0m
+
+    src/app/features/cases/cases-page.component.ts:4:35:
+[37m      4 │ ...ent } from [32m'../../shared/components/app-footer/app-footer.compon[37m...
+        ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../../shared/components/app-footer/app-footer.component"[0m
+
+    src/app/features/home/home-page.component.ts:7:35:
+[37m      7 │ ...ent } from [32m'../../shared/components/app-footer/app-footer.compon[37m...
+        ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../../shared/components/app-footer/app-footer.component"[0m
+
+    src/app/features/not-found/not-found-page.component.ts:4:35:
+[37m      4 │ ...ent } from [32m'../../shared/components/app-footer/app-footer.compon[37m...
+        ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "../../shared/components/app-footer/app-footer.component"[0m
+
+    src/app/features/transparency/transparency-page.component.ts:5:35:
+[37m      5 │ ...ent } from [32m'../../shared/components/app-footer/app-footer.compon[37m...
+        ╵               [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module './features/transparency/transparency-page.component' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.routes.ts:24:13:
+[37m      24 │       import([32m'./features/transparency/transparency-page.component'[37m...
+         ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./features/transparency/transparency-page.component"[0m
+
+    src/app/app.routes.ts:24:13:
+[37m      24 │       import([32m'./features/transparency/transparency-page.component'[37m...
+         ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module './features/transparency/transparency-page.component' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.routes.ts:24:13:
+[37m      24 │       import([32m'./features/transparency/transparency-page.component'[37m...
+         ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./features/transparency/transparency-page.component"[0m
+
+    src/app/app.routes.ts:24:13:
+[37m      24 │       import([32m'./features/transparency/transparency-page.component'[37m...
+         ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module './features/transparency/transparency-page.component' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/app.routes.ts:24:13:
+[37m      24 │       import([32m'./features/transparency/transparency-page.component'[37m...
+         ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "./features/transparency/transparency-page.component"[0m
+
+    src/app/app.routes.ts:24:13:
+[37m      24 │       import([32m'./features/transparency/transparency-page.component'[37m...
+         ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: IconComponent is not used within the template of DonationCardComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/donation-card/donation-card.component.ts:10:38:
+[37m      10 │ ...: [CopyAliasButtonComponent, [32mIconComponent[37m, ShareButtonComponent],
+         ╵                                 [32m~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: IconComponent is not used within the template of DonationCardComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/components/donation-card/donation-card.component.ts:10:38:
+[37m      10 │ ...: [CopyAliasButtonComponent, [32mIconComponent[37m, ShareButtonComponent],
+         ╵                                 [32m~~~~~~~~~~~~~[0m
+
+

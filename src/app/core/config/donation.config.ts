@@ -1,10 +1,11 @@
 export const DONATION_CONFIG = {
   alias: 'patan.ayuda.2026',
   accountHolder: 'Aldana Salazar',
-  currentDebt: 1_950_800.84,
-  debtUpdatedAt: null,
+  mercadoPagoUrl: 'https://link.mercadopago.com.ar/gatarsistiky',
+  currentDebt: 1_950_800,
+  debtUpdatedAt: '05/08/2026',
   veterinary: {
     name: 'Clínica San Lorenzo',
-    address: 'San Lorenzo 947, Tandil'
-  }
+    address: 'San Lorenzo 947, Tandil',
+  },
 } as const;

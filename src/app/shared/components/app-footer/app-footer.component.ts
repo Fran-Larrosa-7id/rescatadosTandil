@@ -22,7 +22,16 @@ import { IconComponent } from '../icon/icon.component';
         </nav>
 
         <p class="mt-8 text-xs text-[var(--color-text-muted)]">
-          © 2026 {{ brandName }}. Hecho con amor por los callejeritos.
+          © 2026 {{ brandName }}. Hecho por
+          <a
+            href="https://github.com/FranciscoLarrosa96/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-bold text-[var(--color-accent)] hover:text-[var(--color-accent-hover)]"
+          >
+            Francisco Larrosa
+          </a>
+          .
         </p>
       </div>
     </footer>

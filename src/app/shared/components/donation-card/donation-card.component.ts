@@ -33,7 +33,16 @@ import { ShareButtonComponent } from '../share-button/share-button.component';
         </div>
       </dl>
 
-      <div class="mt-5">
+      <div class="mt-5 space-y-3">
+        <a
+          [href]="config.mercadoPagoUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-full bg-[#FFE600] px-5 py-3 text-sm font-black text-[#2D3277] shadow-sm transition hover:bg-[#FFF159]"
+        >
+          <img src="images/mp%20icon.svg" alt="" class="h-7 w-7 object-contain" loading="lazy" />
+          Donar con Mercado Pago
+        </a>
         <app-copy-alias-button [text]="config.alias" [variant]="buttonVariant()" />
       </div>
 
