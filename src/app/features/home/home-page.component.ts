@@ -39,7 +39,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
         >
           <img
             ngSrc="images/cases/tiky/cover.avif"
-            alt="Foto pendiente para la portada de Rescate Tandil"
+            alt="Foto pendiente para la portada de Gatarsis"
             class="aspect-[4/3] h-full w-full object-cover"
             fill
             priority

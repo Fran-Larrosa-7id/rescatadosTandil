@@ -1,4 +1,4 @@
-# Rescatados Tandil
+# Gatarsis
 
 Aplicación estática Angular 22 + Tailwind CSS para publicar casos de rescate animal y facilitar colaboración por transferencia bancaria.
 

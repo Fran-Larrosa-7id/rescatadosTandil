@@ -1,4 +1,5 @@
-import { Component, computed, effect, input, inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 
@@ -11,8 +12,8 @@ import { AppHeaderComponent } from '../../shared/components/app-header/app-heade
 import { CaseGalleryComponent } from '../../shared/components/case-gallery/case-gallery.component';
 import { CurrentNeedsComponent } from '../../shared/components/current-needs/current-needs.component';
 import { DonationCardComponent } from '../../shared/components/donation-card/donation-card.component';
-import { IconComponent } from '../../shared/components/icon/icon.component';
 import { CopyAliasButtonComponent } from '../../shared/components/copy-alias-button/copy-alias-button.component';
+import { IconComponent } from '../../shared/components/icon/icon.component';
 import { ShareButtonComponent } from '../../shared/components/share-button/share-button.component';
 import { StatusBadgeComponent } from '../../shared/components/status-badge/status-badge.component';
 import { UpdatesTimelineComponent } from '../../shared/components/updates-timeline/updates-timeline.component';
@@ -26,8 +27,8 @@ import { UpdatesTimelineComponent } from '../../shared/components/updates-timeli
     CaseGalleryComponent,
     CurrentNeedsComponent,
     DonationCardComponent,
-    IconComponent,
     CopyAliasButtonComponent,
+    IconComponent,
     ShareButtonComponent,
     StatusBadgeComponent,
     UpdatesTimelineComponent
@@ -38,7 +39,10 @@ import { UpdatesTimelineComponent } from '../../shared/components/updates-timeli
     <main id="contenido" class="pb-28 md:pb-0">
       @if (caseData(); as item) {
         <section class="mx-auto max-w-7xl px-4 py-6 sm:px-6 md:py-12 lg:px-8">
-          <a routerLink="/casos" class="inline-flex items-center gap-2 text-sm font-bold text-[var(--color-text-muted)] hover:text-[var(--color-accent)]">
+          <a
+            routerLink="/casos"
+            class="inline-flex items-center gap-2 text-sm font-bold text-[var(--color-text-muted)] hover:text-[var(--color-accent)]"
+          >
             <app-icon name="arrow" class="size-4 rotate-180" />
             Casos
           </a>
@@ -58,13 +62,69 @@ import { UpdatesTimelineComponent } from '../../shared/components/updates-timeli
 
               <app-case-gallery [cover]="item.coverImage" [gallery]="item.gallery" />
 
-              <section class="mt-12 max-w-[68ch] rounded-2xl bg-white p-6 shadow-sm md:bg-transparent md:p-0 md:shadow-none">
+              <nav
+                aria-label="Navegacion del caso"
+                class="mt-8 overflow-x-auto border-b border-[var(--color-border)]"
+              >
+                <div class="flex w-max min-w-full gap-6 text-sm font-bold text-[var(--color-text-muted)]">
+                  <button
+                    type="button"
+                    class="border-b-2 border-transparent px-1 py-3 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
+                    (click)="scrollToSection('historia')"
+                  >
+                    Historia
+                  </button>
+                  <button
+                    type="button"
+                    class="border-b-2 border-transparent px-1 py-3 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
+                    (click)="scrollToSection('necesidades')"
+                  >
+                    Que necesita hoy
+                  </button>
+                  <button
+                    type="button"
+                    class="border-b-2 border-transparent px-1 py-3 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
+                    (click)="scrollToSection('historial-clinico')"
+                  >
+                    Historial clinico
+                  </button>
+                </div>
+              </nav>
+
+              <section
+                id="historia"
+                class="mt-12 max-w-[68ch] scroll-mt-24 rounded-2xl bg-white p-6 shadow-sm md:bg-transparent md:p-0 md:shadow-none"
+              >
                 <h2 class="text-3xl font-extrabold">Su historia</h2>
                 <div class="mt-5 space-y-6 leading-7 text-[var(--color-text)]">
-                  @for (paragraph of item.story; track paragraph) {
+                  @for (paragraph of item.story.slice(0, 3); track paragraph) {
                     <p>{{ paragraph }}</p>
                   }
+
+                  @if (item.story.length > 3) {
+                    <div
+                      id="historia-contenido-adicional"
+                      class="space-y-6 md:block"
+                      [class.hidden]="!isStoryExpanded()"
+                    >
+                      @for (paragraph of item.story.slice(3); track paragraph) {
+                        <p>{{ paragraph }}</p>
+                      }
+                    </div>
+                  }
                 </div>
+                @if (item.story.length > 3) {
+                  <button
+                    type="button"
+                    class="mt-6 inline-flex min-h-11 items-center gap-2 font-bold text-[var(--color-accent)] hover:text-[var(--color-accent-hover)] md:hidden"
+                    [attr.aria-expanded]="isStoryExpanded()"
+                    aria-controls="historia-contenido-adicional"
+                    (click)="isStoryExpanded.set(!isStoryExpanded())"
+                  >
+                    {{ isStoryExpanded() ? 'Mostrar menos' : 'Leer historia completa' }}
+                    <app-icon name="chevron" class="size-4 transition" [class.rotate-90]="isStoryExpanded()" />
+                  </button>
+                }
               </section>
 
               @if (item.currentNeeds.length > 0) {
@@ -101,7 +161,7 @@ import { UpdatesTimelineComponent } from '../../shared/components/updates-timeli
         <section class="mx-auto max-w-3xl px-4 py-20 text-center sm:px-6">
           <h1 class="text-4xl font-black">No encontramos este caso.</h1>
           <p class="mt-4 text-[var(--color-text-muted)]">
-            Puede que el enlace haya cambiado o que el caso todavía no esté cargado.
+            Puede que el enlace haya cambiado o que el caso todavia no este cargado.
           </p>
           <a
             routerLink="/casos"
@@ -120,12 +180,14 @@ export class CaseDetailPageComponent {
   readonly slug = input.required<string>();
 
   private readonly casesService = inject(RescueCasesService);
+  private readonly document = inject(DOCUMENT);
   private readonly title = inject(Title);
   private readonly meta = inject(Meta);
 
   protected readonly alias = DONATION_CONFIG.alias;
   protected readonly caseData = computed(() => this.casesService.getBySlug(this.slug()));
   protected readonly formatDate = formatDateNumeric;
+  protected readonly isStoryExpanded = signal(false);
 
   constructor() {
     effect(() => {
@@ -143,5 +205,9 @@ export class CaseDetailPageComponent {
 
   protected shareTitle(name: string): string {
     return `${name} | ${SITE_CONFIG.brandName}`;
+  }
+
+  protected scrollToSection(id: string): void {
+    this.document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
