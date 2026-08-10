@@ -1,1 +1,0 @@
-var t=new Intl.NumberFormat(`es-AR`,{style:`currency`,currency:`ARS`,minimumFractionDigits:2,maximumFractionDigits:2});function n(r){return t.format(r).replace(/\s/g,``)}export{n as t};
