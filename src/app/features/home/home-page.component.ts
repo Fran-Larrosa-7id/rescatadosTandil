@@ -12,6 +12,7 @@ import { CurrentDebtCardComponent } from '../../shared/components/current-debt-c
 import { DonationCardComponent } from '../../shared/components/donation-card/donation-card.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
+import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 
 @Component({
   selector: 'app-home-page',
@@ -26,6 +27,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
     CaseCardComponent,
     EmptyStateComponent,
     IconComponent,
+    RevealOnScrollDirective,
   ],
   template: `
     <app-header />
@@ -35,6 +37,8 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
         class="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 md:grid-cols-[1.15fr_0.85fr] md:items-center md:py-16 lg:px-8"
       >
         <div
+          appReveal="left"
+          [appRevealDelay]="300"
           class="relative aspect-[4/3] overflow-hidden rounded-xl bg-[var(--color-surface)] shadow-sm"
         >
           <img
@@ -46,7 +50,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
           />
         </div>
 
-        <div>
+        <div appReveal="right" [appRevealDelay]="300">
           <h1 class="max-w-xl text-5xl font-black leading-[1.02] md:text-6xl">
             Ayudanos a seguir salvando vidas.
           </h1>
@@ -73,6 +77,8 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
 
       <section class="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
         <div
+          appReveal
+          [appRevealDelay]="300"
           class="grid gap-5 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 md:grid-cols-[1.25fr_0.75fr] md:items-center md:p-10"
         >
           <app-current-debt-card />
@@ -81,7 +87,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
       </section>
 
       <section class="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
-        <div class="mb-7 flex items-end justify-between gap-4">
+        <div appReveal [appRevealDelay]="300" class="mb-7 flex items-end justify-between gap-4">
           <div>
             <h2 class="text-4xl font-black">Historias que necesitan una mano.</h2>
             <p class="mt-2 text-[var(--color-text-muted)]">
@@ -103,7 +109,11 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
             class="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-4 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0"
           >
             @for (item of featuredCases; track item.slug) {
-              <div class="w-[82vw] shrink-0 snap-start md:w-auto">
+              <div
+                appReveal
+                [appRevealDelay]="$index * 100"
+                class="w-[82vw] shrink-0 snap-start md:w-auto"
+              >
                 <app-case-card [item]="item" />
               </div>
             }

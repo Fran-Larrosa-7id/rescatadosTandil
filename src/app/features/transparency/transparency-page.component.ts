@@ -7,6 +7,7 @@ import { AppHeaderComponent } from '../../shared/components/app-header/app-heade
 import { BottomNavigationComponent } from '../../shared/components/bottom-navigation/bottom-navigation.component';
 import { CopyAliasButtonComponent } from '../../shared/components/copy-alias-button/copy-alias-button.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
+import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 
 @Component({
   selector: 'app-transparency-page',
@@ -15,13 +16,14 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
     AppFooterComponent,
     BottomNavigationComponent,
     CopyAliasButtonComponent,
-    IconComponent
+    IconComponent,
+    RevealOnScrollDirective
   ],
   template: `
     <app-header />
 
     <main id="contenido" class="mx-auto max-w-6xl px-4 py-10 sm:px-6 md:py-16 lg:px-8">
-      <section class="grid gap-8 rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 shadow-sm md:p-8 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-center">
+      <section appReveal class="grid gap-8 rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 shadow-sm md:p-8 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-center">
         <div>
           <p class="inline-flex items-center gap-2 rounded-full bg-[var(--color-danger-bg)] px-3 py-1.5 text-xs font-extrabold uppercase text-[var(--color-accent)]">
             <app-icon name="receipt" class="size-4" />
@@ -49,7 +51,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
         </div>
       </section>
 
-      <section id="ayudar" class="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
+      <section id="ayudar" appReveal class="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
         <article class="rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 shadow-sm md:p-8">
           <div class="flex items-start gap-4">
             <span class="inline-flex size-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--color-recovering-bg)] text-[var(--color-accent)]">
@@ -122,11 +124,11 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
         </article>
       </section>
 
-      <section class="mt-14">
+      <section appReveal class="mt-14">
         <h2 class="text-3xl font-black">Que genera esta deuda?</h2>
         <div class="mt-6 grid gap-4 md:grid-cols-3">
           @for (item of expenseCategories; track item.title) {
-            <article class="rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 shadow-sm">
+            <article appReveal [appRevealDelay]="$index * 90" class="rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 shadow-sm">
               <h3 class="font-extrabold">{{ item.title }}</h3>
               <p class="mt-2 text-sm leading-6 text-[var(--color-text-muted)]">{{ item.description }}</p>
             </article>

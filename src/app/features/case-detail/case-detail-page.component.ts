@@ -17,6 +17,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
 import { ShareButtonComponent } from '../../shared/components/share-button/share-button.component';
 import { StatusBadgeComponent } from '../../shared/components/status-badge/status-badge.component';
 import { UpdatesTimelineComponent } from '../../shared/components/updates-timeline/updates-timeline.component';
+import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 
 @Component({
   selector: 'app-case-detail-page',
@@ -31,7 +32,8 @@ import { UpdatesTimelineComponent } from '../../shared/components/updates-timeli
     IconComponent,
     ShareButtonComponent,
     StatusBadgeComponent,
-    UpdatesTimelineComponent
+    UpdatesTimelineComponent,
+    RevealOnScrollDirective
   ],
   template: `
     <app-header />
@@ -49,7 +51,7 @@ import { UpdatesTimelineComponent } from '../../shared/components/updates-timeli
 
           <div class="mt-6 grid gap-8 lg:grid-cols-[1fr_360px] lg:items-start">
             <div>
-              <div class="mb-6">
+              <div appReveal class="mb-6">
                 <app-status-badge [status]="item.status" />
                 <h1 class="mt-5 text-5xl font-black leading-tight">{{ item.name }}</h1>
                 <p class="mt-4 max-w-3xl text-lg text-[var(--color-text-muted)]">{{ item.summary }}</p>
@@ -60,10 +62,12 @@ import { UpdatesTimelineComponent } from '../../shared/components/updates-timeli
                 }
               </div>
 
-              <app-case-gallery [cover]="item.coverImage" [gallery]="item.gallery" />
+              <app-case-gallery appReveal [appRevealDelay]="80" [cover]="item.coverImage" [gallery]="item.gallery" />
 
               <nav
                 aria-label="Navegacion del caso"
+                appReveal
+                [appRevealDelay]="120"
                 class="mt-8 overflow-x-auto border-b border-[var(--color-border)]"
               >
                 <div class="flex w-max min-w-full gap-6 text-sm font-bold text-[var(--color-text-muted)]">
@@ -93,6 +97,7 @@ import { UpdatesTimelineComponent } from '../../shared/components/updates-timeli
 
               <section
                 id="historia"
+                appReveal
                 class="mt-12 max-w-[68ch] scroll-mt-24 rounded-2xl bg-white p-6 shadow-sm md:bg-transparent md:p-0 md:shadow-none"
               >
                 <h2 class="text-3xl font-extrabold">Su historia</h2>
@@ -128,19 +133,19 @@ import { UpdatesTimelineComponent } from '../../shared/components/updates-timeli
               </section>
 
               @if (item.currentNeeds.length > 0) {
-                <div class="mt-12 max-w-[68ch]">
+                <div appReveal class="mt-12 max-w-[68ch]">
                   <app-current-needs [needs]="item.currentNeeds" [updatedAt]="item.updatedAt" />
                 </div>
               }
 
               @if (item.updates.length > 0) {
-                <div class="mt-12 max-w-[68ch]">
+                <div appReveal class="mt-12 max-w-[68ch]">
                   <app-updates-timeline [updates]="item.updates" />
                 </div>
               }
             </div>
 
-            <aside class="hidden lg:sticky lg:top-24 lg:block">
+            <aside appReveal="right" [appRevealDelay]="120" class="hidden lg:sticky lg:top-24 lg:block">
               <app-donation-card
                 title="¿Querés ayudar?"
                 [buttonVariant]="'primary'"

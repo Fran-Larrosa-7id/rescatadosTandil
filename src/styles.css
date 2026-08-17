@@ -95,6 +95,32 @@ a:focus-visible {
   outline-offset: 3px;
 }
 
+/* Content is visible by default. Motion is enabled only by the browser-side directive. */
+:root.reveal-motion .reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 420ms ease,
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root.reveal-motion .reveal[data-reveal='left'] {
+  transform: translateX(-24px);
+}
+
+:root.reveal-motion .reveal[data-reveal='right'] {
+  transform: translateX(24px);
+}
+
+:root.reveal-motion .reveal[data-reveal='fade'] {
+  transform: none;
+}
+
+:root.reveal-motion .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

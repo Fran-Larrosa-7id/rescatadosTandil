@@ -94,6 +94,42 @@ export const TIKY_CASE = {
 
   updates: [
     {
+      date: '2026-08-16',
+      title: 'Tiky está muchísimo mejor y casi con el alta',
+      paragraphs: [
+        'Tiky continúa evolucionando muy bien y, después de todo lo que atravesó, ya está casi con el alta.',
+
+        'La rescatista contó que verla recuperarse, jugar y disfrutar de la vida que merece es una de esas cosas que le recuerdan por qué vale la pena seguir luchando por cada rescate.',
+
+        'Sin embargo, también explicó que decidió frenar temporalmente el ingreso de nuevos rescates porque todavía necesita resolver o reducir significativamente la deuda veterinaria general acumulada. La intención no es dejar de ayudar, sino recuperar un poco de aire para poder volver a hacerlo cuando aparezca otro animal que necesite una oportunidad.',
+
+        'En esta publicación volvió a mencionar una deuda veterinaria general cercana a $1.500.000 y pidió colaboración para poder reducirla. Aclaró que incluso aportes pequeños pueden hacer una gran diferencia cuando muchas personas se suman.',
+
+        'También recordó que, para quienes no puedan colaborar económicamente, compartir las publicaciones es otra forma muy importante de ayudar y de llegar a más personas.',
+
+        'La publicación estuvo acompañada por un video de Tiky simplemente jugando y disfrutando de su recuperación: una gatita de apenas 3 meses empezando a vivir la vida que merece.',
+      ],
+    },
+
+    {
+      date: '2026-08-10',
+      title: 'Tiky sigue recuperándose súper bien',
+      paragraphs: [
+        'Tiky continúa recuperándose muy bien y se la puede ver cada vez más activa y cómoda durante su recuperación.',
+
+        'En esta actualización también aparece jugando junto a su hermano Kele, una imagen que refleja cuánto cambió su realidad después de todo lo que tuvo que atravesar.',
+
+        'Ese día la rescatista realizó una nueva entrega de $350.000 en efectivo en la veterinaria y agradeció especialmente a todas las personas que hicieron posible reunir ese dinero.',
+
+        'Después de esa entrega informó que todavía quedaba un saldo veterinario general pendiente de $1.600.800,84.',
+
+        'Aunque la deuda continuaba siendo muy importante, destacó que poco a poco se iba avanzando y volvió a pedir colaboración y difusión para poder seguir reduciéndola.',
+
+        'Ver a Tiky jugar con su hermano después de la fractura, la infección, la amputación y todo el proceso de recuperación hizo que todo el esfuerzo realizado hasta ese momento valiera la pena.',
+      ],
+    },
+
+    {
       date: '2026-08-05',
       title: 'La cirugía salió más que bien',
       paragraphs: [
@@ -160,7 +196,7 @@ export const TIKY_CASE = {
     },
   ],
 
-  updatedAt: '2026-08-05',
+  updatedAt: '2026-08-16',
 
   seoDescription:
     'Conocé la historia de Tiky, rescatada con una fractura expuesta a los 3 meses, y su recuperación después de una cirugía de amputación.',

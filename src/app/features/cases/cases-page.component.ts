@@ -10,6 +10,7 @@ import { AppHeaderComponent } from '../../shared/components/app-header/app-heade
 import { BottomNavigationComponent } from '../../shared/components/bottom-navigation/bottom-navigation.component';
 import { CaseCardComponent } from '../../shared/components/case-card/case-card.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
+import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 
 type CaseFilter = RescueCaseStatus | 'all';
 
@@ -20,13 +21,14 @@ type CaseFilter = RescueCaseStatus | 'all';
     AppFooterComponent,
     BottomNavigationComponent,
     CaseCardComponent,
-    EmptyStateComponent
+    EmptyStateComponent,
+    RevealOnScrollDirective
   ],
   template: `
     <app-header />
 
     <main id="contenido" class="mx-auto max-w-7xl px-4 py-8 sm:px-6 md:py-12 lg:px-8">
-      <div class="max-w-3xl">
+      <div appReveal class="max-w-3xl">
         <h1 class="text-5xl font-black leading-tight">Casos y rescates</h1>
         <p class="mt-3 text-lg text-[var(--color-text-muted)]">
           Conocé a los callejeritos que estamos ayudando. Cada historia es única y tu aporte, por
@@ -34,7 +36,7 @@ type CaseFilter = RescueCaseStatus | 'all';
         </p>
       </div>
 
-      <div class="-mx-4 mt-8 flex gap-3 overflow-x-auto px-4 pb-2" aria-label="Filtrar casos">
+      <div appReveal [appRevealDelay]="80" class="-mx-4 mt-8 flex gap-3 overflow-x-auto px-4 pb-2" aria-label="Filtrar casos">
         @for (filter of filters; track filter.value) {
           <button
             type="button"
@@ -50,7 +52,7 @@ type CaseFilter = RescueCaseStatus | 'all';
         @if (filteredCases().length > 0) {
           <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             @for (item of filteredCases(); track item.slug) {
-              <app-case-card [item]="item" />
+              <app-case-card appReveal [appRevealDelay]="$index * 90" [item]="item" />
             }
           </div>
         } @else {
