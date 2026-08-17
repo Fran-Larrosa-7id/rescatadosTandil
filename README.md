@@ -34,6 +34,18 @@ Modificá únicamente `src/app/core/config/donation.config.ts`:
 
 El alias bancario y titular también viven en ese archivo para evitar valores duplicados.
 
+## Cómo agregar un producto
+
+1. Creá `src/app/data/merch/products/<slug>.product.ts`.
+2. Agregá las fotos reales en `public/images/products/`.
+3. Completá nombre, descripción, variantes y dimensiones reales de cada imagen.
+4. Importá el producto en `src/app/data/merch/merch-products.data.ts`.
+5. Ejecutá tests, build y deploy.
+
+## Cómo abrir o cerrar una preventa
+
+Modificá `src/app/core/config/merch-preorder.config.ts`. Ahí se centralizan el estado, fechas, contacto y nota de entrega. No agregues un enlace de reserva hasta tener un canal de contacto real.
+
 ## Build
 
 ```bash

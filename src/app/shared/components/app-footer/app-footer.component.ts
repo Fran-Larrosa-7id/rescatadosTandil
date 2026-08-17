@@ -19,6 +19,7 @@ import { IconComponent } from '../icon/icon.component';
           <a routerLink="/donde-va-tu-ayuda" fragment="ayudar" class="hover:text-[var(--color-accent)]">Contactanos</a>
           <a routerLink="/donde-va-tu-ayuda" fragment="ayudar" class="hover:text-[var(--color-accent)]">Alias bancario</a>
           <a routerLink="/donde-va-tu-ayuda" class="hover:text-[var(--color-accent)]">Preguntas frecuentes</a>
+          <a routerLink="/merch" class="hover:text-[var(--color-accent)]">Merch solidario</a>
         </nav>
 
         <p class="mt-8 text-xs text-[var(--color-text-muted)]">

@@ -1,7 +1,8 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 
 import { RescueImage } from '../../../core/models/rescue-image.model';
+import { PhotoSwipeService } from '../../../core/services/photo-swipe.service';
 import { IconComponent } from '../icon/icon.component';
 
 @Component({
@@ -66,19 +67,10 @@ export class CaseGalleryComponent {
   readonly cover = input.required<RescueImage>();
   readonly gallery = input<readonly RescueImage[]>([]);
 
+  private readonly photoSwipe = inject(PhotoSwipeService);
   protected readonly allImages = computed(() => [this.cover(), ...this.gallery()]);
 
   protected async open(index: number): Promise<void> {
-    const { default: PhotoSwipe } = await import('photoswipe');
-    const gallery = new PhotoSwipe({
-      dataSource: this.allImages(),
-      index,
-      bgOpacity: 0.92,
-      showHideAnimationType: 'zoom',
-      wheelToZoom: true,
-      padding: { top: 24, bottom: 24, left: 24, right: 24 }
-    });
-
-    gallery.init();
+    await this.photoSwipe.open(this.allImages(), index);
   }
 }

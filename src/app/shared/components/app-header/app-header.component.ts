@@ -45,6 +45,15 @@ import { IconComponent } from '../icon/icon.component';
             <app-icon name="document" class="size-4" />
             <span>Dónde va tu ayuda</span>
           </a>
+          <a
+            routerLink="/merch"
+            routerLinkActive="border-[var(--color-accent)] bg-[var(--color-recovering-bg)] text-[var(--color-accent)]"
+            class="inline-flex items-center gap-1.5 rounded-t-md border-b-2 border-transparent px-2 py-2 text-[var(--color-text)] transition hover:text-[var(--color-accent)]"
+            ariaCurrentWhenActive="page"
+          >
+            <app-icon name="shop" class="size-4" />
+            <span>Merch</span>
+          </a>
         </nav>
 
         <div class="flex items-center gap-2">

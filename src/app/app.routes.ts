@@ -31,6 +31,11 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'merch',
+    loadComponent: () =>
+      import('./features/merch/merch-page.component').then((m) => m.MerchPageComponent)
+  },
+  {
     path: '**',
     loadComponent: () =>
       import('./features/not-found/not-found-page.component').then(
