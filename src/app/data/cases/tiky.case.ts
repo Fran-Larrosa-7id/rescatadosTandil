@@ -27,6 +27,8 @@ export const TIKY_CASE = {
 
   coverImage: {
     src: 'images/cases/tiky/cover.avif',
+    width: 1600,
+    height: 900,
     alt: 'Tiky durante su recuperación',
     objectPosition: '50% 40%',
   },
@@ -34,22 +36,32 @@ export const TIKY_CASE = {
   gallery: [
     {
       src: 'images/cases/tiky/01.avif',
+      width: 700,
+      height: 1556,
       alt: 'Tiky durante su internación veterinaria',
     },
     {
       src: 'images/cases/tiky/02.avif',
+      width: 900,
+      height: 1600,
       alt: 'Tiky con sus patitas vendadas durante el tratamiento',
     },
     {
       src: 'images/cases/tiky/04.avif',
+      width: 900,
+      height: 1600,
       alt: 'Tiky después de la cirugía de amputación',
     },
     {
       src: 'images/cases/tiky/05.avif',
+      width: 1536,
+      height: 2048,
       alt: 'Tiky durante su recuperación luego de recibir el alta',
     },
     {
       src: 'images/cases/tiky/06.avif',
+      width: 900,
+      height: 1600,
       alt: 'Tiky durante su recuperación luego de recibir el alta',
     },
   ],

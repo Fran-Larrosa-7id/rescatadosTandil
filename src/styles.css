@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import 'photoswipe/style.css';
 
 :root {
   --color-bg: #fbf8f3;
@@ -52,6 +53,24 @@
 
 .mercado-pago-button img {
   display: block;
+}
+
+.gallery-expand-control {
+  background-color: color-mix(in srgb, var(--color-card) 88%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-card) 65%, transparent);
+}
+
+.gallery-expand-control:hover {
+  background-color: var(--color-card);
+}
+
+:root.dark .gallery-expand-control {
+  background-color: color-mix(in srgb, var(--color-card) 82%, transparent);
+  border-color: color-mix(in srgb, var(--color-text) 22%, transparent);
+}
+
+:root.dark .gallery-expand-control:hover {
+  background-color: var(--color-surface-strong);
 }
 
 :root.dark .bg-white {
