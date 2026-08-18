@@ -56,8 +56,8 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
             Ayudanos a seguir salvando vidas.
           </h1>
           <p class="mt-6 max-w-xl text-lg text-[var(--color-text-muted)] md:text-xl">
-            Detrás de cada rescate real hay una historia de supervivencia. Conocé a los animales que
-            hoy necesitan una mano para salir adelante.
+            Detrás de cada rescate hay una historia de supervivencia. Conocé a los animales que hoy
+            necesitan una mano para salir adelante.
           </p>
           <div class="mt-8 grid gap-3 sm:flex">
             <a
@@ -92,8 +92,8 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           <div>
             <h2 class="text-4xl font-black">Historias que necesitan una mano.</h2>
             <p class="mt-2 text-[var(--color-text-muted)]">
-              Conocé a los animales que actualmente están bajo cuidado, recibiendo tratamiento o
-              atravesando su recuperación.
+              Conocé a los animales que actualmente están bajo nuestro cuidado y seguí de cerca su
+              evolución.
             </p>
           </div>
           <a

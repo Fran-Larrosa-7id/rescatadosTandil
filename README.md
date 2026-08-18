@@ -1,5 +1,13 @@
 # Gatarsis
 
+## Administración
+
+El panel lazy vive bajo `/admin` (en GitHub Pages: `/rescatadosTandil/admin`). No se enlaza desde la navegación pública. Usa la API `https://gatarsis-back.onrender.com/api/v1/admin` y requiere que el backend de Fase 3 esté desplegado.
+
+Los tokens de acceso y refresh viven exclusivamente en memoria durante la pestaña: recargar o cerrar sesión vuelve al login. El panel no guarda credenciales ni tokens en `localStorage`, `sessionStorage`, cookies o URLs.
+
+Incluye dashboard, catálogo y variantes, inventario seguro (restock/ajuste), pedidos, pagos/review/refund y auditoría. El ajuste nunca habilita un stock en mano menor que el reservado y el diálogo de refund exige motivo y la confirmación literal `REEMBOLSAR`; el backend sigue siendo la autoridad de seguridad e idempotencia.
+
 Aplicación estática Angular 22 + Tailwind CSS para publicar casos de rescate animal y facilitar colaboración por transferencia bancaria.
 
 ## Development server
