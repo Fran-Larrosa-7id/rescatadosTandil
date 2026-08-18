@@ -1,0 +1,1 @@
+import{g as N}from"./main-OKKNOAFC.js";var i=class o{async open(t,e){let{default:r}=await import(`./chunk-ymRepe34.js`);new r({dataSource:[...t],index:e,bgOpacity:.92,showHideAnimationType:`zoom`,wheelToZoom:!0,padding:{top:24,bottom:24,left:24,right:24}}).init()}static ɵfac=function(e){return new(e||o)};static ɵprov=N({token:o,factory:o.ɵfac,providedIn:`root`})};export{i as t};
