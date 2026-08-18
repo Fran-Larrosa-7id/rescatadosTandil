@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AdminApiService } from '../core/admin-api.service';
-import { Dashboard } from '../core/admin.models';
+import { AdminDashboard } from '../core/admin.models';
 
 @Component({
   standalone: true,
@@ -47,7 +47,7 @@ import { Dashboard } from '../core/admin.models';
   styleUrl: './admin-pages.css',
 })
 export class AdminDashboardComponent implements OnInit {
-  readonly data = signal<Dashboard | null>(null);
+  readonly data = signal<AdminDashboard | null>(null);
   readonly loading = signal(true);
   constructor(private api: AdminApiService) {}
   ngOnInit() {

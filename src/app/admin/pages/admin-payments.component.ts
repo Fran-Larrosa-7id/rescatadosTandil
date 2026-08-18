@@ -1,172 +1,30 @@
-import { Component, OnInit, signal } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { adminErrorMessage } from '../core/admin-domain-error';
 import { AdminApiService } from '../core/admin-api.service';
-import { Payment } from '../core/admin.models';
+import { AdminPaymentDetailResponse, AdminPaymentListItem, AdminPaymentProcessingStatus } from '../core/admin.models';
 
-@Component({
-  standalone: true,
-  imports: [FormsModule, CurrencyPipe, DatePipe],
-  template: `<div class="page">
-    <div class="page-heading">
-      <div>
-        <p class="eyebrow">Cobros</p>
-        <h1>{{ detail() ? 'Pago' : reviewMode ? 'Pagos para revisar' : 'Pagos' }}</h1>
-      </div>
-    </div>
-    @if (detail()) {
-      <section class="surface-card detail">
-        <h2>IDs</h2>
-        <p>
-          ID interno: <code>{{ detail()!.id }}</code>
-        </p>
-        <p>
-          Mercado Pago Payment ID: <code>{{ detail()!.providerPaymentId || '—' }}</code>
-        </p>
-        <p>
-          Order ID: <code>{{ detail()!.orderId }}</code>
-        </p>
-        <button (click)="openRefund(detail()!)">Reembolsar</button>
-      </section>
-    } @else if (loading()) {
-      <div class="skeleton">Cargando pagos…</div>
-    } @else if (payments().length) {
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Mercado Pago Payment ID</th>
-              <th>Order</th>
-              <th>Provider</th>
-              <th>Procesamiento</th>
-              <th>Importe</th>
-              <th>Aprobado</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (p of payments(); track p.id) {
-              <tr>
-                <td>{{ p.providerPaymentId || '—' }}</td>
-                <td>
-                  <code>{{ p.orderId.slice(0, 8) }}</code>
-                </td>
-                <td>{{ p.providerStatus }}</td>
-                <td>{{ p.processingStatus }}</td>
-                <td>
-                  {{
-                    p.transactionAmountInCents / 100
-                      | currency: 'ARS' : 'symbol' : '1.2-2' : 'es-AR'
-                  }}
-                </td>
-                <td>{{ p.dateApproved ? (p.dateApproved | date: 'short') : '—' }}</td>
-                <td>
-                  <button (click)="show(p.id)">Ver</button>
-                  @if (reviewMode) {
-                    <button (click)="resolve(p)">Resolver</button>
-                  }
-                  <button (click)="openRefund(p)">Reembolsar</button>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    } @else {
-      <p class="empty">{{ reviewMode ? 'No hay pagos para revisar.' : 'No hay pagos.' }}</p>
-    }
-    @if (refund()) {
-      <div class="dialog-backdrop">
-        <form class="dialog surface-card" (ngSubmit)="sendRefund()">
-          <h2>Reembolso completo</h2>
-          <p>
-            <strong>Esta acción mueve dinero real.</strong> El stock NO se repone automáticamente.
-          </p>
-          <label>Motivo<textarea name="reason" [(ngModel)]="reason" required></textarea></label
-          ><label
-            >Escribí REEMBOLSAR para confirmar<input
-              name="confirmation"
-              [(ngModel)]="confirmation"
-              required
-          /></label>
-          <p class="error" aria-live="polite">{{ message() }}</p>
-          <div class="actions">
-            <button type="button" (click)="refund.set(null)">Cancelar</button
-            ><button
-              class="button-primary button"
-              [disabled]="confirmation !== 'REEMBOLSAR' || !reason.trim() || busy()"
-            >
-              {{ busy() ? 'Enviando…' : 'Reembolsar' }}
-            </button>
-          </div>
-        </form>
-      </div>
-    }
-  </div>`,
-  styleUrl: './admin-pages.css',
-})
+@Component({ standalone: true, imports: [FormsModule, CurrencyPipe, DatePipe], template: `<div class="page">
+  <div class="page-heading"><div><p class="eyebrow">Cobros</p><h1>{{ detail() ? 'Pago' : reviewMode ? 'Pagos para revisar' : 'Pagos' }}</h1></div></div>
+  @if (detail()) {
+    <section class="surface-card detail"><h2>IDs</h2><p>ID local Gatarsis: <code>{{ detail()!.payment.id }}</code></p><p>Mercado Pago Payment ID: <code>{{ detail()!.payment.providerPaymentId }}</code></p><p>Order ID: <code>{{ detail()!.payment.orderId }}</code></p><p>Estado de procesamiento: <span class="badge">{{ detail()!.payment.processingStatus }}</span></p><p>Importe: {{ detail()!.payment.transactionAmountInCents / 100 | currency: 'ARS' : 'symbol' : '1.2-2' : 'es-AR' }}</p>@if (detail()!.refund) { <p>Refund: {{ detail()!.refund!.status }} · {{ detail()!.refund!.providerRefundId ?? 'sin ID proveedor' }}</p> }<button (click)="openRefund(detail()!.payment)">Reembolsar</button></section>
+  } @else {
+    @if (!reviewMode) { <div class="filters"><label>Procesamiento<select [(ngModel)]="processingStatus" (ngModelChange)="load()"><option value="">Todos</option><option>RECEIVED</option><option>RECORDED</option><option>APPLIED</option><option>REQUIRES_REVIEW</option></select></label><label>Order ID<input [(ngModel)]="orderId" (ngModelChange)="load()" /></label><label>Pago MP<input [(ngModel)]="providerPaymentId" (ngModelChange)="load()" /></label></div> }
+    @if (message()) { <p class="error" aria-live="polite">{{ message() }}</p> }
+    @if (loading()) { <div class="skeleton">Cargando pagos…</div> } @else if (payments().length) { <div class="table-wrap"><table><thead><tr><th>Mercado Pago Payment ID</th><th>Order</th><th>Provider</th><th>Procesamiento</th><th>Importe</th><th>Aprobado</th><th></th></tr></thead><tbody>@for (payment of payments(); track payment.id) { <tr><td>{{ payment.providerPaymentId }}</td><td><code>{{ payment.orderId.slice(0, 8) }}</code></td><td>{{ payment.providerStatus }}</td><td><span class="badge">{{ payment.processingStatus }}</span></td><td>{{ payment.transactionAmountInCents / 100 | currency: 'ARS' : 'symbol' : '1.2-2' : 'es-AR' }}</td><td>{{ payment.dateApproved ? (payment.dateApproved | date: 'short') : '—' }}</td><td><button (click)="show(payment.id)">Ver</button>@if (reviewMode) { <button (click)="resolve(payment)">Resolver</button> }<button (click)="openRefund(payment)">Reembolsar</button></td></tr> }</tbody></table></div> } @else { <p class="empty">{{ reviewMode ? 'No hay pagos para revisar.' : 'No hay pagos.' }}</p> }
+  }
+  @if (refund()) { <div class="dialog-backdrop"><form class="dialog surface-card" (ngSubmit)="sendRefund()"><h2>Reembolso completo</h2><p><strong>Esta acción mueve dinero real.</strong> El stock NO se repone automáticamente.</p><label>Motivo<textarea name="reason" [(ngModel)]="reason" required></textarea></label><label>Escribí REEMBOLSAR para confirmar<input name="confirmation" [(ngModel)]="confirmation" required /></label><p class="error" aria-live="polite">{{ message() }}</p><div class="actions"><button type="button" (click)="refund.set(null)">Cancelar</button><button class="button-primary button" [disabled]="confirmation !== 'REEMBOLSAR' || !reason.trim() || busy()">{{ busy() ? 'Enviando…' : 'Reembolsar' }}</button></div></form></div> }
+</div>`, styleUrl: './admin-pages.css' })
 export class AdminPaymentsComponent implements OnInit {
-  readonly payments = signal<Payment[]>([]);
-  readonly detail = signal<Payment | null>(null);
-  readonly refund = signal<Payment | null>(null);
-  readonly loading = signal(true);
-  readonly busy = signal(false);
-  readonly message = signal('');
-  reviewMode = false;
-  reason = '';
-  confirmation = '';
-  constructor(
-    private api: AdminApiService,
-    private route: ActivatedRoute,
-  ) {}
-  ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('paymentId');
-    this.reviewMode = this.route.snapshot.url.some((x) => x.path === 'review');
-    if (id) this.api.payment(id).subscribe((x) => this.detail.set(x));
-    else
-      (this.reviewMode
-        ? this.api.review()
-        : this.api.payments({ page: 1, pageSize: 50 })
-      ).subscribe({
-        next: (r) => this.payments.set(r.items),
-        error: () => this.payments.set([]),
-        complete: () => this.loading.set(false),
-      });
-  }
-  show(id: string) {
-    this.api.payment(id).subscribe((x) => this.detail.set(x));
-  }
-  resolve(p: Payment) {
-    const note = prompt('Nota de resolución (obligatoria):');
-    if (!note?.trim()) return;
-    this.api.resolveReview(p.id, 'ACKNOWLEDGED_NO_ACTION', note).subscribe(() => {
-      this.message.set('Review resuelto.');
-      this.ngOnInit();
-    });
-  }
-  openRefund(p: Payment) {
-    this.refund.set(p);
-    this.reason = '';
-    this.confirmation = '';
-    this.message.set('');
-  }
-  sendRefund() {
-    const p = this.refund();
-    if (!p) return;
-    this.busy.set(true);
-    this.api.refund(p.id, this.reason, crypto.randomUUID()).subscribe({
-      next: () => {
-        this.refund.set(null);
-        this.message.set('Refund solicitado.');
-      },
-      error: (e) =>
-        this.message.set(
-          e?.error?.code === 'PAYMENT_NOT_REFUNDABLE'
-            ? 'Este pago no puede reembolsarse.'
-            : 'No pudimos solicitar el refund.',
-        ),
-      complete: () => this.busy.set(false),
-    });
-  }
+  readonly payments = signal<AdminPaymentListItem[]>([]); readonly detail = signal<AdminPaymentDetailResponse | null>(null); readonly refund = signal<AdminPaymentListItem | null>(null); readonly loading = signal(true); readonly busy = signal(false); readonly message = signal('');
+  reviewMode = false; processingStatus: '' | AdminPaymentProcessingStatus = ''; orderId = ''; providerPaymentId = ''; reason = ''; confirmation = '';
+  constructor(private readonly api: AdminApiService, private readonly route: ActivatedRoute) {}
+  ngOnInit(): void { const id = this.route.snapshot.paramMap.get('paymentId'); this.reviewMode = this.route.snapshot.url.some((segment) => segment.path === 'review'); if (id) this.show(id); else this.load(); }
+  load(): void { this.loading.set(true); this.message.set(''); const request = this.reviewMode ? this.api.review({ page: 1, pageSize: 50 }) : this.api.payments({ processingStatus: this.processingStatus || undefined, orderId: this.orderId || undefined, providerPaymentId: this.providerPaymentId || undefined, page: 1, pageSize: 50 }); request.subscribe({ next: (response) => this.payments.set(response.items), error: (error: unknown) => { this.payments.set([]); this.message.set(adminErrorMessage(error, 'No pudimos cargar los pagos.')); }, complete: () => this.loading.set(false) }); }
+  show(id: string): void { this.api.payment(id).subscribe({ next: (detail) => this.detail.set(detail), error: (error: unknown) => this.message.set(adminErrorMessage(error, 'No pudimos cargar el pago.')) }); }
+  resolve(payment: AdminPaymentListItem): void { const manualInvestigation = confirm('¿Completaste una investigación manual para este pago?'); const note = prompt('Nota de resolución (obligatoria):'); if (!note?.trim()) return; this.api.resolveReview(payment.id, { resolution: manualInvestigation ? 'MANUAL_INVESTIGATION_COMPLETE' : 'ACKNOWLEDGED_NO_ACTION', note }).subscribe({ next: () => { this.message.set('Review resuelto.'); this.load(); }, error: (error: unknown) => this.message.set(adminErrorMessage(error, 'No pudimos resolver el review.')) }); }
+  openRefund(payment: AdminPaymentListItem): void { this.refund.set(payment); this.reason = ''; this.confirmation = ''; this.message.set(''); }
+  sendRefund(): void { const payment = this.refund(); if (!payment) return; this.busy.set(true); this.api.refund(payment.id, { reason: this.reason, confirmation: 'REEMBOLSAR' }, crypto.randomUUID()).subscribe({ next: () => { this.refund.set(null); this.message.set('Refund solicitado. Revisá el estado antes de realizar otra acción.'); }, error: (error: unknown) => this.message.set(adminErrorMessage(error, 'No pudimos solicitar el refund. No se reintentó automáticamente.')), complete: () => this.busy.set(false) }); }
 }

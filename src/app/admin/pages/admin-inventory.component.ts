@@ -2,7 +2,8 @@ import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AdminApiService } from '../core/admin-api.service';
-import { InventoryItem } from '../core/admin.models';
+import { adminErrorMessage } from '../core/admin-domain-error';
+import { AdminInventoryItem } from '../core/admin.models';
 
 @Component({
   standalone: true,
@@ -40,7 +41,7 @@ import { InventoryItem } from '../core/admin.models';
                 <td>{{ i.stockOnHand }}</td>
                 <td>{{ i.reservedStock }}</td>
                 <td>
-                  <strong [class.low]="i.availableStock <= i.lowStockThreshold">{{
+                  <strong [class.low]="i.lowStockThreshold !== null && i.availableStock <= i.lowStockThreshold">{{
                     i.availableStock
                   }}</strong>
                 </td>
@@ -95,9 +96,9 @@ import { InventoryItem } from '../core/admin.models';
   styleUrl: './admin-pages.css',
 })
 export class AdminInventoryComponent implements OnInit {
-  readonly items = signal<InventoryItem[]>([]);
+  readonly items = signal<AdminInventoryItem[]>([]);
   readonly loading = signal(true);
-  readonly selected = signal<InventoryItem | null>(null);
+  readonly selected = signal<AdminInventoryItem | null>(null);
   readonly mode = signal<'restock' | 'adjust'>('restock');
   readonly busy = signal(false);
   readonly message = signal('');
@@ -119,7 +120,7 @@ export class AdminInventoryComponent implements OnInit {
         complete: () => this.loading.set(false),
       });
   }
-  open(item: InventoryItem, mode: 'restock' | 'adjust') {
+  open(item: AdminInventoryItem, mode: 'restock' | 'adjust') {
     this.selected.set(item);
     this.mode.set(mode);
     this.amount = mode === 'adjust' ? item.stockOnHand : 0;
@@ -144,12 +145,7 @@ export class AdminInventoryComponent implements OnInit {
         this.message.set('Stock actualizado.');
         this.load();
       },
-      error: (e) =>
-        this.message.set(
-          e?.error?.code === 'STOCK_ADJUSTMENT_CONFLICT'
-            ? 'El stock en mano no puede quedar por debajo del reservado.'
-            : 'No pudimos actualizar el stock.',
-        ),
+      error: (error: unknown) => this.message.set(adminErrorMessage(error, 'No pudimos actualizar el stock.')),
       complete: () => this.busy.set(false),
     });
   }

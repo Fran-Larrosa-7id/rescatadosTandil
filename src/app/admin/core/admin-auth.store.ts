@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, finalize, shareReplay, tap, throwError } from 'rxjs';
 import { ADMIN_API_BASE_URL } from './admin-api.config';
-import { AdminUser, AuthResponse } from './admin.models';
+import { AdminAuthResponse, AdminUser } from './admin.models';
 
 type AuthStatus = 'anonymous' | 'authenticating' | 'authenticated' | 'refreshing';
 
@@ -16,7 +16,7 @@ export class AdminAuthStore {
   readonly authenticated = computed(
     () => this.status() === 'authenticated' && !!this.accessToken(),
   );
-  private refreshRequest?: Observable<AuthResponse>;
+  private refreshRequest?: Observable<AdminAuthResponse>;
 
   constructor(
     private readonly http: HttpClient,
@@ -26,7 +26,7 @@ export class AdminAuthStore {
   login(email: string, password: string) {
     this.status.set('authenticating');
     return this.http
-      .post<AuthResponse>(`${ADMIN_API_BASE_URL}/auth/login`, { email, password })
+      .post<AdminAuthResponse>(`${ADMIN_API_BASE_URL}/auth/login`, { email, password })
       .pipe(
         tap((response) => this.setSession(response)),
         finalize(() => {
@@ -35,13 +35,13 @@ export class AdminAuthStore {
       );
   }
 
-  refresh(): Observable<AuthResponse> {
+  refresh(): Observable<AdminAuthResponse> {
     const token = this.refreshToken();
     if (!token) return throwError(() => new Error('ADMIN_SESSION_EXPIRED'));
     if (!this.refreshRequest) {
       this.status.set('refreshing');
       this.refreshRequest = this.http
-        .post<AuthResponse>(`${ADMIN_API_BASE_URL}/auth/refresh`, { refreshToken: token })
+        .post<AdminAuthResponse>(`${ADMIN_API_BASE_URL}/auth/refresh`, { refreshToken: token })
         .pipe(
           tap((response) => this.setSession(response)),
           finalize(() => {
@@ -62,7 +62,7 @@ export class AdminAuthStore {
     };
     if (token)
       this.http
-        .post(`${ADMIN_API_BASE_URL}/auth/logout`, { refreshToken: token })
+        .post<void>(`${ADMIN_API_BASE_URL}/auth/logout`, null)
         .subscribe({ complete: done, error: done });
     else done();
   }
@@ -73,7 +73,7 @@ export class AdminAuthStore {
     this.refreshToken.set(null);
     this.status.set('anonymous');
   }
-  private setSession(response: AuthResponse) {
+  private setSession(response: AdminAuthResponse) {
     this.admin.set(response.admin);
     this.accessToken.set(response.accessToken);
     this.refreshToken.set(response.refreshToken);

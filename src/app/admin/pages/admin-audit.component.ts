@@ -2,7 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { DatePipe, JsonPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminApiService } from '../core/admin-api.service';
-import { AuditLog } from '../core/admin.models';
+import { AdminAuditLog } from '../core/admin.models';
 @Component({
   standalone: true,
   imports: [FormsModule, DatePipe, JsonPipe],
@@ -55,7 +55,7 @@ import { AuditLog } from '../core/admin.models';
   styleUrl: './admin-pages.css',
 })
 export class AdminAuditComponent implements OnInit {
-  readonly logs = signal<AuditLog[]>([]);
+  readonly logs = signal<AdminAuditLog[]>([]);
   readonly loading = signal(true);
   action = '';
   adminUserId = '';

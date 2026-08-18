@@ -3,7 +3,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AdminApiService } from '../core/admin-api.service';
-import { Product } from '../core/admin.models';
+import { AdminProductListItem } from '../core/admin.models';
 
 @Component({
   standalone: true,
@@ -74,10 +74,10 @@ import { Product } from '../core/admin.models';
   styleUrl: './admin-pages.css',
 })
 export class AdminProductsComponent implements OnInit {
-  readonly products = signal<Product[]>([]);
+  readonly products = signal<AdminProductListItem[]>([]);
   readonly loading = signal(true);
   search = '';
-  active = '';
+  active: '' | 'true' | 'false' = '';
   constructor(private api: AdminApiService) {}
   ngOnInit() {
     this.load();
@@ -85,7 +85,12 @@ export class AdminProductsComponent implements OnInit {
   load() {
     this.loading.set(true);
     this.api
-      .products({ search: this.search, active: this.active, page: 1, pageSize: 50 })
+      .products({
+        search: this.search,
+        active: this.active === '' ? undefined : this.active === 'true',
+        page: 1,
+        pageSize: 50,
+      })
       .subscribe({
         next: (r) => this.products.set(r.items),
         error: () => this.products.set([]),
