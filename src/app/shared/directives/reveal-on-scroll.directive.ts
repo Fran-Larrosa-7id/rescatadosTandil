@@ -6,13 +6,13 @@ import {
   Renderer2,
   afterNextRender,
   inject,
-  input
+  input,
 } from '@angular/core';
 
 export type RevealDirection = 'up' | 'left' | 'right' | 'fade';
 
 @Directive({
-  selector: '[appReveal]'
+  selector: '[appReveal]',
 })
 export class RevealOnScrollDirective implements OnDestroy {
   readonly appReveal = input<RevealDirection | ''>('up');
@@ -52,7 +52,7 @@ export class RevealOnScrollDirective implements OnDestroy {
           }
         }
       },
-      { rootMargin: '0px 0px -8% 0px', threshold: 0.08 }
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
     );
 
     this.observer.observe(target);

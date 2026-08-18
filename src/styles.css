@@ -15,6 +15,10 @@
   --color-recovering-bg: #ebddf8;
   --color-danger-bg: #f9e2e7;
   --color-card: #ffffff;
+  --color-surface-elevated: #fffdfa;
+  --color-border-subtle: color-mix(in srgb, var(--color-accent) 16%, var(--color-border));
+  --shadow-surface: 0 8px 24px rgba(58, 45, 72, 0.06);
+  --shadow-elevated: 0 12px 28px rgba(58, 45, 72, 0.1);
 }
 
 :root.dark {
@@ -31,15 +35,93 @@
   --color-recovering-bg: #273b30;
   --color-danger-bg: #472f3b;
   --color-card: #251f2b;
+  --color-surface-elevated: #2c2532;
+  --color-border-subtle: color-mix(in srgb, var(--color-text) 14%, var(--color-border));
+  --shadow-surface: none;
+  --shadow-elevated: 0 10px 24px rgba(0, 0, 0, 0.16);
 }
 
 .button-primary {
   background-color: var(--color-accent);
   color: #ffffff;
+  box-shadow: 0 5px 14px color-mix(in srgb, var(--color-accent) 22%, transparent);
+  transition:
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
 }
 
 .button-primary:hover {
   background-color: var(--color-accent-hover);
+  box-shadow: 0 7px 18px color-mix(in srgb, var(--color-accent) 28%, transparent);
+}
+
+.button-primary:active {
+  transform: scale(0.98);
+}
+
+.surface-card {
+  background-color: var(--color-card);
+  border-color: var(--color-border-subtle);
+  box-shadow: var(--shadow-surface);
+}
+
+.surface-elevated {
+  background-color: var(--color-surface-elevated);
+  border-color: var(--color-border-subtle);
+  box-shadow: var(--shadow-elevated);
+}
+
+.surface-warm {
+  background-color: var(--color-surface);
+  border-color: var(--color-border-subtle);
+}
+
+.surface-glass {
+  background-color: color-mix(in srgb, var(--color-card) 78%, transparent);
+  border-color: color-mix(in srgb, var(--color-text) 12%, transparent);
+  box-shadow: var(--shadow-surface);
+  backdrop-filter: blur(12px);
+}
+
+:root.dark .surface-glass {
+  background-color: color-mix(in srgb, var(--color-surface-elevated) 82%, transparent);
+  border-color: color-mix(in srgb, var(--color-text) 15%, transparent);
+}
+
+.preorder-glass {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--color-card) 86%, transparent), color-mix(in srgb, var(--color-recovering-bg) 42%, transparent));
+  border-color: color-mix(in srgb, var(--color-accent) 28%, var(--color-border));
+  box-shadow: var(--shadow-elevated);
+  backdrop-filter: blur(12px);
+}
+
+:root.dark .preorder-glass {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--color-surface-elevated) 88%, transparent), color-mix(in srgb, var(--color-recovering-bg) 38%, transparent));
+}
+
+.soft-chip {
+  background-color: color-mix(in srgb, var(--color-card) 88%, var(--color-surface));
+  border-color: var(--color-border-subtle);
+  box-shadow: 0 2px 6px rgba(58, 45, 72, 0.04);
+}
+
+:root.dark .soft-chip {
+  box-shadow: none;
+}
+
+.nav-active {
+  background-color: color-mix(in srgb, var(--color-accent) 13%, var(--color-card));
+  border-color: color-mix(in srgb, var(--color-accent) 32%, var(--color-border));
+  color: var(--color-accent);
+}
+
+:root.dark .nav-active {
+  background-color: color-mix(in srgb, var(--color-accent) 30%, var(--color-surface-elevated));
+  border-color: color-mix(in srgb, var(--color-accent) 48%, var(--color-border));
+  color: var(--color-text);
 }
 
 .mercado-pago-button {
@@ -62,6 +144,33 @@
 
 .gallery-expand-control:hover {
   background-color: var(--color-card);
+}
+
+.merch-hero-carousel {
+  mask-image: linear-gradient(to right, transparent, black 7%, black 93%, transparent);
+}
+
+.merch-hero-track {
+  display: flex;
+  gap: 0.75rem;
+  width: max-content;
+  animation: merch-carousel 28s linear infinite;
+}
+
+.merch-hero-carousel:hover .merch-hero-track,
+.merch-hero-carousel:focus-within .merch-hero-track {
+  animation-play-state: paused;
+}
+
+.merch-hero-slide {
+  width: clamp(12rem, 23vw, 18rem);
+  flex: 0 0 auto;
+}
+
+@keyframes merch-carousel {
+  to {
+    transform: translateX(calc(-50% - 0.375rem));
+  }
 }
 
 :root.dark .gallery-expand-control {
@@ -112,6 +221,7 @@ button:focus-visible,
 a:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--color-accent), white 35%);
   outline-offset: 3px;
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--color-accent) 16%, transparent);
 }
 
 /* Content is visible by default. Motion is enabled only by the browser-side directive. */
@@ -148,5 +258,20 @@ a:focus-visible {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+  }
+
+  .merch-hero-carousel {
+    mask-image: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+
+  .merch-hero-track {
+    animation: none;
+    width: auto;
+  }
+
+  .merch-hero-slide {
+    scroll-snap-align: start;
   }
 }

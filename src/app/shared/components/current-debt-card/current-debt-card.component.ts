@@ -6,7 +6,7 @@ import { formatArs } from '../../../core/utils/format-ars';
 @Component({
   selector: 'app-current-debt-card',
   template: `
-    <section class="rounded-2xl border border-[var(--color-border)] bg-white p-6 shadow-sm md:p-10">
+    <section class="surface-card rounded-2xl border p-6 md:p-10">
       <p class="text-xs font-extrabold uppercase tracking-[0.08em] text-[var(--color-accent)]">
         Deuda actual
       </p>

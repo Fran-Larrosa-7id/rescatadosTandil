@@ -10,7 +10,7 @@ import { ShareButtonComponent } from '../share-button/share-button.component';
   template: `
     <section
       id="ayudar"
-      class="rounded-2xl border border-[var(--color-border)] bg-white p-6 shadow-sm"
+      class="surface-elevated rounded-2xl border p-6"
       [class.md:p-8]="large()"
     >
       <h2 class="text-2xl font-extrabold">{{ title() }}</h2>
@@ -18,7 +18,7 @@ import { ShareButtonComponent } from '../share-button/share-button.component';
         Transferencia directa a la cuenta de la rescatista para ayudar con los gastos veterinarios.
       </p>
 
-      <dl class="mt-6 divide-y divide-[var(--color-border)] rounded-xl bg-[var(--color-surface)] px-4">
+      <dl class="surface-warm mt-6 divide-y divide-[var(--color-border)] rounded-xl border px-4">
         <div class="flex items-center justify-between gap-4 py-4">
           <dt class="text-sm text-[var(--color-text-muted)]">Titular</dt>
           <dd class="text-right text-sm font-bold">{{ config.accountHolder }}</dd>

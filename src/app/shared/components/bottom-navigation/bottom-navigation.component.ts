@@ -8,13 +8,13 @@ import { IconComponent } from '../icon/icon.component';
   imports: [RouterLink, RouterLinkActive, IconComponent],
   template: `
     <nav
-      class="fixed inset-x-0 bottom-0 z-40 border-t border-[var(--color-border)] bg-white/95 px-3 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-2 shadow-[0_-8px_24px_rgba(32,32,32,0.06)] backdrop-blur md:hidden"
+      class="surface-glass fixed inset-x-0 bottom-0 z-40 border-t px-3 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-2 md:hidden"
       aria-label="Navegación móvil"
     >
-      <div class="mx-auto grid max-w-md grid-cols-3 gap-2">
+      <div class="mx-auto grid max-w-md grid-cols-4 gap-1.5">
         <a
           routerLink="/"
-          routerLinkActive="bg-[var(--color-accent)] text-white"
+          routerLinkActive="nav-active"
           [routerLinkActiveOptions]="{ exact: true }"
           ariaCurrentWhenActive="page"
           class="flex min-h-12 flex-col items-center justify-center rounded-full px-3 text-xs font-bold text-[var(--color-text)]"
@@ -24,7 +24,7 @@ import { IconComponent } from '../icon/icon.component';
         </a>
         <a
           routerLink="/casos"
-          routerLinkActive="bg-[var(--color-accent)] text-white"
+          routerLinkActive="nav-active"
           ariaCurrentWhenActive="page"
           class="flex min-h-12 flex-col items-center justify-center rounded-full px-3 text-xs font-bold text-[var(--color-text)]"
         >
@@ -33,12 +33,21 @@ import { IconComponent } from '../icon/icon.component';
         </a>
         <a
           routerLink="/donde-va-tu-ayuda"
-          routerLinkActive="bg-[var(--color-accent)] text-white"
+          routerLinkActive="nav-active"
           ariaCurrentWhenActive="page"
           class="flex min-h-12 flex-col items-center justify-center rounded-full px-3 text-xs font-bold text-[var(--color-text)]"
         >
           <app-icon name="receipt" class="size-4" />
           Ayuda
+        </a>
+        <a
+          routerLink="/merch"
+          routerLinkActive="nav-active"
+          ariaCurrentWhenActive="page"
+          class="flex min-h-12 flex-col items-center justify-center rounded-full px-2 text-xs font-bold text-[var(--color-text)]"
+        >
+          <app-icon name="shop" class="size-4" />
+          Tienda
         </a>
       </div>
     </nav>

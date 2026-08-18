@@ -15,6 +15,7 @@ export interface MerchProduct {
   readonly coverImage: RescueImage;
   readonly gallery: readonly RescueImage[];
   readonly variants: readonly MerchProductVariant[];
+  readonly sizes?: readonly string[];
   readonly price: number | null;
   readonly featured: boolean;
   readonly preorderOnly: boolean;

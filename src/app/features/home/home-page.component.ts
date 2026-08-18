@@ -124,22 +124,34 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
         }
       </section>
       <section appReveal class="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
-        <div class="grid gap-7 rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 md:grid-cols-[0.9fr_1.1fr] md:items-center md:p-8">
+        <div
+          class="grid gap-7 rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 md:grid-cols-[0.9fr_1.1fr] md:items-center md:p-8"
+        >
           <div>
-            <p class="inline-flex items-center gap-2 rounded-full bg-[var(--color-card)] px-3 py-1.5 text-xs font-extrabold uppercase tracking-wide text-[var(--color-accent)]">
+            <p
+              class="soft-chip inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-extrabold uppercase tracking-wide text-[var(--color-accent)]"
+            >
               <app-icon name="shop" class="size-4" />
               Merch que ayuda
             </p>
             <h2 class="mt-5 text-4xl font-black">Llevate un pedacito de Gatarsis.</h2>
-            <p class="mt-3 max-w-xl text-[var(--color-text-muted)]">Bolsas y llaveros creados para acompañar la causa y ayudar a sostener los rescates.</p>
-            <a routerLink="/merch" class="button-primary mt-7 inline-flex min-h-12 items-center justify-center rounded-full px-7 font-extrabold shadow-sm">
+            <p class="mt-3 max-w-xl text-[var(--color-text-muted)]">
+              Bolsas y llaveros creados para ayudar a sostener los rescates.
+            </p>
+            <a
+              routerLink="/merch"
+              class="button-primary mt-7 inline-flex min-h-12 items-center justify-center rounded-full px-7 font-extrabold shadow-sm"
+            >
               Conocer el merch
               <app-icon name="arrow" class="ml-2 size-4" />
             </a>
           </div>
           <div class="grid grid-cols-2 gap-3">
             @for (product of merchProducts; track product.slug) {
-              <div class="overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)]" [class.mt-6]="$odd">
+              <div
+                class="overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)]"
+                [class.mt-6]="$odd"
+              >
                 <img
                   class="aspect-[3/4] h-full w-full object-cover"
                   [ngSrc]="product.coverImage.src"
@@ -164,5 +176,8 @@ export class HomePageComponent {
   private readonly casesService = inject(RescueCasesService);
   protected readonly donationConfig = DONATION_CONFIG;
   protected readonly featuredCases = this.casesService.getFeatured();
-  protected readonly merchProducts = MERCH_PRODUCTS.filter((product) => product.featured).slice(0, 2);
+  protected readonly merchProducts = MERCH_PRODUCTS.filter((product) => product.featured).slice(
+    0,
+    2,
+  );
 }

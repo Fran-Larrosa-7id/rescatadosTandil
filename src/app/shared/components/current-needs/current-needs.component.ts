@@ -8,7 +8,7 @@ import { IconComponent } from '../icon/icon.component';
   selector: 'app-current-needs',
   imports: [IconComponent],
   template: `
-    <section id="necesidades" class="scroll-mt-24 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
+    <section id="necesidades" class="surface-warm scroll-mt-24 rounded-2xl border p-6">
       <h2 class="text-2xl font-extrabold text-[var(--color-accent)]">Qué necesita hoy</h2>
       @if (updatedAt()) {
         <p class="mt-1 text-sm font-medium text-[var(--color-text-muted)]">

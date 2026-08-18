@@ -36,7 +36,7 @@ type CaseFilter = RescueCaseStatus | 'all';
         </p>
       </div>
 
-      <div appReveal [appRevealDelay]="80" class="-mx-4 mt-8 flex gap-3 overflow-x-auto px-4 pb-2" aria-label="Filtrar casos">
+      <div appReveal [appRevealDelay]="80" class="-mx-4 mt-8 flex gap-3 overflow-x-auto px-4 py-2" aria-label="Filtrar casos">
         @for (filter of filters; track filter.value) {
           <button
             type="button"
@@ -83,8 +83,8 @@ export class CasesPageComponent {
     const baseClasses = 'min-h-11 shrink-0 rounded-full border px-5 text-sm font-bold transition';
     const stateClasses =
       this.activeFilter() === value
-        ? 'bg-[var(--color-text)] text-white border-[var(--color-text)]'
-        : 'bg-white border-[var(--color-border)] text-[var(--color-text)]';
+        ? 'bg-[var(--color-accent)] text-white border-[var(--color-accent)] shadow-sm'
+        : 'surface-card border text-[var(--color-text)]';
 
     return `${baseClasses} ${stateClasses}`;
   }

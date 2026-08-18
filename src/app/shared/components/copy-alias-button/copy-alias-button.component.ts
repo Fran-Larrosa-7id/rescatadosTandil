@@ -27,7 +27,7 @@ export class CopyAliasButtonComponent {
   protected readonly primaryClasses =
     'bg-[var(--color-accent)] text-white shadow-sm hover:bg-[var(--color-accent-hover)]';
   protected readonly secondaryClasses =
-    'border border-[var(--color-border)] bg-white text-[var(--color-text)] hover:border-[var(--color-accent)]';
+    'surface-card border text-[var(--color-text)] hover:border-[var(--color-accent)]';
 
   private readonly state = signal<CopyState>('idle');
   private resetTimer: ReturnType<typeof setTimeout> | undefined;
@@ -53,7 +53,7 @@ export class CopyAliasButtonComponent {
 
   protected buttonClasses(): string {
     const baseClasses =
-      'inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-extrabold transition';
+      'inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-extrabold transition active:scale-[0.98]';
     const variantClasses = this.variant() === 'primary' ? this.primaryClasses : this.secondaryClasses;
 
     return `${baseClasses} ${variantClasses}`;

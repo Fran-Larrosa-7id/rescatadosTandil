@@ -65,17 +65,32 @@ import { IconComponent } from '../icon/icon.component';
         <p class="mt-2 text-lg font-bold text-[var(--color-accent)]">{{ product().tagline }}</p>
         <p class="mt-4 leading-7 text-[var(--color-text-muted)]">{{ product().description }}</p>
 
-        <div class="mt-6">
-          <p class="text-sm font-bold text-[var(--color-text-muted)]">Variantes disponibles</p>
-          <div class="mt-3 flex flex-wrap gap-2">
-            @for (variant of product().variants; track variant.id) {
-              <span class="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-card)] px-3 py-2 text-sm font-bold">
-                <span class="size-2.5 rounded-full border border-[var(--color-border)]" [class.bg-[#242129]]="variant.color === 'black'" [class.bg-white]="variant.color === 'white'" [class.bg-[var(--color-accent)]]="variant.color === 'lilac'"></span>
-                {{ variant.name }}
-              </span>
-            }
+        @if (product().variants.length > 0) {
+          <div class="mt-6">
+            <p class="text-sm font-bold text-[var(--color-text-muted)]">Colores disponibles</p>
+            <div class="mt-3 flex flex-wrap gap-2">
+              @for (variant of product().variants; track variant.id) {
+                <span class="soft-chip inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm font-bold">
+                  <span class="size-2.5 rounded-full border border-[var(--color-border)]" [class.bg-[#242129]]="variant.color === 'black'" [class.bg-white]="variant.color === 'white'" [class.bg-[var(--color-accent)]]="variant.color === 'lilac'"></span>
+                  {{ variant.name }}
+                </span>
+              }
+            </div>
           </div>
-        </div>
+        }
+
+        @if (product().sizes?.length) {
+          <div class="mt-4">
+            <p class="text-sm font-bold text-[var(--color-text-muted)]">Talles disponibles</p>
+            <div class="mt-3 flex flex-wrap gap-2">
+              @for (size of product().sizes; track size) {
+                <span class="soft-chip inline-flex min-w-11 items-center justify-center rounded-full border px-3 py-2 text-sm font-bold">
+                  {{ size }}
+                </span>
+              }
+            </div>
+          </div>
+        }
 
         @if (product().price !== null) {
           <p class="mt-6 text-2xl font-black">{{ formatPrice(product().price!) }}</p>

@@ -33,7 +33,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
     ShareButtonComponent,
     StatusBadgeComponent,
     UpdatesTimelineComponent,
-    RevealOnScrollDirective
+    RevealOnScrollDirective,
   ],
   template: `
     <app-header />
@@ -54,7 +54,9 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
               <div appReveal class="mb-6">
                 <app-status-badge [status]="item.status" />
                 <h1 class="mt-5 text-5xl font-black leading-tight">{{ item.name }}</h1>
-                <p class="mt-4 max-w-3xl text-lg text-[var(--color-text-muted)]">{{ item.summary }}</p>
+                <p class="mt-4 max-w-3xl text-lg text-[var(--color-text-muted)]">
+                  {{ item.summary }}
+                </p>
                 @if (item.updatedAt) {
                   <p class="mt-4 text-sm text-[var(--color-text-muted)]">
                     Actualizado el {{ formatDate(item.updatedAt) }}
@@ -62,7 +64,12 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
                 }
               </div>
 
-              <app-case-gallery appReveal [appRevealDelay]="80" [cover]="item.coverImage" [gallery]="item.gallery" />
+              <app-case-gallery
+                appReveal
+                [appRevealDelay]="80"
+                [cover]="item.coverImage"
+                [gallery]="item.gallery"
+              />
 
               <nav
                 aria-label="Navegacion del caso"
@@ -70,7 +77,9 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
                 [appRevealDelay]="120"
                 class="mt-8 overflow-x-auto border-b border-[var(--color-border)]"
               >
-                <div class="flex w-max min-w-full gap-6 text-sm font-bold text-[var(--color-text-muted)]">
+                <div
+                  class="flex w-max min-w-full gap-6 text-sm font-bold text-[var(--color-text-muted)]"
+                >
                   <button
                     type="button"
                     class="border-b-2 border-transparent px-1 py-3 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
@@ -98,7 +107,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
               <section
                 id="historia"
                 appReveal
-                class="mt-12 max-w-[68ch] scroll-mt-24 rounded-2xl bg-white p-6 shadow-sm md:bg-transparent md:p-0 md:shadow-none"
+                class="mt-12 max-w-[68ch] scroll-mt-24 rounded-2xl bg-[var(--color-card)] p-6 shadow-sm md:bg-transparent md:p-0 md:shadow-none"
               >
                 <h2 class="text-3xl font-extrabold">Su historia</h2>
                 <div class="mt-5 space-y-6 leading-7 text-[var(--color-text)]">
@@ -127,7 +136,11 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
                     (click)="isStoryExpanded.set(!isStoryExpanded())"
                   >
                     {{ isStoryExpanded() ? 'Mostrar menos' : 'Leer historia completa' }}
-                    <app-icon name="chevron" class="size-4 transition" [class.rotate-90]="isStoryExpanded()" />
+                    <app-icon
+                      name="chevron"
+                      class="size-4 transition"
+                      [class.rotate-90]="isStoryExpanded()"
+                    />
                   </button>
                 }
               </section>
@@ -145,7 +158,11 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
               }
             </div>
 
-            <aside appReveal="right" [appRevealDelay]="120" class="hidden lg:sticky lg:top-24 lg:block">
+            <aside
+              appReveal="right"
+              [appRevealDelay]="120"
+              class="hidden lg:sticky lg:top-24 lg:block"
+            >
               <app-donation-card
                 title="¿Querés ayudar?"
                 [buttonVariant]="'primary'"
@@ -156,7 +173,9 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           </div>
         </section>
 
-        <div class="fixed inset-x-0 bottom-0 z-40 border-t border-[var(--color-border)] bg-white/95 px-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] pt-3 shadow-[0_-8px_24px_rgba(32,32,32,0.08)] backdrop-blur lg:hidden">
+        <div
+          class="surface-glass fixed inset-x-0 bottom-0 z-40 border-t px-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] pt-3 lg:hidden"
+        >
           <div class="mx-auto flex max-w-md gap-3">
             <app-copy-alias-button class="min-w-0 flex-1" [text]="alias" [variant]="'primary'" />
             <app-share-button [title]="shareTitle(item.name)" [text]="item.summary" />
@@ -179,7 +198,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
     </main>
 
     <app-footer />
-  `
+  `,
 })
 export class CaseDetailPageComponent {
   readonly slug = input.required<string>();
@@ -197,7 +216,9 @@ export class CaseDetailPageComponent {
   constructor() {
     effect(() => {
       const item = this.caseData();
-      const pageTitle = item ? `${item.name} | ${SITE_CONFIG.brandName}` : `Caso no encontrado | ${SITE_CONFIG.brandName}`;
+      const pageTitle = item
+        ? `${item.name} | ${SITE_CONFIG.brandName}`
+        : `Caso no encontrado | ${SITE_CONFIG.brandName}`;
       const description = item?.seoDescription ?? item?.summary ?? SITE_CONFIG.defaultDescription;
       this.title.setTitle(pageTitle);
       this.meta.updateTag({ name: 'description', content: description });

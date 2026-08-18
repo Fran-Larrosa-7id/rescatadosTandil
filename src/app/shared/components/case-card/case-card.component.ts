@@ -10,7 +10,7 @@ import { StatusBadgeComponent } from '../status-badge/status-badge.component';
   selector: 'app-case-card',
   imports: [RouterLink, NgOptimizedImage, IconComponent, StatusBadgeComponent],
   template: `
-    <article class="overflow-hidden rounded-xl border border-[var(--color-border)] bg-white shadow-sm">
+    <article class="surface-card overflow-hidden rounded-2xl border transition duration-200 hover:-translate-y-0.5 hover:border-[var(--color-accent)]">
       <a [routerLink]="['/casos', item().slug]" class="group block">
         <div class="relative aspect-[4/5] overflow-hidden bg-[var(--color-surface)]">
           <img

@@ -54,6 +54,6 @@ export class ShareButtonComponent {
   protected buttonClasses(): string {
     const widthClass = this.fullWidth() ? 'w-full' : 'min-w-11';
 
-    return `inline-flex min-h-11 ${widthClass} items-center justify-center rounded-full border border-[var(--color-border)] bg-white px-4 py-3 text-sm font-bold text-[var(--color-text)] transition hover:border-[var(--color-accent)]`;
+    return `surface-card inline-flex min-h-11 ${widthClass} items-center justify-center rounded-full border px-4 py-3 text-sm font-bold text-[var(--color-text)] transition hover:border-[var(--color-accent)] active:scale-[0.98]`;
   }
 }

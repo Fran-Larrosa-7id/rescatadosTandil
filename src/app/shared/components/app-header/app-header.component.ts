@@ -9,9 +9,12 @@ import { IconComponent } from '../icon/icon.component';
   selector: 'app-header',
   imports: [RouterLink, RouterLinkActive, IconComponent],
   template: `
-    <header class="border-b border-[var(--color-border)] bg-[var(--color-bg)]/95">
+    <header class="surface-glass border-b">
       <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <a routerLink="/" class="flex items-center gap-2 text-lg font-extrabold text-[var(--color-accent)]">
+        <a
+          routerLink="/"
+          class="flex items-center gap-2 text-lg font-extrabold text-[var(--color-accent)]"
+        >
           <app-icon name="paw" class="size-5" />
           <span>{{ brandName }}</span>
         </a>
@@ -19,9 +22,9 @@ import { IconComponent } from '../icon/icon.component';
         <nav class="hidden items-center gap-5 text-sm font-semibold md:flex" aria-label="Principal">
           <a
             routerLink="/"
-            routerLinkActive="border-[var(--color-accent)] bg-[var(--color-recovering-bg)] text-[var(--color-accent)]"
+            routerLinkActive="nav-active"
             [routerLinkActiveOptions]="{ exact: true }"
-            class="inline-flex items-center gap-1.5 rounded-t-md border-b-2 border-transparent px-2 py-2 text-[var(--color-text)] transition hover:text-[var(--color-accent)]"
+            class="inline-flex items-center gap-1.5 rounded-full border border-transparent px-3 py-2 text-[var(--color-text)] transition hover:bg-[var(--color-recovering-bg)] hover:text-[var(--color-accent)]"
             ariaCurrentWhenActive="page"
           >
             <app-icon name="home" class="size-4" />
@@ -29,8 +32,8 @@ import { IconComponent } from '../icon/icon.component';
           </a>
           <a
             routerLink="/casos"
-            routerLinkActive="border-[var(--color-accent)] bg-[var(--color-recovering-bg)] text-[var(--color-accent)]"
-            class="inline-flex items-center gap-1.5 rounded-t-md border-b-2 border-transparent px-2 py-2 text-[var(--color-text)] transition hover:text-[var(--color-accent)]"
+            routerLinkActive="nav-active"
+            class="inline-flex items-center gap-1.5 rounded-full border border-transparent px-3 py-2 text-[var(--color-text)] transition hover:bg-[var(--color-recovering-bg)] hover:text-[var(--color-accent)]"
             ariaCurrentWhenActive="page"
           >
             <app-icon name="paw" class="size-4" />
@@ -38,8 +41,8 @@ import { IconComponent } from '../icon/icon.component';
           </a>
           <a
             routerLink="/donde-va-tu-ayuda"
-            routerLinkActive="border-[var(--color-accent)] bg-[var(--color-recovering-bg)] text-[var(--color-accent)]"
-            class="inline-flex items-center gap-1.5 rounded-t-md border-b-2 border-transparent px-2 py-2 text-[var(--color-text)] transition hover:text-[var(--color-accent)]"
+            routerLinkActive="nav-active"
+            class="inline-flex items-center gap-1.5 rounded-full border border-transparent px-3 py-2 text-[var(--color-text)] transition hover:bg-[var(--color-recovering-bg)] hover:text-[var(--color-accent)]"
             ariaCurrentWhenActive="page"
           >
             <app-icon name="document" class="size-4" />
@@ -47,19 +50,19 @@ import { IconComponent } from '../icon/icon.component';
           </a>
           <a
             routerLink="/merch"
-            routerLinkActive="border-[var(--color-accent)] bg-[var(--color-recovering-bg)] text-[var(--color-accent)]"
-            class="inline-flex items-center gap-1.5 rounded-t-md border-b-2 border-transparent px-2 py-2 text-[var(--color-text)] transition hover:text-[var(--color-accent)]"
+            routerLinkActive="nav-active"
+            class="inline-flex items-center gap-1.5 rounded-full border border-transparent px-3 py-2 text-[var(--color-text)] transition hover:bg-[var(--color-recovering-bg)] hover:text-[var(--color-accent)]"
             ariaCurrentWhenActive="page"
           >
             <app-icon name="shop" class="size-4" />
-            <span>Merch</span>
+            <span>Tienda Online</span>
           </a>
         </nav>
 
         <div class="flex items-center gap-2">
           <button
             type="button"
-            class="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-text)] transition hover:border-[var(--color-accent)]"
+            class="soft-chip inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border text-[var(--color-text)] transition hover:border-[var(--color-accent)]"
             [attr.aria-label]="theme.isDark() ? 'Usar modo claro' : 'Usar modo oscuro'"
             [attr.aria-pressed]="theme.isDark()"
             [attr.title]="theme.isDark() ? 'Usar modo claro' : 'Usar modo oscuro'"
@@ -81,7 +84,7 @@ import { IconComponent } from '../icon/icon.component';
         </div>
       </div>
     </header>
-  `
+  `,
 })
 export class AppHeaderComponent {
   protected readonly theme = inject(ThemeService);
