@@ -1,20 +1,20 @@
-import { DatePipe } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { formatAdminDate } from '../core/admin-formatters';
 import { AdminApiService } from '../core/admin-api.service';
 import { AdminProductListItem } from '../core/admin.models';
 
 @Component({
   standalone: true,
-  imports: [FormsModule, RouterLink, DatePipe],
+  imports: [FormsModule, RouterLink],
   template: `<div class="page">
     <div class="page-heading">
       <div>
         <p class="eyebrow">Catálogo</p>
         <h1>Productos</h1>
       </div>
-      <a class="button-primary button" routerLink="/admin/products/new">Nuevo producto</a>
+      <a class="button-primary button" routerLink="/admin/products/new">+ Nuevo producto</a>
     </div>
     <div class="filters">
       <label
@@ -32,6 +32,11 @@ import { AdminProductListItem } from '../core/admin.models';
     </div>
     @if (loading()) {
       <div class="skeleton">Cargando productos…</div>
+    } @else if (error()) {
+      <div class="state">
+        <p>No pudimos cargar los productos.</p>
+        <button class="button button-primary" type="button" (click)="load()">Reintentar</button>
+      </div>
     } @else if (products().length) {
       <div class="table-wrap">
         <table>
@@ -39,36 +44,44 @@ import { AdminProductListItem } from '../core/admin.models';
             <tr>
               <th>Producto</th>
               <th>Slug</th>
-              <th>Variantes</th>
+              <th class="numeric">Variantes</th>
               <th>Estado</th>
               <th>Destacado</th>
               <th>Actualizado</th>
-              <th></th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            @for (p of products(); track p.id) {
+            @for (product of products(); track product.id) {
               <tr>
-                <td>{{ p.name }}</td>
+                <td>{{ product.name }}</td>
                 <td>
-                  <code>{{ p.slug }}</code>
+                  <code>{{ product.slug }}</code>
                 </td>
-                <td>{{ p.variants?.length ?? '—' }}</td>
+                <td class="numeric">{{ product.variants.length }}</td>
                 <td>
-                  <span class="badge" [class.inactive]="!p.active">{{
-                    p.active ? 'Activo' : 'Inactivo'
+                  <span class="badge" [class.inactive]="!product.active">{{
+                    product.active ? 'Activo' : 'Inactivo'
                   }}</span>
                 </td>
-                <td>{{ p.featured ? 'Sí' : '—' }}</td>
-                <td>{{ p.updatedAt | date: 'shortDate' }}</td>
-                <td><a [routerLink]="['/admin/products', p.id]">Editar</a></td>
+                <td>{{ product.featured ? 'Sí' : 'No' }}</td>
+                <td>{{ date(product.updatedAt) }}</td>
+                <td>
+                  <div class="table-actions">
+                    <a [routerLink]="['/admin/products', product.id]">Editar</a>
+                  </div>
+                </td>
               </tr>
             }
           </tbody>
         </table>
       </div>
     } @else {
-      <p class="empty">No hay productos.</p>
+      <div class="state">
+        <p>Todavía no hay productos.</p>
+        <p>Creá el primero para empezar a cargar la tienda.</p>
+        <a class="button button-primary" routerLink="/admin/products/new">Crear producto</a>
+      </div>
     }
   </div>`,
   styleUrl: './admin-pages.css',
@@ -76,14 +89,19 @@ import { AdminProductListItem } from '../core/admin.models';
 export class AdminProductsComponent implements OnInit {
   readonly products = signal<AdminProductListItem[]>([]);
   readonly loading = signal(true);
+  readonly error = signal(false);
   search = '';
   active: '' | 'true' | 'false' = '';
-  constructor(private api: AdminApiService) {}
-  ngOnInit() {
+  constructor(private readonly api: AdminApiService) {}
+  ngOnInit(): void {
     this.load();
   }
-  load() {
+  date(value: string): string {
+    return formatAdminDate(value);
+  }
+  load(): void {
     this.loading.set(true);
+    this.error.set(false);
     this.api
       .products({
         search: this.search,
@@ -92,8 +110,8 @@ export class AdminProductsComponent implements OnInit {
         pageSize: 50,
       })
       .subscribe({
-        next: (r) => this.products.set(r.items),
-        error: () => this.products.set([]),
+        next: (response) => this.products.set(response.items),
+        error: () => this.error.set(true),
         complete: () => this.loading.set(false),
       });
   }

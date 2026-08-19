@@ -48,6 +48,16 @@ nav a:hover,
   background: color-mix(in srgb, var(--color-accent) 14%, var(--color-card));
   color: var(--color-accent);
 }
+nav a.active {
+  font-weight: 750;
+  box-shadow: inset 3px 0 0 var(--color-accent);
+}
+nav a:focus-visible,
+.link-button:focus-visible,
+.menu-button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-accent) 55%, transparent);
+  outline-offset: 2px;
+}
 .link-button {
   margin-top: auto;
 }
@@ -64,6 +74,9 @@ header {
   font-size: 0.875rem;
   color: var(--color-text-muted);
 }
+.admin-identity { display: grid; gap: 0.1rem; text-align: right; }
+.admin-identity strong { color: var(--color-text); font-size: 0.8rem; }
+.admin-identity span { font-size: 0.78rem; }
 .admin-content {
   max-width: 84rem;
   margin: auto;

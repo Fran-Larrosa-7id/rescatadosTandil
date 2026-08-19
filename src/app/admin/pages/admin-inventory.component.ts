@@ -41,19 +41,31 @@ import { AdminInventoryItem } from '../core/admin.models';
                 <td>{{ i.stockOnHand }}</td>
                 <td>{{ i.reservedStock }}</td>
                 <td>
-                  <strong [class.low]="i.lowStockThreshold !== null && i.availableStock <= i.lowStockThreshold">{{
-                    i.availableStock
-                  }}</strong>
+                  <strong
+                    [class.low]="
+                      i.lowStockThreshold !== null && i.availableStock <= i.lowStockThreshold
+                    "
+                    >{{ i.availableStock }}</strong
+                  >
                 </td>
-                <td>{{ i.active ? 'Activo' : 'Inactivo' }}</td>
                 <td>
-                  <button (click)="open(i, 'restock')">Reponer</button>
-                  <button (click)="open(i, 'adjust')">Ajustar</button>
+                  <span class="badge" [class.inactive]="!i.active">{{ stockState(i) }}</span>
+                </td>
+                <td>
+                  <div class="table-actions">
+                    <button (click)="open(i, 'restock')">Reponer</button>
+                    <button (click)="open(i, 'adjust')">Ajustar</button>
+                  </div>
                 </td>
               </tr>
             }
           </tbody>
         </table>
+      </div>
+    } @else if (error()) {
+      <div class="state">
+        <p>No pudimos cargar el inventario.</p>
+        <button class="button button-primary" type="button" (click)="load()">Reintentar</button>
       </div>
     } @else {
       <p class="empty">No hay inventario para mostrar.</p>
@@ -62,6 +74,9 @@ import { AdminInventoryItem } from '../core/admin.models';
       <div class="dialog-backdrop" role="presentation">
         <form class="dialog surface-card" (ngSubmit)="submit()">
           <h2>{{ mode() === 'restock' ? 'Reponer stock' : 'Ajustar stock' }}</h2>
+          <p>
+            {{ selected()!.productName }} · {{ selected()!.variantName }} · {{ selected()!.sku }}
+          </p>
           <p>
             En mano: <strong>{{ selected()!.stockOnHand }}</strong> · Reservado:
             <strong>{{ selected()!.reservedStock }}</strong> · Disponible:
@@ -98,6 +113,7 @@ import { AdminInventoryItem } from '../core/admin.models';
 export class AdminInventoryComponent implements OnInit {
   readonly items = signal<AdminInventoryItem[]>([]);
   readonly loading = signal(true);
+  readonly error = signal(false);
   readonly selected = signal<AdminInventoryItem | null>(null);
   readonly mode = signal<'restock' | 'adjust'>('restock');
   readonly busy = signal(false);
@@ -112,13 +128,13 @@ export class AdminInventoryComponent implements OnInit {
     this.load();
   }
   load() {
-    this.api
-      .inventory({ page: 1, pageSize: 100 })
-      .subscribe({
-        next: (r) => this.items.set(r.items),
-        error: () => this.items.set([]),
-        complete: () => this.loading.set(false),
-      });
+    this.loading.set(true);
+    this.error.set(false);
+    this.api.inventory({ page: 1, pageSize: 100 }).subscribe({
+      next: (r) => this.items.set(r.items),
+      error: () => this.error.set(true),
+      complete: () => this.loading.set(false),
+    });
   }
   open(item: AdminInventoryItem, mode: 'restock' | 'adjust') {
     this.selected.set(item);
@@ -126,6 +142,12 @@ export class AdminInventoryComponent implements OnInit {
     this.amount = mode === 'adjust' ? item.stockOnHand : 0;
     this.reason = '';
     this.message.set('');
+  }
+  stockState(item: AdminInventoryItem): string {
+    if (item.availableStock <= 0) return 'Sin stock';
+    if (item.lowStockThreshold !== null && item.availableStock <= item.lowStockThreshold)
+      return 'Stock bajo';
+    return item.active ? 'Disponible' : 'Inactivo';
   }
   submit() {
     const item = this.selected();
@@ -142,10 +164,15 @@ export class AdminInventoryComponent implements OnInit {
     op.subscribe({
       next: () => {
         this.selected.set(null);
-        this.message.set('Stock actualizado.');
+        this.message.set(
+          this.mode() === 'restock'
+            ? 'Stock repuesto correctamente.'
+            : 'Stock actualizado correctamente.',
+        );
         this.load();
       },
-      error: (error: unknown) => this.message.set(adminErrorMessage(error, 'No pudimos actualizar el stock.')),
+      error: (error: unknown) =>
+        this.message.set(adminErrorMessage(error, 'No pudimos actualizar el stock.')),
       complete: () => this.busy.set(false),
     });
   }
