@@ -23,14 +23,15 @@ describe('CheckoutStatusPageComponent payment safety', () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.textContent).not.toContain('Intentar pagar nuevamente');
     expect(fixture.nativeElement.textContent).toContain('no vuelvas a pagarlo');
+    expect(fixture.nativeElement.querySelector('.animate-spin')).toBeTruthy();
     expect(component.isPending()).toBe(true);
     expect(cart.checkoutContext()?.status).toBe(status === 'awaiting_payment' ? 'AWAITING_PAYMENT' : 'PAYMENT_PENDING');
   });
 
-  it('uses only GET status when the user consults a pending checkout', () => {
+  it('uses only GET status while polling a pending checkout', () => {
     setup('checkout/pending', { external_reference: orderId });
     http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`).flush({ orderId, status: 'awaiting_payment' });
-    component.consult(true);
+    component.consult();
     const request = http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`);
     expect(request.request.method).toBe('GET');
     request.flush({ orderId, status: 'payment_pending' });

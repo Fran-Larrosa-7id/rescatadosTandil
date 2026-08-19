@@ -57,15 +57,15 @@ const MAX_ATTEMPTS = 10;
         }
 
         <div class="mt-8 grid gap-3 sm:grid-cols-2">
-          @if (canConsult()) {
-            <button class="button-primary min-h-12 rounded-xl px-5 font-extrabold" type="button" (click)="consult(true)">
-              Consultar estado
-            </button>
-          }
           @if (isPending()) {
-            <p class="sm:col-span-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] px-4 py-3 text-sm font-semibold text-[var(--color-text-muted)]">
-              Si ya completaste el pago en Mercado Pago, no vuelvas a pagarlo. Estamos esperando la confirmación.
-            </p>
+            <div class="sm:col-span-2 flex items-center gap-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] px-4 py-4 text-left">
+              <span class="relative grid size-11 shrink-0 place-items-center" aria-hidden="true">
+                <span class="absolute inset-0 rounded-full border-2 border-[color-mix(in_srgb,var(--color-accent)_26%,transparent)]"></span>
+                <span class="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-[var(--color-accent)] border-r-[var(--color-accent)]"></span>
+                <app-icon name="clock" class="size-4 text-[var(--color-accent)]" />
+              </span>
+              <p class="text-sm font-semibold leading-6 text-[var(--color-text-muted)]">Confirmando con Mercado Pago. Si ya completaste el pago, no vuelvas a pagarlo.</p>
+            </div>
           }
           <a class="inline-flex min-h-12 items-center justify-center rounded-xl border border-[var(--color-border)] px-5 font-extrabold transition hover:border-[var(--color-accent)]" routerLink="/tienda">
             {{ isPending() ? 'Volver a la tienda' : 'Seguir comprando' }}
@@ -85,7 +85,6 @@ export class CheckoutStatusPageComponent implements OnInit, OnDestroy {
   readonly orderId = signal<string | null>(null);
   readonly loading = signal(false);
   readonly error = signal('');
-  readonly canConsult = signal(false);
   private attempts = 0;
   private timer: ReturnType<typeof setTimeout> | null = null;
 
@@ -103,27 +102,24 @@ export class CheckoutStatusPageComponent implements OnInit, OnDestroy {
     this.orderId.set(orderId);
     if (!orderId) {
       this.error.set('No encontramos un pedido válido para consultar.');
-      this.canConsult.set(false);
       return;
     }
-    this.consult(false);
+    this.consult();
   }
 
   ngOnDestroy(): void {
     if (this.timer) clearTimeout(this.timer);
   }
 
-  consult(manual: boolean): void {
+  consult(): void {
     const orderId = this.orderId();
     if (!orderId) return;
     if (this.timer) {
       clearTimeout(this.timer);
       this.timer = null;
     }
-    if (manual) this.attempts = 0;
     this.loading.set(true);
     this.error.set('');
-    this.canConsult.set(false);
     this.api
       .orderStatus(orderId)
       .pipe(finalize(() => this.loading.set(false)))
@@ -131,7 +127,7 @@ export class CheckoutStatusPageComponent implements OnInit, OnDestroy {
         next: (response) => this.handleStatus(response),
         error: () => {
           this.error.set('No pudimos consultar el estado del pedido.');
-          this.canConsult.set(true);
+          this.scheduleNextCheck(5000);
         },
       });
   }
@@ -197,14 +193,16 @@ export class CheckoutStatusPageComponent implements OnInit, OnDestroy {
     }
     if (response.status === 'EXPIRED' || response.status === 'CANCELLED' || response.status === 'REFUNDED') this.cart.clearCheckoutContext();
     if (TERMINAL.includes(response.status)) {
-      this.canConsult.set(false);
       return;
     }
-    this.canConsult.set(true);
+    this.scheduleNextCheck();
+  }
+
+  private scheduleNextCheck(delay = 3000): void {
     if (++this.attempts >= MAX_ATTEMPTS) {
       return;
     }
-    this.timer = setTimeout(() => this.consult(false), 3000);
+    this.timer = setTimeout(() => this.consult(), delay);
   }
 }
 
