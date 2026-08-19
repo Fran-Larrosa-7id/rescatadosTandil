@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import 'photoswipe/style.css';
+@import 'flatpickr/dist/flatpickr.css';
 
 :root {
   --color-bg: #fbf8f3;
@@ -144,6 +145,68 @@
 
 .gallery-expand-control:hover {
   background-color: var(--color-card);
+}
+
+.flatpickr-calendar {
+  border: 1px solid var(--color-border);
+  border-radius: 0.85rem;
+  background: var(--color-surface-elevated);
+  box-shadow: 0 22px 60px rgba(29, 23, 34, 0.18);
+  color: var(--color-text);
+  font-family: inherit;
+}
+
+.flatpickr-calendar::before,
+.flatpickr-calendar::after {
+  display: none;
+}
+
+.flatpickr-months,
+.flatpickr-weekdays {
+  background: transparent;
+}
+
+.flatpickr-current-month,
+.flatpickr-monthDropdown-months,
+.flatpickr-weekday,
+.flatpickr-day {
+  color: var(--color-text);
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+.numInputWrapper input {
+  font-weight: 800;
+}
+
+.flatpickr-day {
+  border-radius: 0.45rem;
+}
+
+.flatpickr-day:hover,
+.flatpickr-day:focus {
+  border-color: transparent;
+  background: color-mix(in srgb, var(--color-accent) 10%, var(--color-card));
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.flatpickr-day.today {
+  border-color: color-mix(in srgb, var(--color-accent) 45%, var(--color-border));
+}
+
+.flatpickr-calendar .flatpickr-months .flatpickr-prev-month:hover svg,
+.flatpickr-calendar .flatpickr-months .flatpickr-next-month:hover svg {
+  fill: var(--color-accent);
+}
+
+.flatpickr-input[readonly] {
+  cursor: pointer;
 }
 
 .merch-hero-carousel {

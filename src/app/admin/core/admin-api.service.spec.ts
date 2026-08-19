@@ -28,6 +28,100 @@ describe('AdminApiService contracts', () => {
     request.flush({ items: [{ id: 'product-id', name: 'Bolsa', slug: 'bolsa', shortDescription: null, featured: false, sortOrder: 0, active: true, createdAt: '2026-01-01T00:00:00Z', updatedAt: '2026-01-01T00:00:00Z', variants: [], media: [] }], page: 2, pageSize: 10, total: 1 });
   });
 
+  it('patches only the base product DTO and never sends variants or media', () => {
+    api
+      .updateProduct('product-id', {
+        name: 'Producto editado',
+        slug: 'producto-editado',
+        shortDescription: null,
+        featured: true,
+        sortOrder: 3,
+        active: false,
+      })
+      .subscribe();
+
+    const request = http.expectOne(`${ADMIN_API_BASE_URL}/products/product-id`);
+    expect(request.request.method).toBe('PATCH');
+    expect(request.request.body).toEqual({
+      name: 'Producto editado',
+      slug: 'producto-editado',
+      shortDescription: null,
+      featured: true,
+      sortOrder: 3,
+      active: false,
+    });
+    expect('variants' in request.request.body).toBe(false);
+    expect('media' in request.request.body).toBe(false);
+    expect('inventory' in request.request.body).toBe(false);
+    request.flush({ id: 'product-id', name: 'Producto editado', slug: 'producto-editado', shortDescription: null, featured: true, sortOrder: 3, active: false, createdAt: '2026-01-01T00:00:00Z', updatedAt: '2026-01-01T00:00:00Z', variants: [], media: [] });
+  });
+
+  it('orchestrates variants through their own create and update endpoints', () => {
+    api
+      .createVariant('product-id', {
+        sku: 'SKU-1',
+        name: 'Talle M',
+        color: 'negro',
+        size: 'M',
+        priceInCents: 1500000,
+        active: true,
+        sortOrder: 1,
+        lowStockThreshold: 2,
+      })
+      .subscribe();
+
+    const create = http.expectOne(`${ADMIN_API_BASE_URL}/products/product-id/variants`);
+    expect(create.request.method).toBe('POST');
+    expect(create.request.body).toEqual({
+      sku: 'SKU-1',
+      name: 'Talle M',
+      color: 'negro',
+      size: 'M',
+      priceInCents: 1500000,
+      active: true,
+      sortOrder: 1,
+      lowStockThreshold: 2,
+    });
+    create.flush({ id: 'variant-id', productId: 'product-id', sku: 'SKU-1', name: 'Talle M', color: 'negro', size: 'M', priceInCents: 1500000, active: true, sortOrder: 1, lowStockThreshold: 2, createdAt: '2026-01-01T00:00:00Z', updatedAt: '2026-01-01T00:00:00Z' });
+
+    api.updateVariant('variant-id', { priceInCents: 1800000, active: false }).subscribe();
+    const update = http.expectOne(`${ADMIN_API_BASE_URL}/variants/variant-id`);
+    expect(update.request.method).toBe('PATCH');
+    expect(update.request.body).toEqual({ priceInCents: 1800000, active: false });
+    update.flush({ id: 'variant-id', productId: 'product-id', sku: 'SKU-1', name: 'Talle M', color: 'negro', size: 'M', priceInCents: 1800000, active: false, sortOrder: 1, lowStockThreshold: 2, createdAt: '2026-01-01T00:00:00Z', updatedAt: '2026-01-01T00:00:00Z' });
+  });
+
+  it('orchestrates product media through create update and delete endpoints', () => {
+    api
+      .createMedia('product-id', {
+        url: 'https://cdn.test/image.jpg',
+        alt: 'Producto sobre mesa',
+        sortOrder: 1,
+        isCover: true,
+      })
+      .subscribe();
+    const create = http.expectOne(`${ADMIN_API_BASE_URL}/products/product-id/media`);
+    expect(create.request.method).toBe('POST');
+    expect(create.request.body).toEqual({
+      url: 'https://cdn.test/image.jpg',
+      alt: 'Producto sobre mesa',
+      sortOrder: 1,
+      isCover: true,
+    });
+    create.flush({ id: 'media-id', productId: 'product-id', url: 'https://cdn.test/image.jpg', alt: 'Producto sobre mesa', sortOrder: 1, isCover: true, createdAt: '2026-01-01T00:00:00Z' });
+
+    api.updateMedia('media-id', { alt: 'Producto en uso', isCover: false }).subscribe();
+    const update = http.expectOne(`${ADMIN_API_BASE_URL}/product-media/media-id`);
+    expect(update.request.method).toBe('PATCH');
+    expect(update.request.body).toEqual({ alt: 'Producto en uso', isCover: false });
+    update.flush({ id: 'media-id', productId: 'product-id', url: 'https://cdn.test/image.jpg', alt: 'Producto en uso', sortOrder: 1, isCover: false, createdAt: '2026-01-01T00:00:00Z' });
+
+    api.deleteMedia('media-id').subscribe();
+    const remove = http.expectOne(`${ADMIN_API_BASE_URL}/product-media/media-id`);
+    expect(remove.request.method).toBe('DELETE');
+    remove.flush(null);
+  });
+
   it('posts restock and adjusts to a target stockOnHand', () => {
     api.restock('variant-id', 3, 'Ingreso').subscribe();
     const restock = http.expectOne(`${ADMIN_API_BASE_URL}/inventory/variant-id/restock`);
