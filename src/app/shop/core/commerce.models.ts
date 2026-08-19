@@ -42,13 +42,20 @@ export interface ReserveCheckoutRequest {
 }
 
 export type PublicOrderStatus =
-  | 'awaiting_payment'
   | 'AWAITING_PAYMENT'
   | 'PAYMENT_PENDING'
   | 'PAID'
   | 'EXPIRED'
   | 'CANCELLED'
   | 'REFUNDED';
+
+export type PublicOrderStatusHttp =
+  | 'awaiting_payment'
+  | 'payment_pending'
+  | 'paid'
+  | 'expired'
+  | 'cancelled'
+  | 'refunded';
 
 export interface ReservedOrderItem {
   variantId: string;
@@ -62,7 +69,7 @@ export interface ReservedOrderItem {
 
 export interface ReserveCheckoutResponse {
   orderId: string;
-  status: PublicOrderStatus;
+  status: PublicOrderStatusHttp;
   totalInCents: number;
   reservationExpiresAt: string;
   items?: ReservedOrderItem[];
@@ -81,4 +88,8 @@ export interface PublicOrderStatusResponse {
   totalInCents?: number;
   reservationExpiresAt?: string | null;
   paidAt?: string | null;
+}
+
+export interface PublicOrderStatusHttpResponse extends Omit<PublicOrderStatusResponse, 'status'> {
+  status: PublicOrderStatusHttp;
 }

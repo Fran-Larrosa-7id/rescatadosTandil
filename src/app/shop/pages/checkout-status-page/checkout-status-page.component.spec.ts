@@ -2,6 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
+import { vi } from 'vitest';
 import { PUBLIC_API_BASE_URL } from '../../core/commerce.models';
 import { CartStore } from '../../core/cart.store';
 import { CheckoutStatusPageComponent } from './checkout-status-page.component';
@@ -19,43 +20,68 @@ describe('CheckoutStatusPageComponent', () => {
     localStorage.clear();
   });
 
-  it('does not show PAID from success query approved when backend is awaiting payment', () => {
+  it('does not show PAID from success query approved when backend is awaiting_payment', () => {
     setup('checkout/success', { external_reference: orderId, status: 'approved' });
     const request = http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`);
-    request.flush({ orderId, status: 'AWAITING_PAYMENT' });
+    request.flush({ orderId, status: 'awaiting_payment' });
     fixture.detectChanges();
     expect(component.status()).toBe('AWAITING_PAYMENT');
     expect(component.title()).not.toBe('Pago confirmado');
     expect(cart.items().length).toBe(1);
   });
 
-  it('handles lowercase awaiting_payment from the reserve contract', () => {
+  it('keeps the cart for lowercase awaiting_payment from the backend', () => {
     setup('checkout/pending', { external_reference: orderId });
     const request = http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`);
     request.flush({ orderId, status: 'awaiting_payment' });
     fixture.detectChanges();
-    expect(component.status()).toBe('awaiting_payment');
+    expect(component.status()).toBe('AWAITING_PAYMENT');
     expect(component.title()).not.toBe('Pago confirmado');
     expect(component.description()).toContain('coordinar el retiro');
     expect(cart.items().length).toBe(1);
   });
 
-  it('shows PAID and clears cart only when backend status is PAID', () => {
+  it('shows PAID and clears the persisted cart when backend status is paid', () => {
     setup('checkout/success', { external_reference: orderId });
     const request = http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`);
-    request.flush({ orderId, status: 'PAID' });
+    request.flush({ orderId, status: 'paid' });
     fixture.detectChanges();
     expect(component.title()).toBe('Pago confirmado');
     expect(component.description()).toContain('coordinar el retiro');
     expect(cart.items()).toEqual([]);
+    expect(localStorage.getItem('gatarsis.shop.cart.v1')).toContain('"items":[]');
+    expect(component.canRetryPayment()).toBe(false);
   });
 
-  it('shows PAID even on failure route when backend says PAID', () => {
+  it('shows PAID even on failure route when backend says paid', () => {
     setup('checkout/failure', { external_reference: orderId, status: 'rejected' });
     const request = http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`);
-    request.flush({ orderId, status: 'PAID' });
+    request.flush({ orderId, status: 'paid' });
     fixture.detectChanges();
     expect(component.title()).toBe('Pago confirmado');
+  });
+
+  it('keeps the cart for lowercase payment_pending from the backend', () => {
+    setup('checkout/pending', { external_reference: orderId });
+    const request = http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`);
+    request.flush({ orderId, status: 'payment_pending' });
+    expect(component.status()).toBe('PAYMENT_PENDING');
+    expect(component.title()).toBe('Tu pago está pendiente');
+    expect(cart.items().length).toBe(1);
+  });
+
+  it('stops polling after backend status paid', () => {
+    vi.useFakeTimers();
+    try {
+      setup('checkout/success', { external_reference: orderId });
+      const request = http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`);
+      request.flush({ orderId, status: 'paid' });
+      vi.advanceTimersByTime(4000);
+      http.expectNone(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`);
+      expect(component.canConsult()).toBe(false);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('does not request status for malformed external_reference or preferenceId-looking value', () => {

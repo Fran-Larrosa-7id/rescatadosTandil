@@ -4,6 +4,7 @@ import { finalize } from 'rxjs';
 import { AppFooterComponent } from '../../../shared/components/app-footer/app-footer.component';
 import { AppHeaderComponent } from '../../../shared/components/app-header/app-header.component';
 import { BottomNavigationComponent } from '../../../shared/components/bottom-navigation/bottom-navigation.component';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { CartStore } from '../../core/cart.store';
 import { PublicOrderStatus, PublicOrderStatusResponse } from '../../core/commerce.models';
 import { PublicCommerceApiService } from '../../core/public-commerce-api.service';
@@ -13,40 +14,67 @@ const MAX_ATTEMPTS = 10;
 
 @Component({
   standalone: true,
-  imports: [RouterLink, AppHeaderComponent, AppFooterComponent, BottomNavigationComponent],
+  imports: [RouterLink, AppHeaderComponent, AppFooterComponent, BottomNavigationComponent, IconComponent],
   template: `
     <app-header />
-    <main id="contenido" class="mx-auto max-w-3xl px-4 py-14 text-center sm:px-6 lg:px-8" aria-live="polite">
-      <p class="text-sm font-extrabold uppercase tracking-wide text-[var(--color-accent)]">Checkout</p>
-      <h1 class="mt-3 text-4xl font-black">{{ title() }}</h1>
-      <p class="mt-4 text-lg text-[var(--color-text-muted)]">{{ description() }}</p>
+    <main id="contenido" class="relative isolate overflow-hidden px-4 py-12 sm:px-6 sm:py-20" aria-live="polite">
+      <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,color-mix(in_srgb,var(--color-accent)_20%,transparent),transparent_38%)]"></div>
+      <div class="pointer-events-none absolute -left-20 top-20 -z-10 size-56 rounded-full bg-[var(--color-recovering-bg)] opacity-45 blur-3xl"></div>
+      <div class="pointer-events-none absolute -right-20 bottom-8 -z-10 size-64 rounded-full bg-[var(--color-surface-strong)] opacity-40 blur-3xl"></div>
 
-      @if (orderId()) {
-        <p class="mt-6 font-bold">Pedido #{{ orderId()!.slice(0, 8) }}</p>
-      }
+      <section class="surface-elevated mx-auto max-w-xl rounded-[2rem] border p-6 text-center shadow-[0_24px_70px_rgba(31,24,37,0.18)] sm:p-10">
+        <div
+          class="mx-auto grid size-18 place-items-center rounded-full shadow-lg"
+          [class.bg-[#19ae5c]]="status() === 'PAID'"
+          [class.bg-[var(--color-accent)]]="status() !== 'PAID'"
+          [class.text-white]="true"
+        >
+          @if (status() === 'PAID') {
+            <app-icon name="check" class="size-9" />
+          } @else if (status() === 'EXPIRED' || status() === 'CANCELLED' || status() === 'REFUNDED') {
+            <app-icon name="info" class="size-8" />
+          } @else {
+            <app-icon name="clock" class="size-8" />
+          }
+        </div>
 
-      @if (error()) {
-        <p class="mt-6 rounded-2xl border border-[var(--color-border)] p-4 font-bold" role="alert">{{ error() }}</p>
-      }
+        <p class="mt-6 text-xs font-extrabold uppercase tracking-[0.18em] text-[var(--color-accent)]">Estado del checkout</p>
+        <h1 class="mt-3 text-3xl font-black tracking-tight sm:text-4xl">{{ title() }}</h1>
+        <p class="mx-auto mt-4 max-w-md text-base leading-7 text-[var(--color-text-muted)] sm:text-lg">{{ description() }}</p>
 
-      <div class="mt-8 flex flex-wrap justify-center gap-3">
-        @if (canConsult()) {
-          <button class="button-primary rounded-full px-6 py-3 font-extrabold" type="button" (click)="consult(true)">
-            Consultar estado
-          </button>
+        @if (orderId()) {
+          <div class="mt-7 rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] px-5 py-4 text-left">
+            <p class="text-xs font-extrabold uppercase tracking-wider text-[var(--color-text-muted)]">Pedido</p>
+            <p class="mt-1 text-lg font-black">#{{ orderId()!.slice(0, 8) }}</p>
+            @if (status() === 'PAID') {
+              <p class="mt-1 text-sm font-bold text-[#18874c]">Pago verificado · retiro a coordinar</p>
+            }
+          </div>
         }
-        @if (canRetryPayment()) {
-          <button class="button-primary rounded-full px-6 py-3 font-extrabold" type="button" (click)="retryPayment()">
-            Intentar pagar nuevamente
-          </button>
+
+        @if (error()) {
+          <p class="mt-6 rounded-2xl border border-[var(--color-border)] bg-[var(--color-danger-bg)] p-4 text-left font-bold" role="alert">{{ error() }}</p>
         }
-        <a class="rounded-full border border-[var(--color-border)] px-6 py-3 font-extrabold" routerLink="/carrito">
-          Volver al carrito
-        </a>
-        <a class="rounded-full border border-[var(--color-border)] px-6 py-3 font-extrabold" routerLink="/tienda">
-          Ver tienda
-        </a>
-      </div>
+
+        <div class="mt-8 grid gap-3 sm:grid-cols-2">
+          @if (canConsult()) {
+            <button class="button-primary min-h-12 rounded-xl px-5 font-extrabold" type="button" (click)="consult(true)">
+              Consultar estado
+            </button>
+          }
+          @if (canRetryPayment()) {
+            <button class="button-primary min-h-12 rounded-xl px-5 font-extrabold" type="button" (click)="retryPayment()">
+              Intentar pagar nuevamente
+            </button>
+          }
+          <a class="inline-flex min-h-12 items-center justify-center rounded-xl border border-[var(--color-border)] px-5 font-extrabold transition hover:border-[var(--color-accent)]" routerLink="/tienda">
+            Seguir comprando
+          </a>
+          <a class="inline-flex min-h-12 items-center justify-center rounded-xl border border-[var(--color-border)] px-5 font-extrabold transition hover:border-[var(--color-accent)]" routerLink="/carrito">
+            Ver carrito
+          </a>
+        </div>
+      </section>
     </main>
     <app-footer />
     <app-bottom-navigation />
@@ -124,7 +152,6 @@ export class CheckoutStatusPageComponent implements OnInit, OnDestroy {
         return 'Pago confirmado';
       case 'PAYMENT_PENDING':
       case 'AWAITING_PAYMENT':
-      case 'awaiting_payment':
         return routeKind(this.route) === 'pending' ? 'Tu pago está pendiente' : 'Estamos confirmando tu pago';
       case 'EXPIRED':
         return 'La reserva venció';
@@ -145,7 +172,6 @@ export class CheckoutStatusPageComponent implements OnInit, OnDestroy {
         return 'Gracias por ser parte del cambio. Vamos a comunicarnos con vos para coordinar el retiro de tu pedido.';
       case 'PAYMENT_PENDING':
       case 'AWAITING_PAYMENT':
-      case 'awaiting_payment':
         return 'Estamos esperando la confirmación del pago. Cuando se confirme podremos coordinar el retiro.';
       case 'EXPIRED':
         return 'El carrito queda disponible para intentar una compra nueva con stock actualizado.';
@@ -161,7 +187,7 @@ export class CheckoutStatusPageComponent implements OnInit, OnDestroy {
   }
 
   canRetryPayment(): boolean {
-    return this.status() === 'AWAITING_PAYMENT' || this.status() === 'PAYMENT_PENDING' || this.status() === 'awaiting_payment';
+    return this.status() === 'AWAITING_PAYMENT' || this.status() === 'PAYMENT_PENDING';
   }
 
   private handleStatus(response: PublicOrderStatusResponse): void {

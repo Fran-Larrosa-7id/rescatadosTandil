@@ -48,7 +48,7 @@ describe('PublicCommerceApiService', () => {
       fulfillment: { method: 'PICKUP', note: null },
     });
     expect(JSON.stringify(request.request.body)).not.toContain('price');
-    request.flush({ orderId: 'order-id', status: 'AWAITING_PAYMENT', totalInCents: 3000, reservationExpiresAt: '2026-01-01T00:10:00Z' });
+    request.flush({ orderId: 'order-id', status: 'awaiting_payment', totalInCents: 3000, reservationExpiresAt: '2026-01-01T00:10:00Z' });
   });
 
   it('creates preference for an order and relies on backend initPoint', () => {
@@ -61,10 +61,28 @@ describe('PublicCommerceApiService', () => {
     request.flush({ orderId: 'order-id', preferenceId: 'provider-preference', initPoint: 'https://mercadopago.test/checkout' });
   });
 
-  it('queries order status from backend authority', () => {
+  it('normalizes the lowercase status returned by the backend at the HTTP boundary', () => {
     api.orderStatus('order-id').subscribe((response) => expect(response.status).toBe('PAID'));
     const request = http.expectOne(`${PUBLIC_API_BASE_URL}/orders/order-id/status`);
     expect(request.request.method).toBe('GET');
-    request.flush({ orderId: 'order-id', status: 'PAID' });
+    request.flush({ orderId: 'order-id', status: 'paid' });
+  });
+
+  it('normalizes every documented lowercase order status', () => {
+    const statuses = [
+      ['awaiting_payment', 'AWAITING_PAYMENT'],
+      ['payment_pending', 'PAYMENT_PENDING'],
+      ['paid', 'PAID'],
+      ['expired', 'EXPIRED'],
+      ['cancelled', 'CANCELLED'],
+      ['refunded', 'REFUNDED'],
+    ] as const;
+    for (const [httpStatus, internalStatus] of statuses) {
+      api.orderStatus(`order-${httpStatus}`).subscribe((response) => expect(response.status).toBe(internalStatus));
+      http.expectOne(`${PUBLIC_API_BASE_URL}/orders/order-${httpStatus}/status`).flush({
+        orderId: `order-${httpStatus}`,
+        status: httpStatus,
+      });
+    }
   });
 });
