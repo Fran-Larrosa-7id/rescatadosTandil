@@ -10,17 +10,13 @@ import { IconComponent } from '../icon/icon.component';
   template: `
     <footer class="border-t border-[var(--color-border)] bg-white pb-24 pt-10 md:pb-10">
       <div class="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-        <a routerLink="/" class="inline-flex items-center gap-2 text-xl font-extrabold text-[var(--color-accent)]">
+        <a
+          routerLink="/"
+          class="inline-flex items-center gap-2 text-xl font-extrabold text-[var(--color-accent)]"
+        >
           <app-icon name="paw" class="size-5" />
           <span>{{ brandName }}</span>
         </a>
-
-        <nav class="mt-8 flex flex-wrap justify-center gap-6 text-sm text-[var(--color-text-muted)]" aria-label="Pie">
-          <a routerLink="/donde-va-tu-ayuda" fragment="ayudar" class="hover:text-[var(--color-accent)]">Contactanos</a>
-          <a routerLink="/donde-va-tu-ayuda" fragment="ayudar" class="hover:text-[var(--color-accent)]">Alias bancario</a>
-          <a routerLink="/donde-va-tu-ayuda" class="hover:text-[var(--color-accent)]">Preguntas frecuentes</a>
-          <a routerLink="/merch" class="hover:text-[var(--color-accent)]">Tienda Online</a>
-        </nav>
 
         <p class="mt-8 text-xs text-[var(--color-text-muted)]">
           © 2026 {{ brandName }}. Hecho por
@@ -36,7 +32,7 @@ import { IconComponent } from '../icon/icon.component';
         </p>
       </div>
     </footer>
-  `
+  `,
 })
 export class AppFooterComponent {
   protected readonly brandName = SITE_CONFIG.brandName;

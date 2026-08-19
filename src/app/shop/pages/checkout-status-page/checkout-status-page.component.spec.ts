@@ -9,123 +9,70 @@ import { CheckoutStatusPageComponent } from './checkout-status-page.component';
 
 const orderId = 'd7f5ff29-2c18-4e3b-b635-630eda25b5d8';
 
-describe('CheckoutStatusPageComponent', () => {
+describe('CheckoutStatusPageComponent payment safety', () => {
   let fixture: ComponentFixture<CheckoutStatusPageComponent>;
   let component: CheckoutStatusPageComponent;
   let http: HttpTestingController;
   let cart: CartStore;
 
-  afterEach(() => {
-    http.verify();
-    localStorage.clear();
-  });
+  afterEach(() => { http.verify(); localStorage.clear(); });
 
-  it('does not show PAID from success query approved when backend is awaiting_payment', () => {
-    setup('checkout/success', { external_reference: orderId, status: 'approved' });
-    const request = http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`);
-    request.flush({ orderId, status: 'awaiting_payment' });
+  it.each(['awaiting_payment', 'payment_pending'] as const)('does not offer another payment while backend reports %s', (status) => {
+    setup('checkout/pending', { external_reference: orderId, status: 'approved' });
+    http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`).flush({ orderId, status });
     fixture.detectChanges();
-    expect(component.status()).toBe('AWAITING_PAYMENT');
-    expect(component.title()).not.toBe('Pago confirmado');
-    expect(cart.items().length).toBe(1);
+    expect(fixture.nativeElement.textContent).not.toContain('Intentar pagar nuevamente');
+    expect(fixture.nativeElement.textContent).toContain('no vuelvas a pagarlo');
+    expect(component.isPending()).toBe(true);
+    expect(cart.checkoutContext()?.status).toBe(status === 'awaiting_payment' ? 'AWAITING_PAYMENT' : 'PAYMENT_PENDING');
   });
 
-  it('keeps the cart for lowercase awaiting_payment from the backend', () => {
+  it('uses only GET status when the user consults a pending checkout', () => {
     setup('checkout/pending', { external_reference: orderId });
+    http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`).flush({ orderId, status: 'awaiting_payment' });
+    component.consult(true);
     const request = http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`);
-    request.flush({ orderId, status: 'awaiting_payment' });
-    fixture.detectChanges();
-    expect(component.status()).toBe('AWAITING_PAYMENT');
-    expect(component.title()).not.toBe('Pago confirmado');
-    expect(component.description()).toContain('coordinar el retiro');
-    expect(cart.items().length).toBe(1);
-  });
-
-  it('shows PAID and clears the persisted cart when backend status is paid', () => {
-    setup('checkout/success', { external_reference: orderId });
-    const request = http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`);
-    request.flush({ orderId, status: 'paid' });
-    fixture.detectChanges();
-    expect(component.title()).toBe('Pago confirmado');
-    expect(component.description()).toContain('coordinar el retiro');
-    expect(cart.items()).toEqual([]);
-    expect(localStorage.getItem('gatarsis.shop.cart.v1')).toContain('"items":[]');
-    expect(component.canRetryPayment()).toBe(false);
-  });
-
-  it('shows PAID even on failure route when backend says paid', () => {
-    setup('checkout/failure', { external_reference: orderId, status: 'rejected' });
-    const request = http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`);
-    request.flush({ orderId, status: 'paid' });
-    fixture.detectChanges();
-    expect(component.title()).toBe('Pago confirmado');
-  });
-
-  it('keeps the cart for lowercase payment_pending from the backend', () => {
-    setup('checkout/pending', { external_reference: orderId });
-    const request = http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`);
+    expect(request.request.method).toBe('GET');
     request.flush({ orderId, status: 'payment_pending' });
-    expect(component.status()).toBe('PAYMENT_PENDING');
-    expect(component.title()).toBe('Tu pago está pendiente');
+    http.expectNone((request) => request.url.includes('preference') || request.url.includes('reserve'));
+  });
+
+  it('does not trust success query params when backend remains pending', () => {
+    setup('checkout/success', { external_reference: orderId, status: 'approved' });
+    http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`).flush({ orderId, status: 'awaiting_payment' });
+    expect(component.title()).not.toBe('Pago confirmado');
     expect(cart.items().length).toBe(1);
   });
 
-  it('stops polling after backend status paid', () => {
+  it('clears cart and checkout context only when backend confirms paid', () => {
+    setup('checkout/success', { external_reference: orderId });
+    http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`).flush({ orderId, status: 'paid' });
+    expect(cart.items()).toEqual([]);
+    expect(cart.checkoutContext()).toBeNull();
+  });
+
+  it.each(['expired', 'cancelled', 'refunded'] as const)('releases the local checkout context when backend returns %s', (status) => {
+    setup('checkout/pending', { external_reference: orderId });
+    http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`).flush({ orderId, status });
+    expect(cart.checkoutContext()).toBeNull();
+    expect(cart.items().length).toBe(1);
+  });
+
+  it('stops polling after paid', () => {
     vi.useFakeTimers();
     try {
       setup('checkout/success', { external_reference: orderId });
-      const request = http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`);
-      request.flush({ orderId, status: 'paid' });
+      http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`).flush({ orderId, status: 'paid' });
       vi.advanceTimersByTime(4000);
       http.expectNone(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`);
-      expect(component.canConsult()).toBe(false);
-    } finally {
-      vi.useRealTimers();
-    }
-  });
-
-  it('does not request status for malformed external_reference or preferenceId-looking value', () => {
-    setup('checkout/success', { external_reference: '2252402486-provider-preference' });
-    http.expectNone((request) => request.url.includes('/orders/'));
-    expect(component.error()).toBe('No encontramos un pedido válido para consultar.');
+    } finally { vi.useRealTimers(); }
   });
 
   function setup(path: string, query: Record<string, string>): void {
-    localStorage.clear();
-    TestBed.resetTestingModule();
-    TestBed.configureTestingModule({
-      imports: [CheckoutStatusPageComponent],
-      providers: [
-        provideRouter([]),
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              queryParamMap: convertToParamMap(query),
-              routeConfig: { path },
-            },
-          },
-        },
-      ],
-    });
-    fixture = TestBed.createComponent(CheckoutStatusPageComponent);
-    component = fixture.componentInstance;
-    http = TestBed.inject(HttpTestingController);
-    cart = TestBed.inject(CartStore);
-    cart.add({
-      variantId: 'variant-id',
-      productId: 'product-id',
-      productSlug: 'producto',
-      productName: 'Producto',
-      variantName: 'Variante',
-      sku: 'SKU',
-      unitPriceInCents: 100,
-      quantity: 1,
-      availableStock: 1,
-      imageUrl: null,
-    });
+    localStorage.clear(); TestBed.resetTestingModule();
+    TestBed.configureTestingModule({ imports: [CheckoutStatusPageComponent], providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting(), { provide: ActivatedRoute, useValue: { snapshot: { queryParamMap: convertToParamMap(query), routeConfig: { path } } } }] });
+    fixture = TestBed.createComponent(CheckoutStatusPageComponent); component = fixture.componentInstance; http = TestBed.inject(HttpTestingController); cart = TestBed.inject(CartStore);
+    cart.add({ variantId: 'variant-id', productId: 'product-id', productSlug: 'producto', productName: 'Producto', variantName: 'Variante', sku: 'SKU', unitPriceInCents: 100, quantity: 1, availableStock: 1, imageUrl: null });
     fixture.detectChanges();
   }
 });

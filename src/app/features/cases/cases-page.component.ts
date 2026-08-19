@@ -1,9 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 
-import {
-  CASE_STATUS_META,
-  RescueCaseStatus
-} from '../../core/models/rescue-case.model';
+import { RescueCaseStatus } from '../../core/models/rescue-case.model';
 import { RescueCasesService } from '../../core/services/rescue-cases.service';
 import { AppFooterComponent } from '../../shared/components/app-footer/app-footer.component';
 import { AppHeaderComponent } from '../../shared/components/app-header/app-header.component';
@@ -22,26 +19,31 @@ type CaseFilter = RescueCaseStatus | 'all';
     BottomNavigationComponent,
     CaseCardComponent,
     EmptyStateComponent,
-    RevealOnScrollDirective
+    RevealOnScrollDirective,
   ],
   template: `
     <app-header />
 
     <main id="contenido" class="mx-auto max-w-7xl px-4 py-8 sm:px-6 md:py-12 lg:px-8">
       <div appReveal class="max-w-3xl">
-        <h1 class="text-5xl font-black leading-tight">Casos y rescates</h1>
+        <h1 class="text-5xl font-black leading-tight">Sus historias</h1>
         <p class="mt-3 text-lg text-[var(--color-text-muted)]">
-          Conocé a los callejeritos que estamos ayudando. Cada historia es única y tu aporte, por
-          más pequeño que sea, cambia sus vidas.
+          Conocé a cada uno, descubrí su historia y seguí el camino recorrido desde su rescate.
         </p>
       </div>
 
-      <div appReveal [appRevealDelay]="80" class="-mx-4 mt-8 flex gap-3 overflow-x-auto px-4 py-2" aria-label="Filtrar casos">
+      <div
+        appReveal
+        [appRevealDelay]="80"
+        class="-mx-4 mt-8 flex gap-3 overflow-x-auto px-4 py-2"
+        aria-label="Filtrar casos"
+      >
         @for (filter of filters; track filter.value) {
           <button
             type="button"
             [class]="filterClass(filter.value)"
             (click)="activeFilter.set(filter.value)"
+            [attr.aria-pressed]="activeFilter() === filter.value"
           >
             {{ filter.label }}
           </button>
@@ -63,7 +65,7 @@ type CaseFilter = RescueCaseStatus | 'all';
 
     <app-footer />
     <app-bottom-navigation />
-  `
+  `,
 })
 export class CasesPageComponent {
   private readonly casesService = inject(RescueCasesService);
@@ -71,13 +73,14 @@ export class CasesPageComponent {
   protected readonly activeFilter = signal<CaseFilter>('all');
   protected readonly filters: readonly { readonly value: CaseFilter; readonly label: string }[] = [
     { value: 'all', label: 'Todos' },
-    { value: 'needs-help', label: CASE_STATUS_META['needs-help'].label },
-    { value: 'treatment', label: CASE_STATUS_META.treatment.label },
-    { value: 'recovering', label: CASE_STATUS_META.recovering.label },
-    { value: 'closed', label: CASE_STATUS_META.closed.label },
-    { value: 'memorial', label: CASE_STATUS_META.memorial.label }
+    { value: 'treatment', label: 'En tratamiento' },
+    { value: 'recovering', label: 'Recuperados' },
+    { value: 'closed', label: 'Adoptados' },
+    { value: 'memorial', label: 'En memoria' },
   ];
-  protected readonly filteredCases = computed(() => this.casesService.getByStatus(this.activeFilter()));
+  protected readonly filteredCases = computed(() =>
+    this.casesService.getByStatus(this.activeFilter()),
+  );
 
   protected filterClass(value: CaseFilter): string {
     const baseClasses = 'min-h-11 shrink-0 rounded-full border px-5 text-sm font-bold transition';

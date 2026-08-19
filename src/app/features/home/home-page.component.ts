@@ -90,7 +90,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
       <section class="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
         <div appReveal [appRevealDelay]="300" class="mb-7 flex items-end justify-between gap-4">
           <div>
-            <h2 class="text-4xl font-black">Historias que necesitan una mano.</h2>
+            <h2 class="text-4xl font-black">Por ellos estamos acá</h2>
             <p class="mt-2 text-[var(--color-text-muted)]">
               Conocé a los animales que actualmente están bajo nuestro cuidado y seguí de cerca su
               evolución.
@@ -128,9 +128,9 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           class="grid gap-7 rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 md:grid-cols-[0.9fr_1.1fr] md:items-center md:p-8"
         >
           <div>
-            <h2 class="mt-5 text-4xl font-black">Llevate un pedacito de Gatarsis.</h2>
+            <h2 class="mt-5 text-4xl font-black">Tu compra también rescata.</h2>
             <p class="mt-3 max-w-xl text-[var(--color-text-muted)]">
-              Bolsas y llaveros creados para ayudar a sostener los rescates.
+              Productos creados para ayudar a sostener nuestros rescates
             </p>
             <a
               routerLink="/merch"

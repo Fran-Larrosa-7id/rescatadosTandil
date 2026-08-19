@@ -62,17 +62,17 @@ const MAX_ATTEMPTS = 10;
               Consultar estado
             </button>
           }
-          @if (canRetryPayment()) {
-            <button class="button-primary min-h-12 rounded-xl px-5 font-extrabold" type="button" (click)="retryPayment()">
-              Intentar pagar nuevamente
-            </button>
+          @if (isPending()) {
+            <p class="sm:col-span-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] px-4 py-3 text-sm font-semibold text-[var(--color-text-muted)]">
+              Si ya completaste el pago en Mercado Pago, no vuelvas a pagarlo. Estamos esperando la confirmación.
+            </p>
           }
           <a class="inline-flex min-h-12 items-center justify-center rounded-xl border border-[var(--color-border)] px-5 font-extrabold transition hover:border-[var(--color-accent)]" routerLink="/tienda">
-            Seguir comprando
+            {{ isPending() ? 'Volver a la tienda' : 'Seguir comprando' }}
           </a>
-          <a class="inline-flex min-h-12 items-center justify-center rounded-xl border border-[var(--color-border)] px-5 font-extrabold transition hover:border-[var(--color-accent)]" routerLink="/carrito">
-            Ver carrito
-          </a>
+          @if (!isPending()) {
+            <a class="inline-flex min-h-12 items-center justify-center rounded-xl border border-[var(--color-border)] px-5 font-extrabold transition hover:border-[var(--color-accent)]" routerLink="/carrito">Ver carrito</a>
+          }
         </div>
       </section>
     </main>
@@ -116,6 +116,10 @@ export class CheckoutStatusPageComponent implements OnInit, OnDestroy {
   consult(manual: boolean): void {
     const orderId = this.orderId();
     if (!orderId) return;
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
     if (manual) this.attempts = 0;
     this.loading.set(true);
     this.error.set('');
@@ -132,19 +136,6 @@ export class CheckoutStatusPageComponent implements OnInit, OnDestroy {
       });
   }
 
-  retryPayment(): void {
-    const orderId = this.orderId();
-    if (!orderId) return;
-    this.loading.set(true);
-    this.api
-      .createMercadoPagoPreference(orderId)
-      .pipe(finalize(() => this.loading.set(false)))
-      .subscribe({
-        next: (preference) => window.location.assign(preference.initPoint),
-        error: () => this.error.set('No pudimos preparar un nuevo intento de pago.'),
-      });
-  }
-
   title(): string {
     if (this.loading() && !this.status()) return 'Confirmando tu pago...';
     switch (this.status()) {
@@ -152,7 +143,7 @@ export class CheckoutStatusPageComponent implements OnInit, OnDestroy {
         return 'Pago confirmado';
       case 'PAYMENT_PENDING':
       case 'AWAITING_PAYMENT':
-        return routeKind(this.route) === 'pending' ? 'Tu pago está pendiente' : 'Estamos confirmando tu pago';
+        return 'Estamos confirmando tu pago';
       case 'EXPIRED':
         return 'La reserva venció';
       case 'CANCELLED':
@@ -172,7 +163,7 @@ export class CheckoutStatusPageComponent implements OnInit, OnDestroy {
         return 'Gracias por ser parte del cambio. Vamos a comunicarnos con vos para coordinar el retiro de tu pedido.';
       case 'PAYMENT_PENDING':
       case 'AWAITING_PAYMENT':
-        return 'Estamos esperando la confirmación del pago. Cuando se confirme podremos coordinar el retiro.';
+        return 'Esto puede demorar unos instantes. No necesitás volver a realizar el pago.';
       case 'EXPIRED':
         return 'El carrito queda disponible para intentar una compra nueva con stock actualizado.';
       case 'CANCELLED':
@@ -186,24 +177,31 @@ export class CheckoutStatusPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  canRetryPayment(): boolean {
+  isPending(): boolean {
     return this.status() === 'AWAITING_PAYMENT' || this.status() === 'PAYMENT_PENDING';
   }
 
   private handleStatus(response: PublicOrderStatusResponse): void {
     this.status.set(response.status);
     this.orderId.set(response.orderId);
+    if (this.isPending()) {
+      this.cart.saveCheckoutContext({
+        orderId: response.orderId,
+        status: response.status,
+        reservationExpiresAt: response.reservationExpiresAt,
+      });
+    }
     if (response.status === 'PAID') {
       this.cart.clear();
       this.cart.clearCheckoutContext();
     }
-    if (response.status === 'EXPIRED') this.cart.clearCheckoutContext();
+    if (response.status === 'EXPIRED' || response.status === 'CANCELLED' || response.status === 'REFUNDED') this.cart.clearCheckoutContext();
     if (TERMINAL.includes(response.status)) {
       this.canConsult.set(false);
       return;
     }
+    this.canConsult.set(true);
     if (++this.attempts >= MAX_ATTEMPTS) {
-      this.canConsult.set(true);
       return;
     }
     this.timer = setTimeout(() => this.consult(false), 3000);

@@ -64,6 +64,19 @@ describe('CartPageComponent checkout', () => {
     expect(redirect).toHaveBeenCalledWith('https://mp.test/init');
   });
 
+  it('blocks a new reservation while a checkout is awaiting payment, including after reload context restore', () => {
+    cart.saveCheckoutContext({
+      orderId: 'd7f5ff29-2c18-4e3b-b635-630eda25b5d8',
+      status: 'AWAITING_PAYMENT',
+      reservationExpiresAt: '2026-01-01T00:10:00Z',
+    });
+    fixture.detectChanges();
+    expect(component.pendingCheckout()?.orderId).toBe('d7f5ff29-2c18-4e3b-b635-630eda25b5d8');
+    expect(fixture.nativeElement.textContent).toContain('Tenés un pago en proceso');
+    component.checkout();
+    http.expectNone(`${PUBLIC_API_BASE_URL}/checkout/reserve`);
+  });
+
   it('reserve failure does not create Mercado Pago preference', () => {
     component.checkout();
     const reserve = http.expectOne(`${PUBLIC_API_BASE_URL}/checkout/reserve`);

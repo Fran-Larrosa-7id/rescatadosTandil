@@ -1,17 +1,20 @@
 import { computed, Injectable, signal } from '@angular/core';
 import { CartItem, StoredCart } from './cart.models';
+import type { PublicOrderStatus } from './commerce.models';
 
 const CART_KEY = 'gatarsis.shop.cart.v1';
 const CHECKOUT_KEY = 'gatarsis.shop.checkout.v1';
 
-interface CheckoutContext {
+export interface CheckoutContext {
   orderId: string;
+  status: PublicOrderStatus;
   reservationExpiresAt?: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
 export class CartStore {
   readonly items = signal<CartItem[]>(restoreCart());
+  readonly activeCheckout = signal<CheckoutContext | null>(restoreCheckoutContext());
   readonly totalItems = computed(() => this.items().reduce((total, item) => total + item.quantity, 0));
   readonly subtotalInCents = computed(() =>
     this.items().reduce((total, item) => total + item.unitPriceInCents * item.quantity, 0),
@@ -58,21 +61,32 @@ export class CartStore {
 
   saveCheckoutContext(context: CheckoutContext): void {
     storage()?.setItem(CHECKOUT_KEY, JSON.stringify(context));
+    this.activeCheckout.set(context);
   }
 
   checkoutContext(): CheckoutContext | null {
-    const raw = storage()?.getItem(CHECKOUT_KEY);
-    if (!raw) return null;
-    try {
-      const value = JSON.parse(raw) as CheckoutContext;
-      return isUuid(value.orderId) ? value : null;
-    } catch {
-      return null;
-    }
+    return this.activeCheckout();
   }
 
   clearCheckoutContext(): void {
     storage()?.removeItem(CHECKOUT_KEY);
+    this.activeCheckout.set(null);
+  }
+}
+
+function restoreCheckoutContext(): CheckoutContext | null {
+  const raw = storage()?.getItem(CHECKOUT_KEY);
+  if (!raw) return null;
+  try {
+    const value = JSON.parse(raw) as Partial<CheckoutContext>;
+    if (!isUuid(value.orderId ?? '')) return null;
+    return {
+      orderId: value.orderId!,
+      status: isOrderStatus(value.status) ? value.status : 'AWAITING_PAYMENT',
+      reservationExpiresAt: value.reservationExpiresAt ?? null,
+    };
+  } catch {
+    return null;
   }
 }
 
@@ -126,4 +140,8 @@ function storage(): Storage | null {
 
 function isUuid(value: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+}
+
+function isOrderStatus(value: unknown): value is PublicOrderStatus {
+  return value === 'AWAITING_PAYMENT' || value === 'PAYMENT_PENDING' || value === 'PAID' || value === 'EXPIRED' || value === 'CANCELLED' || value === 'REFUNDED';
 }

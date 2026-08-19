@@ -60,4 +60,20 @@ describe('CartStore', () => {
     cart.clear();
     expect(cart.items()).toEqual([]);
   });
+
+  it('restores a pending checkout context after reload without storing customer data', () => {
+    const cart = TestBed.inject(CartStore);
+    cart.saveCheckoutContext({
+      orderId: 'd7f5ff29-2c18-4e3b-b635-630eda25b5d8',
+      status: 'PAYMENT_PENDING',
+      reservationExpiresAt: '2026-01-01T00:10:00Z',
+    });
+    TestBed.resetTestingModule();
+    const restored = TestBed.inject(CartStore);
+    expect(restored.checkoutContext()).toEqual({
+      orderId: 'd7f5ff29-2c18-4e3b-b635-630eda25b5d8',
+      status: 'PAYMENT_PENDING',
+      reservationExpiresAt: '2026-01-01T00:10:00Z',
+    });
+  });
 });

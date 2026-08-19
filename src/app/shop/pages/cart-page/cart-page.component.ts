@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { finalize, switchMap, tap } from 'rxjs';
@@ -90,14 +90,22 @@ type CheckoutState =
             @if (reservationText()) {
               <p class="mt-4 rounded-xl bg-[#e7f6eb] p-3 font-bold text-[#23623a]">{{ reservationText() }}</p>
             }
-            <button
-              class="button-primary mt-6 min-h-12 w-full rounded-full px-6 font-extrabold disabled:opacity-50"
-              type="button"
-              [disabled]="state() !== 'IDLE' && state() !== 'ERROR'"
-              (click)="checkout()"
-            >
-              {{ ctaLabel() }}
-            </button>
+            @if (pendingCheckout(); as pending) {
+              <section class="mt-6 rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-4" aria-live="polite">
+                <p class="font-black">Tenés un pago en proceso</p>
+                <p class="mt-2 text-sm text-[var(--color-text-muted)]">Estamos esperando la confirmación de Mercado Pago para el pedido #{{ pending.orderId.slice(0, 8) }}.</p>
+                <a class="mt-4 inline-flex min-h-11 items-center rounded-full border border-[var(--color-border)] px-4 text-sm font-extrabold" routerLink="/checkout/pending">Consultar estado del pago</a>
+              </section>
+            } @else {
+              <button
+                class="button-primary mt-6 min-h-12 w-full rounded-full px-6 font-extrabold disabled:opacity-50"
+                type="button"
+                [disabled]="state() !== 'IDLE' && state() !== 'ERROR'"
+                (click)="checkout()"
+              >
+                {{ ctaLabel() }}
+              </button>
+            }
           </aside>
         </section>
       } @else {
@@ -116,6 +124,12 @@ export class CartPageComponent {
   readonly message = signal('');
   readonly reservationText = signal('');
   readonly customerError = signal('');
+  readonly pendingCheckout = computed(() => {
+    const checkout = this.cart.activeCheckout();
+    return checkout?.status === 'AWAITING_PAYMENT' || checkout?.status === 'PAYMENT_PENDING'
+      ? checkout
+      : null;
+  });
   customer = { name: '', email: '', phone: '', note: '' };
   private attemptKey: string | null = null;
 
@@ -125,7 +139,7 @@ export class CartPageComponent {
   ) {}
 
   checkout(): void {
-    if (!this.cart.items().length || this.state() === 'RESERVING' || this.state() === 'CREATING_PREFERENCE') return;
+    if (!this.cart.items().length || this.pendingCheckout() || this.state() === 'RESERVING' || this.state() === 'CREATING_PREFERENCE') return;
     this.message.set('');
     this.reservationText.set('');
     this.customerError.set('');
@@ -144,6 +158,7 @@ export class CartPageComponent {
           this.state.set('RESERVED');
           this.cart.saveCheckoutContext({
             orderId: order.orderId,
+            status: 'AWAITING_PAYMENT',
             reservationExpiresAt: order.reservationExpiresAt,
           });
           this.reservationText.set(`Tu stock está reservado temporalmente.`);
