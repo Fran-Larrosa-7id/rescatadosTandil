@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
+import { CartStore } from '../../../shop/core/cart.store';
 import { IconComponent } from '../icon/icon.component';
 
 @Component({
@@ -41,16 +42,18 @@ import { IconComponent } from '../icon/icon.component';
           Ayuda
         </a>
         <a
-          routerLink="/merch"
+          routerLink="/tienda"
           routerLinkActive="nav-active"
           ariaCurrentWhenActive="page"
           class="flex min-h-12 flex-col items-center justify-center rounded-full px-2 text-xs font-bold text-[var(--color-text)]"
         >
           <app-icon name="shop" class="size-4" />
-          Tienda
+          Tienda@if (cart.totalItems()) { ({{ cart.totalItems() }}) }
         </a>
       </div>
     </nav>
   `
 })
-export class BottomNavigationComponent {}
+export class BottomNavigationComponent {
+  protected readonly cart = inject(CartStore);
+}

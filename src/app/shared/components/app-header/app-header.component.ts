@@ -3,6 +3,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 
 import { SITE_CONFIG } from '../../../core/config/site.config';
 import { ThemeService } from '../../../core/services/theme.service';
+import { CartStore } from '../../../shop/core/cart.store';
 import { IconComponent } from '../icon/icon.component';
 
 @Component({
@@ -49,13 +50,22 @@ import { IconComponent } from '../icon/icon.component';
             <span>Dónde va tu ayuda</span>
           </a>
           <a
-            routerLink="/merch"
+            routerLink="/tienda"
             routerLinkActive="nav-active"
             class="inline-flex items-center gap-1.5 rounded-full border border-transparent px-3 py-2 text-[var(--color-text)] transition hover:bg-[var(--color-recovering-bg)] hover:text-[var(--color-accent)]"
             ariaCurrentWhenActive="page"
           >
             <app-icon name="shop" class="size-4" />
             <span>Tienda Online</span>
+          </a>
+          <a
+            routerLink="/carrito"
+            routerLinkActive="nav-active"
+            class="inline-flex items-center gap-1.5 rounded-full border border-transparent px-3 py-2 text-[var(--color-text)] transition hover:bg-[var(--color-recovering-bg)] hover:text-[var(--color-accent)]"
+            ariaCurrentWhenActive="page"
+          >
+            <app-icon name="shop" class="size-4" />
+            <span>Carrito ({{ cart.totalItems() }})</span>
           </a>
         </nav>
 
@@ -88,5 +98,6 @@ import { IconComponent } from '../icon/icon.component';
 })
 export class AppHeaderComponent {
   protected readonly theme = inject(ThemeService);
+  protected readonly cart = inject(CartStore);
   protected readonly brandName = SITE_CONFIG.brandName;
 }

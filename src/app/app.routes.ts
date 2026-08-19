@@ -35,9 +35,47 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'merch',
+    path: 'tienda',
     loadComponent: () =>
-      import('./features/merch/merch-page.component').then((m) => m.MerchPageComponent),
+      import('./shop/pages/shop-page/shop-page.component').then((m) => m.ShopPageComponent),
+  },
+  {
+    path: 'tienda/:slug',
+    loadComponent: () =>
+      import('./shop/pages/product-detail-page/product-detail-page.component').then(
+        (m) => m.ProductDetailPageComponent,
+      ),
+  },
+  {
+    path: 'carrito',
+    loadComponent: () =>
+      import('./shop/pages/cart-page/cart-page.component').then((m) => m.CartPageComponent),
+  },
+  {
+    path: 'checkout/success',
+    loadComponent: () =>
+      import('./shop/pages/checkout-status-page/checkout-status-page.component').then(
+        (m) => m.CheckoutStatusPageComponent,
+      ),
+  },
+  {
+    path: 'checkout/pending',
+    loadComponent: () =>
+      import('./shop/pages/checkout-status-page/checkout-status-page.component').then(
+        (m) => m.CheckoutStatusPageComponent,
+      ),
+  },
+  {
+    path: 'checkout/failure',
+    loadComponent: () =>
+      import('./shop/pages/checkout-status-page/checkout-status-page.component').then(
+        (m) => m.CheckoutStatusPageComponent,
+      ),
+  },
+  {
+    path: 'merch',
+    redirectTo: 'tienda',
+    pathMatch: 'full',
   },
   {
     path: '**',
