@@ -128,12 +128,6 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           class="grid gap-7 rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 md:grid-cols-[0.9fr_1.1fr] md:items-center md:p-8"
         >
           <div>
-            <p
-              class="soft-chip inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-extrabold uppercase tracking-wide text-[var(--color-accent)]"
-            >
-              <app-icon name="shop" class="size-4" />
-              Merch que ayuda
-            </p>
             <h2 class="mt-5 text-4xl font-black">Llevate un pedacito de Gatarsis.</h2>
             <p class="mt-3 max-w-xl text-[var(--color-text-muted)]">
               Bolsas y llaveros creados para ayudar a sostener los rescates.
@@ -142,7 +136,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
               routerLink="/merch"
               class="button-primary mt-7 inline-flex min-h-12 items-center justify-center rounded-full px-7 font-extrabold shadow-sm"
             >
-              Conocer el merch
+              Ver mas...
               <app-icon name="arrow" class="ml-2 size-4" />
             </a>
           </div>

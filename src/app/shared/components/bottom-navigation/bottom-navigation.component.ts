@@ -12,7 +12,7 @@ import { IconComponent } from '../icon/icon.component';
       class="surface-glass fixed inset-x-0 bottom-0 z-40 border-t px-3 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-2 md:hidden"
       aria-label="Navegación móvil"
     >
-      <div class="mx-auto grid max-w-md grid-cols-4 gap-1.5">
+      <div class="mx-auto grid max-w-md grid-cols-5 gap-1">
         <a
           routerLink="/"
           routerLinkActive="nav-active"
@@ -48,7 +48,19 @@ import { IconComponent } from '../icon/icon.component';
           class="flex min-h-12 flex-col items-center justify-center rounded-full px-2 text-xs font-bold text-[var(--color-text)]"
         >
           <app-icon name="shop" class="size-4" />
-          Tienda@if (cart.totalItems()) { ({{ cart.totalItems() }}) }
+          Tienda
+        </a>
+        <a
+          routerLink="/carrito"
+          routerLinkActive="nav-active"
+          ariaCurrentWhenActive="page"
+          class="relative flex min-h-12 flex-col items-center justify-center rounded-full px-2 text-xs font-bold text-[var(--color-text)]"
+        >
+          <app-icon name="wallet" class="size-4" />
+          Carrito
+          @if (cart.totalItems()) {
+            <span class="absolute right-1 top-0 inline-flex min-w-4 items-center justify-center rounded-full bg-[var(--color-accent)] px-1 text-[10px] leading-4 text-white">{{ cart.totalItems() }}</span>
+          }
         </a>
       </div>
     </nav>
