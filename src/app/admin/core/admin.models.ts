@@ -34,6 +34,7 @@ export interface AdminFlatPage<T> {
 export interface AdminProductMedia {
   id: string;
   productId: string;
+  variantId?: string | null;
   url: string;
   alt: string;
   sortOrder: number;
@@ -117,6 +118,7 @@ export interface CreateAdminProductMediaRequest {
   alt: string;
   sortOrder?: number;
   isCover?: boolean;
+  variantId?: string | null;
 }
 
 export interface UpdateAdminProductMediaRequest {
@@ -124,6 +126,7 @@ export interface UpdateAdminProductMediaRequest {
   alt?: string;
   sortOrder?: number;
   isCover?: boolean;
+  variantId?: string | null;
 }
 
 export interface AdminProductListQuery {
@@ -283,6 +286,35 @@ export interface AdminOrderDetail {
   paymentPreference: AdminPaymentPreference | null;
   payments: AdminPaymentDetail[];
   inventoryMovements: AdminInventoryMovement[];
+  fulfillment: AdminOrderFulfillment | null;
+}
+
+export type AdminFulfillmentStatus = 'PENDING' | 'READY_FOR_PICKUP' | 'COMPLETED';
+
+export interface AdminOrderFulfillment {
+  id: string;
+  method: 'PICKUP';
+  status: AdminFulfillmentStatus;
+  customer: { name: string; email: string; phone: string };
+  customerNote: string | null;
+  adminNote: string | null;
+  readyAt: string | null;
+  completedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UpdateAdminFulfillmentRequest {
+  status: 'READY_FOR_PICKUP' | 'COMPLETED';
+  adminNote?: string | null;
+}
+
+export interface UpdateAdminFulfillmentResponse {
+  id: string;
+  status: AdminFulfillmentStatus;
+  adminNote: string | null;
+  readyAt: string | null;
+  completedAt: string | null;
 }
 
 export interface AdminPaymentListQuery {

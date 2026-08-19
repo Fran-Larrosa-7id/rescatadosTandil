@@ -1,4 +1,5 @@
 import { Component, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { finalize, switchMap, tap } from 'rxjs';
 import { AppFooterComponent } from '../../../shared/components/app-footer/app-footer.component';
@@ -18,7 +19,7 @@ type CheckoutState =
 
 @Component({
   standalone: true,
-  imports: [RouterLink, AppHeaderComponent, AppFooterComponent, BottomNavigationComponent],
+  imports: [FormsModule, RouterLink, AppHeaderComponent, AppFooterComponent, BottomNavigationComponent],
   template: `
     <app-header />
     <main id="contenido" class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
@@ -60,6 +61,29 @@ type CheckoutState =
             <p class="mt-3 text-sm text-[var(--color-text-muted)]">
               El stock se reserva recién al iniciar el pago.
             </p>
+            <section class="mt-6 border-t border-[var(--color-border)] pt-5">
+              <p class="text-base font-black">Datos para coordinar el retiro</p>
+              <p class="mt-1 text-sm font-bold text-[var(--color-accent)]">Retiro coordinado</p>
+              <p class="mt-2 text-sm text-[var(--color-text-muted)]">Una vez confirmado el pago, nos comunicaremos con vos para coordinar el retiro.</p>
+              <div class="mt-4 grid gap-3">
+                <label class="grid gap-1 text-sm font-bold">Nombre y apellido *
+                  <input class="rounded-xl border border-[var(--color-border)] px-3 py-2 font-normal" [(ngModel)]="customer.name" name="customerName" autocomplete="name" />
+                </label>
+                <label class="grid gap-1 text-sm font-bold">Email *
+                  <input class="rounded-xl border border-[var(--color-border)] px-3 py-2 font-normal" [(ngModel)]="customer.email" name="customerEmail" type="email" autocomplete="email" />
+                </label>
+                <label class="grid gap-1 text-sm font-bold">Teléfono / WhatsApp *
+                  <input class="rounded-xl border border-[var(--color-border)] px-3 py-2 font-normal" [(ngModel)]="customer.phone" name="customerPhone" type="tel" autocomplete="tel" />
+                </label>
+                <label class="grid gap-1 text-sm font-bold">Nota opcional
+                  <textarea class="min-h-20 rounded-xl border border-[var(--color-border)] px-3 py-2 font-normal" [(ngModel)]="customer.note" name="fulfillmentNote"></textarea>
+                </label>
+              </div>
+              <p class="mt-3 text-xs text-[var(--color-text-muted)]">Usaremos estos datos únicamente para coordinar tu pedido.</p>
+              @if (customerError()) {
+                <p class="mt-3 rounded-xl bg-[var(--color-danger-bg)] p-3 text-sm font-bold" role="alert">{{ customerError() }}</p>
+              }
+            </section>
             @if (message()) {
               <p class="mt-4 rounded-xl bg-[var(--color-danger-bg)] p-3 font-bold" role="alert">{{ message() }}</p>
             }
@@ -91,6 +115,8 @@ export class CartPageComponent {
   readonly state = signal<CheckoutState>('IDLE');
   readonly message = signal('');
   readonly reservationText = signal('');
+  readonly customerError = signal('');
+  customer = { name: '', email: '', phone: '', note: '' };
   private attemptKey: string | null = null;
 
   constructor(
@@ -102,10 +128,17 @@ export class CartPageComponent {
     if (!this.cart.items().length || this.state() === 'RESERVING' || this.state() === 'CREATING_PREFERENCE') return;
     this.message.set('');
     this.reservationText.set('');
+    this.customerError.set('');
+    const customer = this.validCustomer();
+    if (!customer) return;
     this.attemptKey = crypto.randomUUID();
     this.state.set('RESERVING');
     this.api
-      .reserve(this.cart.reservePayload(), this.attemptKey)
+      .reserve({
+        ...this.cart.reservePayload(),
+        customer: { name: customer.name, email: customer.email, phone: customer.phone },
+        fulfillment: { method: 'PICKUP', note: customer.note || null },
+      }, this.attemptKey)
       .pipe(
         tap((order) => {
           this.state.set('RESERVED');
@@ -146,6 +179,28 @@ export class CartPageComponent {
 
   money(value: number): string {
     return formatArsFromCents(value);
+  }
+
+  private validCustomer(): { name: string; email: string; phone: string; note: string } | null {
+    const customer = {
+      name: this.customer.name.trim(),
+      email: this.customer.email.trim(),
+      phone: this.customer.phone.trim(),
+      note: this.customer.note.trim(),
+    };
+    if (customer.name.length < 2) {
+      this.customerError.set('Ingresá tu nombre y apellido.');
+      return null;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email)) {
+      this.customerError.set('Ingresá un email válido.');
+      return null;
+    }
+    if (!customer.phone) {
+      this.customerError.set('Ingresá un teléfono o WhatsApp.');
+      return null;
+    }
+    return customer;
   }
 
   protected redirectTo(initPoint: string): void {

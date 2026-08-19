@@ -33,12 +33,20 @@ describe('PublicCommerceApiService', () => {
     ]);
   });
 
-  it('reserves with Idempotency-Key and sends only variantId and quantity', () => {
-    api.reserve({ items: [{ variantId: 'variant-id', quantity: 2 }] }, 'attempt-key').subscribe();
+  it('reserves with Idempotency-Key and sends the fulfillment contract', () => {
+    api.reserve({
+      items: [{ variantId: 'variant-id', quantity: 2 }],
+      customer: { name: 'Ada Lovelace', email: 'ada@example.com', phone: '2494000000' },
+      fulfillment: { method: 'PICKUP', note: null },
+    }, 'attempt-key').subscribe();
     const request = http.expectOne(`${PUBLIC_API_BASE_URL}/checkout/reserve`);
     expect(request.request.method).toBe('POST');
     expect(request.request.headers.get('Idempotency-Key')).toBe('attempt-key');
-    expect(request.request.body).toEqual({ items: [{ variantId: 'variant-id', quantity: 2 }] });
+    expect(request.request.body).toEqual({
+      items: [{ variantId: 'variant-id', quantity: 2 }],
+      customer: { name: 'Ada Lovelace', email: 'ada@example.com', phone: '2494000000' },
+      fulfillment: { method: 'PICKUP', note: null },
+    });
     expect(JSON.stringify(request.request.body)).not.toContain('price');
     request.flush({ orderId: 'order-id', status: 'AWAITING_PAYMENT', totalInCents: 3000, reservationExpiresAt: '2026-01-01T00:10:00Z' });
   });

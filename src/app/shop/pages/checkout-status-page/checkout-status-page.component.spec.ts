@@ -29,12 +29,24 @@ describe('CheckoutStatusPageComponent', () => {
     expect(cart.items().length).toBe(1);
   });
 
+  it('handles lowercase awaiting_payment from the reserve contract', () => {
+    setup('checkout/pending', { external_reference: orderId });
+    const request = http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`);
+    request.flush({ orderId, status: 'awaiting_payment' });
+    fixture.detectChanges();
+    expect(component.status()).toBe('awaiting_payment');
+    expect(component.title()).not.toBe('Pago confirmado');
+    expect(component.description()).toContain('coordinar el retiro');
+    expect(cart.items().length).toBe(1);
+  });
+
   it('shows PAID and clears cart only when backend status is PAID', () => {
     setup('checkout/success', { external_reference: orderId });
     const request = http.expectOne(`${PUBLIC_API_BASE_URL}/orders/${orderId}/status`);
     request.flush({ orderId, status: 'PAID' });
     fixture.detectChanges();
     expect(component.title()).toBe('Pago confirmado');
+    expect(component.description()).toContain('coordinar el retiro');
     expect(cart.items()).toEqual([]);
   });
 

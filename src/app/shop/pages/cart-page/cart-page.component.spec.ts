@@ -35,6 +35,7 @@ describe('CartPageComponent checkout', () => {
       imageUrl: null,
     });
     fixture.detectChanges();
+    component.customer = { name: 'Ada Lovelace', email: 'ada@example.com', phone: '249 400 0000', note: 'Llamar por la tarde' };
   });
 
   afterEach(() => {
@@ -52,8 +53,12 @@ describe('CartPageComponent checkout', () => {
     const requests = http.match(`${PUBLIC_API_BASE_URL}/checkout/reserve`);
     expect(requests.length).toBe(1);
     expect(requests[0].request.headers.has('Idempotency-Key')).toBe(true);
-    expect(requests[0].request.body).toEqual({ items: [{ variantId: 'variant-id', quantity: 2 }] });
-    requests[0].flush({ orderId: 'order-id', status: 'AWAITING_PAYMENT', totalInCents: 200, reservationExpiresAt: '2026-01-01T00:10:00Z' });
+    expect(requests[0].request.body).toEqual({
+      items: [{ variantId: 'variant-id', quantity: 2 }],
+      customer: { name: 'Ada Lovelace', email: 'ada@example.com', phone: '249 400 0000' },
+      fulfillment: { method: 'PICKUP', note: 'Llamar por la tarde' },
+    });
+    requests[0].flush({ orderId: 'order-id', status: 'awaiting_payment', totalInCents: 200, reservationExpiresAt: '2026-01-01T00:10:00Z' });
     const preference = http.expectOne(`${PUBLIC_API_BASE_URL}/checkout/order-id/mercado-pago/preference`);
     preference.flush({ orderId: 'order-id', preferenceId: 'provider-preference', initPoint: 'https://mp.test/init' });
     expect(redirect).toHaveBeenCalledWith('https://mp.test/init');
@@ -65,5 +70,40 @@ describe('CartPageComponent checkout', () => {
     reserve.flush({ code: 'OUT_OF_STOCK' }, { status: 409, statusText: 'Conflict' });
     http.expectNone((request) => request.url.includes('/mercado-pago/preference'));
     expect(component.state()).toBe('ERROR');
+  });
+
+  it('does not reserve when the name is empty or whitespace only', () => {
+    component.customer.name = '   ';
+    component.checkout();
+    http.expectNone(`${PUBLIC_API_BASE_URL}/checkout/reserve`);
+    expect(component.customerError()).toBe('Ingresá tu nombre y apellido.');
+  });
+
+  it('does not reserve with an invalid email or missing phone', () => {
+    component.customer.email = 'no-es-email';
+    component.checkout();
+    http.expectNone(`${PUBLIC_API_BASE_URL}/checkout/reserve`);
+    expect(component.customerError()).toBe('Ingresá un email válido.');
+
+    component.customer.email = 'ada@example.com';
+    component.customer.phone = '   ';
+    component.checkout();
+    http.expectNone(`${PUBLIC_API_BASE_URL}/checkout/reserve`);
+    expect(component.customerError()).toBe('Ingresá un teléfono o WhatsApp.');
+  });
+
+  it('trims customer data in the reserve payload and never persists it in the cart', () => {
+    component.customer = { name: ' Ada Lovelace ', email: ' ada@example.com ', phone: ' 249 400 0000 ', note: ' retiro por la tarde ' };
+    component.checkout();
+    const request = http.expectOne(`${PUBLIC_API_BASE_URL}/checkout/reserve`);
+    expect(request.request.body).toEqual({
+      items: [{ variantId: 'variant-id', quantity: 2 }],
+      customer: { name: 'Ada Lovelace', email: 'ada@example.com', phone: '249 400 0000' },
+      fulfillment: { method: 'PICKUP', note: 'retiro por la tarde' },
+    });
+    const persistedCart = localStorage.getItem('gatarsis.shop.cart.v1') ?? '';
+    expect(persistedCart).not.toContain('Ada Lovelace');
+    expect(persistedCart).not.toContain('ada@example.com');
+    request.flush({ code: 'OUT_OF_STOCK' }, { status: 409, statusText: 'Conflict' });
   });
 });

@@ -1,7 +1,8 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, provideRouter } from '@angular/router';
+import { ActivatedRoute, Router, provideRouter } from '@angular/router';
+import { vi } from 'vitest';
 import { ADMIN_API_BASE_URL } from '../core/admin-api.config';
 import { AdminProductDetail } from '../core/admin.models';
 import { AdminProductEditorComponent } from './admin-product-editor.component';
@@ -10,6 +11,7 @@ describe('AdminProductEditorComponent ProductMedia UX', () => {
   let fixture: ComponentFixture<AdminProductEditorComponent>;
   let component: AdminProductEditorComponent;
   let http: HttpTestingController;
+  let router: Router;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -25,6 +27,8 @@ describe('AdminProductEditorComponent ProductMedia UX', () => {
     fixture = TestBed.createComponent(AdminProductEditorComponent);
     component = fixture.componentInstance;
     http = TestBed.inject(HttpTestingController);
+    router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
     fixture.detectChanges();
     component.id = 'product-id';
   });
@@ -130,9 +134,190 @@ describe('AdminProductEditorComponent ProductMedia UX', () => {
     expect(component.mediaError()).toBe('alt must be longer than or equal to 1 characters');
     expect(component.notice()).toBeNull();
   });
+
+  it('does not create a new product when initial image URL is valid but description is empty', () => {
+    component.id = null;
+    component.model = validProductForm();
+    component.initialMedia.set({
+      id: null,
+      url: 'https://cdn.test/taza.jpg',
+      alt: '',
+      sortOrder: 0,
+      isCover: true,
+    });
+
+    component.saveProduct();
+
+    expect(component.initialMediaError()).toBe('IngresÃ¡ una descripciÃ³n de la imagen.');
+    http.expectNone(`${ADMIN_API_BASE_URL}/products`);
+  });
+
+  it('does not create a new product when initial image description contains only spaces', () => {
+    component.id = null;
+    component.model = validProductForm();
+    component.initialMedia.set({
+      id: null,
+      url: 'https://cdn.test/taza.jpg',
+      alt: '   ',
+      sortOrder: 0,
+      isCover: true,
+    });
+
+    component.saveProduct();
+
+    expect(component.initialMediaError()).toBe('IngresÃ¡ una descripciÃ³n de la imagen.');
+    http.expectNone(`${ADMIN_API_BASE_URL}/products`);
+  });
+
+  it('creates a product and then posts the initial image with the real media contract', () => {
+    component.id = null;
+    component.model = validProductForm();
+    component.initialMedia.set({
+      id: null,
+      url: 'https://cdn.test/taza.jpg',
+      alt: 'Taza Gatarsis color lila con logo blanco',
+      sortOrder: 3,
+      isCover: true,
+    });
+
+    component.saveProduct();
+
+    const productRequest = http.expectOne(`${ADMIN_API_BASE_URL}/products`);
+    expect(productRequest.request.method).toBe('POST');
+    productRequest.flush(productDetail());
+
+    const mediaRequest = http.expectOne(`${ADMIN_API_BASE_URL}/products/product-id/media`);
+    expect(mediaRequest.request.method).toBe('POST');
+    expect(mediaRequest.request.body).toEqual({
+      url: 'https://cdn.test/taza.jpg',
+      alt: 'Taza Gatarsis color lila con logo blanco',
+      sortOrder: 3,
+      isCover: true,
+    });
+    mediaRequest.flush({
+      id: 'media-id',
+      productId: 'product-id',
+      url: 'https://cdn.test/taza.jpg',
+      alt: 'Taza Gatarsis color lila con logo blanco',
+      sortOrder: 3,
+      isCover: true,
+      createdAt: '2026-01-01T00:00:00Z',
+    });
+    http.expectOne(`${ADMIN_API_BASE_URL}/products/product-id`).flush(productDetail());
+  });
+
+  it('sends the initial image description trimmed in the alt contract field', () => {
+    component.id = null;
+    component.model = validProductForm();
+    component.initialMedia.set({
+      id: null,
+      url: 'https://cdn.test/taza.jpg',
+      alt: '  Taza Gatarsis color lila con logo blanco  ',
+      sortOrder: 3,
+      isCover: true,
+    });
+
+    component.saveProduct();
+
+    http.expectOne(`${ADMIN_API_BASE_URL}/products`).flush(productDetail());
+    const mediaRequest = http.expectOne(`${ADMIN_API_BASE_URL}/products/product-id/media`);
+    expect(mediaRequest.request.body).toEqual({
+      url: 'https://cdn.test/taza.jpg',
+      alt: 'Taza Gatarsis color lila con logo blanco',
+      sortOrder: 3,
+      isCover: true,
+    });
+    mediaRequest.flush({
+      id: 'media-id',
+      productId: 'product-id',
+      url: 'https://cdn.test/taza.jpg',
+      alt: 'Taza Gatarsis color lila con logo blanco',
+      sortOrder: 3,
+      isCover: true,
+      createdAt: '2026-01-01T00:00:00Z',
+    });
+    http.expectOne(`${ADMIN_API_BASE_URL}/products/product-id`).flush(productDetail());
+  });
+
+  it('keeps product media section scoped to general media only', () => {
+    component.product.set(
+      productDetail({
+        media: [
+          {
+            id: 'general-media',
+            productId: 'product-id',
+            variantId: null,
+            url: 'https://cdn.test/general.jpg',
+            alt: 'General',
+            sortOrder: 0,
+            isCover: true,
+            createdAt: '2026-01-01T00:00:00Z',
+          },
+          {
+            id: 'variant-media',
+            productId: 'product-id',
+            variantId: 'variant-id',
+            url: 'https://cdn.test/variant.jpg',
+            alt: 'Variante',
+            sortOrder: 0,
+            isCover: true,
+            createdAt: '2026-01-01T00:00:00Z',
+          },
+        ],
+      }),
+    );
+
+    expect(component.generalMedia().map((item) => item.id)).toEqual(['general-media']);
+    expect(component.variantMedia('variant-id').map((item) => item.id)).toEqual(['variant-media']);
+  });
+
+  it('creates variant media with the current variant id and no manual UUID field', () => {
+    component.media.set({
+      id: null,
+      variantId: 'variant-id',
+      url: 'https://cdn.test/lila.jpg',
+      alt: 'Llavero Gatarsis color lila',
+      sortOrder: 1,
+      isCover: true,
+    });
+
+    component.saveMedia();
+
+    const request = http.expectOne(`${ADMIN_API_BASE_URL}/products/product-id/media`);
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({
+      url: 'https://cdn.test/lila.jpg',
+      alt: 'Llavero Gatarsis color lila',
+      sortOrder: 1,
+      isCover: true,
+      variantId: 'variant-id',
+    });
+    request.flush({
+      id: 'media-id',
+      productId: 'product-id',
+      variantId: 'variant-id',
+      url: 'https://cdn.test/lila.jpg',
+      alt: 'Llavero Gatarsis color lila',
+      sortOrder: 1,
+      isCover: true,
+      createdAt: '2026-01-01T00:00:00Z',
+    });
+    http.expectOne(`${ADMIN_API_BASE_URL}/products/product-id`).flush(productDetail());
+  });
 });
 
-function productDetail(): AdminProductDetail {
+function validProductForm() {
+  return {
+    name: 'Producto',
+    slug: 'producto',
+    shortDescription: '',
+    featured: false,
+    sortOrder: 0,
+    active: true,
+  };
+}
+
+function productDetail(partial: Partial<AdminProductDetail> = {}): AdminProductDetail {
   return {
     id: 'product-id',
     name: 'Producto',
@@ -145,5 +330,6 @@ function productDetail(): AdminProductDetail {
     updatedAt: '2026-01-01T00:00:00Z',
     variants: [],
     media: [],
+    ...partial,
   };
 }

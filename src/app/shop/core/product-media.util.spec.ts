@@ -1,5 +1,5 @@
 import { PublicProduct } from './commerce.models';
-import { productPriceLabel, selectCoverMedia } from './product-media.util';
+import { galleryForVariant, productPriceLabel, selectCoverMedia, selectVariantDisplayMedia } from './product-media.util';
 
 describe('public product helpers', () => {
   it('selects cover media first, then sort order fallback', () => {
@@ -14,6 +14,26 @@ describe('public product helpers', () => {
     expect(selectCoverMedia(makeProduct({ media: [] }))).toBeNull();
   });
 
+  it('uses variant media as catalog fallback only when product general media is missing', () => {
+    const product = makeProduct({
+      media: [],
+      variantMedia: [[{ id: 'variant-cover', url: 'variant.jpg', alt: 'Variant', sortOrder: 1, isCover: true }]],
+    });
+
+    expect(selectCoverMedia(product)?.id).toBe('variant-cover');
+  });
+
+  it('builds variant gallery with specific media and falls back to product media', () => {
+    const product = makeProduct({
+      media: [{ id: 'general', url: 'general.jpg', alt: 'General', sortOrder: 0, isCover: true }],
+      variantMedia: [[{ id: 'specific', url: 'specific.jpg', alt: 'Specific', sortOrder: 0, isCover: true }], []],
+    });
+
+    expect(galleryForVariant(product, product.variants[0]).map((media) => media.id)).toEqual(['specific']);
+    expect(galleryForVariant(product, product.variants[1]).map((media) => media.id)).toEqual(['general']);
+    expect(selectVariantDisplayMedia(product, product.variants[0])?.id).toBe('specific');
+  });
+
   it('shows exact price or Desde without averaging variants', () => {
     expect(productPriceLabel(makeProduct({ prices: [1500000, 1500000] }), money)).toBe('$15000');
     expect(productPriceLabel(makeProduct({ prices: [2500000, 1500000] }), money)).toBe('Desde $15000');
@@ -24,7 +44,9 @@ function money(value: number): string {
   return `$${value / 100}`;
 }
 
-function makeProduct(partial: Partial<PublicProduct> & { prices?: number[] }): PublicProduct {
+function makeProduct(
+  partial: Partial<PublicProduct> & { prices?: number[]; variantMedia?: PublicProduct['variants'][number]['media'][] },
+): PublicProduct {
   return {
     id: 'product-id',
     slug: 'producto',
@@ -38,6 +60,7 @@ function makeProduct(partial: Partial<PublicProduct> & { prices?: number[] }): P
       size: null,
       priceInCents: price,
       availableStock: 1,
+      media: partial.variantMedia?.[index],
     })),
   };
 }

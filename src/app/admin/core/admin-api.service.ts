@@ -31,6 +31,8 @@ import {
   ResolveAdminPaymentReviewRequest,
   UpdateAdminProductMediaRequest,
   UpdateAdminProductRequest,
+  UpdateAdminFulfillmentRequest,
+  UpdateAdminFulfillmentResponse,
   UpdateAdminVariantRequest,
 } from './admin.models';
 
@@ -140,6 +142,16 @@ export class AdminApiService {
 
   order(orderId: string): Observable<AdminOrderDetail> {
     return this.http.get<AdminOrderDetail>(`${ADMIN_API_BASE_URL}/orders/${orderId}`);
+  }
+
+  updateFulfillment(
+    orderId: string,
+    body: UpdateAdminFulfillmentRequest,
+  ): Observable<UpdateAdminFulfillmentResponse> {
+    return this.http.patch<UpdateAdminFulfillmentResponse>(
+      `${ADMIN_API_BASE_URL}/orders/${orderId}/fulfillment`,
+      body,
+    );
   }
 
   payments(query: AdminPaymentListQuery = {}): Observable<AdminPaginatedResponse<AdminPaymentListItem>> {

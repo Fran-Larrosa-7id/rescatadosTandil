@@ -41,6 +41,7 @@ interface VariantForm {
 
 interface MediaForm {
   id: string | null;
+  variantId?: string | null;
   url: string;
   alt: string;
   sortOrder: number;
@@ -98,11 +99,81 @@ interface MediaForm {
             </div>
           </div>
           <div class="section-actions">
-            <button class="button button-primary" [disabled]="form.invalid || saving()">
+            <button class="button button-primary" [disabled]="form.invalid || saving() || initialMediaInvalid()">
               {{ saving() ? 'Guardando...' : 'Guardar información' }}
             </button>
           </div>
         </section>
+
+        @if (!id) {
+          <section class="editor-section">
+            <div class="section-heading">
+              <h2>Imagen inicial</h2>
+              <p>Opcional. Se agrega al producto apenas se crea.</p>
+            </div>
+            <div class="media-form">
+              <div class="form-grid">
+                <label class="wide">
+                  URL
+                  <input
+                    name="initialMediaUrl"
+                    type="url"
+                    [ngModel]="initialMedia().url"
+                    (ngModelChange)="updateInitialMedia('url', $event)"
+                    placeholder="https://res.cloudinary.com/.../producto.jpg"
+                  />
+                </label>
+                <label class="wide">
+                  Descripción de la imagen
+                  <input
+                    name="initialMediaDescription"
+                    [ngModel]="initialMedia().alt"
+                    (ngModelChange)="updateInitialMedia('alt', $event)"
+                    placeholder="Taza Gatarsis color lila con logo blanco"
+                  />
+                  <small>Describe brevemente lo que aparece en la foto. Se usa para accesibilidad si la imagen no puede verse.</small>
+                </label>
+                <label>
+                  Orden
+                  <input
+                    name="initialMediaSortOrder"
+                    type="number"
+                    [ngModel]="initialMedia().sortOrder"
+                    (ngModelChange)="updateInitialMedia('sortOrder', $event)"
+                  />
+                </label>
+                <label class="check align-end">
+                  <input
+                    name="initialMediaCover"
+                    type="checkbox"
+                    [ngModel]="initialMedia().isCover"
+                    (ngModelChange)="updateInitialMedia('isCover', $event)"
+                  />
+                  Usar como portada
+                </label>
+              </div>
+              <div class="media-preview draft">
+                @if (initialMedia().url) {
+                  <img
+                    [src]="initialMedia().url"
+                    [alt]="initialMedia().alt || 'Vista previa de imagen'"
+                    (error)="initialImageFailed.set(true)"
+                  />
+                }
+                @if (initialImageFailed()) {
+                  <span>No se pudo cargar la imagen.</span>
+                } @else if (!initialMedia().url) {
+                  <span>Vista previa</span>
+                }
+              </div>
+            </div>
+            @if (initialMediaError() || initialMediaValidationMessage()) {
+              <p class="feedback error" aria-live="polite">
+                {{ initialMediaError() || initialMediaValidationMessage() }}
+              </p>
+            }
+          </section>
+        }
       </form>
 
       @if (id) {
@@ -119,6 +190,7 @@ interface MediaForm {
               <table>
                 <thead>
                   <tr>
+                    <th>Foto</th>
                     <th>Variante</th>
                     <th>SKU</th>
                     <th>Precio</th>
@@ -131,6 +203,15 @@ interface MediaForm {
                 <tbody>
                   @for (item of product()!.variants; track item.id) {
                     <tr>
+                      <td>
+                        <div class="media-preview thumb">
+                          @if (variantPreview(item); as preview) {
+                            <img [src]="preview.url" [alt]="preview.alt" (error)="markImageFailed(preview.id)" />
+                          } @else {
+                            <span>Sin foto</span>
+                          }
+                        </div>
+                      </td>
                       <td>{{ item.name }}</td>
                       <td><code>{{ item.sku }}</code></td>
                       <td>{{ ars(item.priceInCents) }}</td>
@@ -151,14 +232,14 @@ interface MediaForm {
         <section class="editor-section">
           <div class="section-heading inline-heading">
             <div>
-              <h2>Imágenes</h2>
-              <p>Usá URLs públicas y descripciones claras.</p>
+              <h2>Imágenes del producto</h2>
+              <p>Se muestran como galería general y sirven de respaldo para variantes sin imágenes propias.</p>
             </div>
             <button type="button" class="button button-secondary" (click)="newMedia()">Agregar imagen</button>
           </div>
-          @if (product()?.media?.length) {
+          @if (generalMedia().length) {
             <div class="media-grid">
-              @for (item of product()!.media; track item.id) {
+              @for (item of generalMedia(); track item.id) {
                 <article class="media-card">
                   <div class="media-preview">
                     @if (failedImages().has(item.id)) {
@@ -171,7 +252,7 @@ interface MediaForm {
                     <strong>{{ item.alt }}</strong>
                     <span>Orden {{ item.sortOrder }}</span>
                     @if (item.isCover) {
-                      <span class="cover-label">Portada</span>
+                      <span class="cover-label">Portada del producto</span>
                     }
                   </div>
                   <div class="media-actions">
@@ -204,6 +285,45 @@ interface MediaForm {
               <label>Orden<input [(ngModel)]="variant()!.sortOrder" name="variantSortOrder" type="number" /></label>
               <label class="check align-end"><input [(ngModel)]="variant()!.active" name="variantActive" type="checkbox" /> Activa</label>
             </div>
+            @if (variant()!.id) {
+              <section class="variant-media-panel">
+                <div class="section-heading inline-heading">
+                  <div>
+                    <h3>Imágenes de esta variante</h3>
+                    <p>Usalas cuando la variante cambia visualmente el producto.</p>
+                  </div>
+                  <button type="button" class="button button-secondary" (click)="newMedia(variant()!.id!)">Agregar imagen</button>
+                </div>
+                @if (variantMedia(variant()!.id!).length) {
+                  <div class="media-grid compact">
+                    @for (item of variantMedia(variant()!.id!); track item.id) {
+                      <article class="media-card">
+                        <div class="media-preview">
+                          @if (failedImages().has(item.id)) {
+                            <span>No se pudo cargar la imagen.</span>
+                          } @else {
+                            <img [src]="item.url" [alt]="item.alt" (error)="markImageFailed(item.id)" />
+                          }
+                        </div>
+                        <div class="media-copy">
+                          <strong>{{ item.alt }}</strong>
+                          <span>Orden {{ item.sortOrder }}</span>
+                          @if (item.isCover) {
+                            <span class="cover-label">Portada de esta variante</span>
+                          }
+                        </div>
+                        <div class="media-actions">
+                          <button type="button" (click)="editMedia(item)">Editar</button>
+                          <button type="button" class="danger-action" (click)="deleteMedia(item)">Eliminar</button>
+                        </div>
+                      </article>
+                    }
+                  </div>
+                } @else {
+                  <p class="empty compact">Esta variante todavía no tiene imágenes propias.</p>
+                }
+              </section>
+            }
             <div class="actions">
               <button type="button" class="button button-quiet" (click)="variant.set(null)">Cancelar</button>
               <button class="button button-primary">Guardar variante</button>
@@ -221,7 +341,7 @@ interface MediaForm {
             </header>
             <div class="media-form">
               <div class="form-grid">
-                <label class="wide">URL<input [(ngModel)]="media()!.url" name="mediaUrl" type="url" required /></label>
+                <label class="wide">URL de la imagen<input [(ngModel)]="media()!.url" name="mediaUrl" type="url" required /></label>
                 <label class="wide">
                   Descripción de la imagen
                   <input
@@ -233,7 +353,10 @@ interface MediaForm {
                   <small>Describe brevemente lo que aparece en la foto. Se usa para accesibilidad si la imagen no puede verse.</small>
                 </label>
                 <label>Orden<input [(ngModel)]="media()!.sortOrder" name="mediaSortOrder" type="number" /></label>
-                <label class="check align-end"><input [(ngModel)]="media()!.isCover" name="mediaCover" type="checkbox" /> Usar como portada</label>
+                <label class="check align-end">
+                  <input [(ngModel)]="media()!.isCover" name="mediaCover" type="checkbox" />
+                  {{ media()!.variantId ? 'Portada de esta variante' : 'Portada del producto' }}
+                </label>
               </div>
               <div class="media-preview draft">
                 @if (media()!.url) {
@@ -265,10 +388,13 @@ export class AdminProductEditorComponent implements OnInit {
   readonly product = signal<AdminProductDetail | null>(null);
   readonly variant = signal<VariantForm | null>(null);
   readonly media = signal<MediaForm | null>(null);
+  readonly initialMedia = signal<MediaForm>(defaultInitialMedia());
   readonly notice = signal<AdminFeedback | null>(null);
   readonly mediaError = signal('');
+  readonly initialMediaError = signal('');
   readonly failedImages = signal(new Set<string>());
   readonly draftImageFailed = signal(false);
+  readonly initialImageFailed = signal(false);
   model: ProductForm = {
     name: '',
     slug: '',
@@ -293,6 +419,18 @@ export class AdminProductEditorComponent implements OnInit {
     return formatArsFromCents(value);
   }
 
+  generalMedia(): AdminProductMedia[] {
+    return this.sortedMedia(this.product()?.media.filter((item) => !item.variantId) ?? []);
+  }
+
+  variantMedia(variantId: string): AdminProductMedia[] {
+    return this.sortedMedia(this.product()?.media.filter((item) => item.variantId === variantId) ?? []);
+  }
+
+  variantPreview(variant: AdminProductVariant): AdminProductMedia | null {
+    return this.coverFrom(this.variantMedia(variant.id)) ?? this.coverFrom(this.generalMedia());
+  }
+
   markDirty(): void {
     this.dirty.set(true);
   }
@@ -302,8 +440,13 @@ export class AdminProductEditorComponent implements OnInit {
   }
 
   saveProduct(): void {
+    if (!this.id && this.initialMediaInvalid()) {
+      this.initialMediaError.set(this.initialMediaValidationMessage());
+      return;
+    }
     this.saving.set(true);
     const request = this.id ? this.updateRequest() : this.createRequest();
+    const initialMedia = this.id ? null : this.initialMediaBody();
     const operation = this.id
       ? this.api.updateProduct(this.id, request as UpdateAdminProductRequest)
       : this.api.createProduct(request as CreateAdminProductRequest);
@@ -312,6 +455,25 @@ export class AdminProductEditorComponent implements OnInit {
         const isNew = !this.id;
         this.id = saved.id;
         this.dirty.set(false);
+        if (isNew && initialMedia) {
+          this.api.createMedia(saved.id, initialMedia).subscribe({
+            next: () => {
+              this.initialMedia.set(defaultInitialMedia());
+              this.initialMediaError.set('');
+              this.feedback('success', 'Producto creado con imagen.');
+              void this.router.navigate(['/admin/products', saved.id]);
+              this.loadProduct();
+            },
+            error: (error: unknown) => {
+              this.initialMediaError.set(mediaErrorMessage(error));
+              this.feedback('success', 'Producto creado. RevisÃ¡ la imagen inicial.');
+              void this.router.navigate(['/admin/products', saved.id]);
+              this.loadProduct();
+            },
+            complete: () => this.saving.set(false),
+          });
+          return;
+        }
         this.feedback('success', isNew ? 'Producto creado.' : 'Producto actualizado.');
         if (isNew) void this.router.navigate(['/admin/products', saved.id]);
         this.loadProduct();
@@ -320,8 +482,32 @@ export class AdminProductEditorComponent implements OnInit {
         this.feedback('error', adminErrorMessage(error, 'No pudimos guardar los cambios.'));
         this.saving.set(false);
       },
-      complete: () => this.saving.set(false),
+      complete: () => {
+        if (!initialMedia) this.saving.set(false);
+      },
     });
+  }
+
+  updateInitialMedia(field: keyof MediaForm, value: string | number | boolean): void {
+    this.initialMedia.update((draft) => ({
+      ...draft,
+      [field]: field === 'sortOrder' ? Number(value) : value,
+    }));
+    this.initialMediaError.set('');
+    if (field === 'url') this.initialImageFailed.set(false);
+    this.markDirty();
+  }
+
+  initialMediaInvalid(): boolean {
+    return !!this.initialMediaValidationMessage();
+  }
+
+  initialMediaValidationMessage(): string {
+    if (this.id || !this.initialMediaRequested()) return '';
+    const draft = this.initialMedia();
+    if (!draft.url.trim()) return 'IngresÃ¡ una URL vÃ¡lida para la imagen.';
+    if (draft.alt.trim().length < 1) return 'IngresÃ¡ una descripciÃ³n de la imagen.';
+    return '';
   }
 
   newVariant(): void {
@@ -384,10 +570,10 @@ export class AdminProductEditorComponent implements OnInit {
     });
   }
 
-  newMedia(): void {
+  newMedia(variantId: string | null = null): void {
     this.draftImageFailed.set(false);
     this.mediaError.set('');
-    this.media.set({ id: null, url: '', alt: '', sortOrder: 0, isCover: false });
+    this.media.set({ id: null, variantId, url: '', alt: '', sortOrder: 0, isCover: false });
   }
 
   editMedia(item: AdminProductMedia): void {
@@ -395,6 +581,7 @@ export class AdminProductEditorComponent implements OnInit {
     this.mediaError.set('');
     this.media.set({
       id: item.id,
+      variantId: item.variantId ?? null,
       url: item.url,
       alt: item.alt,
       sortOrder: item.sortOrder,
@@ -425,6 +612,7 @@ export class AdminProductEditorComponent implements OnInit {
       sortOrder: draft.sortOrder,
       isCover: draft.isCover,
     };
+    if (!draft.id && draft.variantId) body.variantId = draft.variantId;
     const operation = draft.id
       ? this.api.updateMedia(draft.id, body as UpdateAdminProductMediaRequest)
       : this.api.createMedia(this.id, body);
@@ -503,6 +691,34 @@ export class AdminProductEditorComponent implements OnInit {
       sortOrder: this.model.sortOrder,
     };
   }
+
+  private initialMediaRequested(): boolean {
+    const draft = this.initialMedia();
+    return !!draft.url.trim() || !!draft.alt.trim();
+  }
+
+  private initialMediaBody(): CreateAdminProductMediaRequest | null {
+    if (!this.initialMediaRequested()) return null;
+    const draft = this.initialMedia();
+    return {
+      url: draft.url.trim(),
+      alt: draft.alt.trim(),
+      sortOrder: draft.sortOrder,
+      isCover: draft.isCover,
+    };
+  }
+
+  private sortedMedia(media: AdminProductMedia[]): AdminProductMedia[] {
+    return [...media].sort((a, b) => a.sortOrder - b.sortOrder);
+  }
+
+  private coverFrom(media: AdminProductMedia[]): AdminProductMedia | null {
+    return media.find((item) => item.isCover) ?? media[0] ?? null;
+  }
+}
+
+function defaultInitialMedia(): MediaForm {
+  return { id: null, variantId: null, url: '', alt: '', sortOrder: 0, isCover: true };
 }
 
 function nullable(value: string): string | null {

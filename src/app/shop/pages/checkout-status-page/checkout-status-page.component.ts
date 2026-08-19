@@ -124,6 +124,7 @@ export class CheckoutStatusPageComponent implements OnInit, OnDestroy {
         return 'Pago confirmado';
       case 'PAYMENT_PENDING':
       case 'AWAITING_PAYMENT':
+      case 'awaiting_payment':
         return routeKind(this.route) === 'pending' ? 'Tu pago está pendiente' : 'Estamos confirmando tu pago';
       case 'EXPIRED':
         return 'La reserva venció';
@@ -141,10 +142,11 @@ export class CheckoutStatusPageComponent implements OnInit, OnDestroy {
   description(): string {
     switch (this.status()) {
       case 'PAID':
-        return 'Gracias por ser parte del cambio. Tu compra ayuda a seguir sosteniendo tratamientos, alimento y cuidados.';
+        return 'Gracias por ser parte del cambio. Vamos a comunicarnos con vos para coordinar el retiro de tu pedido.';
       case 'PAYMENT_PENDING':
       case 'AWAITING_PAYMENT':
-        return 'Todavía no recibimos una confirmación definitiva. Vamos a seguir consultando el backend.';
+      case 'awaiting_payment':
+        return 'Estamos esperando la confirmación del pago. Cuando se confirme podremos coordinar el retiro.';
       case 'EXPIRED':
         return 'El carrito queda disponible para intentar una compra nueva con stock actualizado.';
       case 'CANCELLED':
@@ -159,7 +161,7 @@ export class CheckoutStatusPageComponent implements OnInit, OnDestroy {
   }
 
   canRetryPayment(): boolean {
-    return this.status() === 'AWAITING_PAYMENT' || this.status() === 'PAYMENT_PENDING';
+    return this.status() === 'AWAITING_PAYMENT' || this.status() === 'PAYMENT_PENDING' || this.status() === 'awaiting_payment';
   }
 
   private handleStatus(response: PublicOrderStatusResponse): void {

@@ -50,6 +50,9 @@ import { AdminOrderDetail, AdminOrderListItem, AdminOrderStatus } from '../core/
             </div>
           </dl>
         </section>
+        @if (message()) {
+          <p class="feedback error" role="alert">{{ message() }}</p>
+        }
 
         <section class="content-grid two-columns">
           <article class="panel">
@@ -105,6 +108,42 @@ import { AdminOrderDetail, AdminOrderListItem, AdminOrderStatus } from '../core/
                 <p class="muted">Todavía no hay pagos asociados.</p>
               }
             </div>
+          </article>
+
+          <article class="panel">
+            <div class="section-heading inline-heading">
+              <div>
+                <h2>Entrega</h2>
+                <p>Coordinación de retiro del pedido.</p>
+              </div>
+            </div>
+            @if (orderDetail.fulfillment; as fulfillment) {
+              @if (orderDetail.order.status === 'REFUNDED') {
+                <p class="feedback">Pedido reembolsado</p>
+              }
+              <div class="item-list">
+                <div class="compact-fact"><span>Método</span><strong>{{ fulfillmentMethodLabel(fulfillment.method) }}</strong></div>
+                <div class="compact-fact"><span>Estado</span><strong>{{ fulfillmentStatusLabel(fulfillment.status) }}</strong></div>
+                <div class="compact-fact"><span>Cliente</span><strong>{{ fulfillment.customer.name }}</strong></div>
+                <div class="compact-fact"><span>Contacto</span><strong>{{ fulfillment.customer.email }} · {{ fulfillment.customer.phone }}</strong></div>
+                <div class="compact-fact"><span>Nota del cliente</span><strong>{{ fulfillment.customerNote || '—' }}</strong></div>
+                <div class="compact-fact"><span>Nota interna</span><strong>{{ fulfillment.adminNote || '—' }}</strong></div>
+                @if (fulfillment.readyAt) {
+                  <div class="compact-fact"><span>Listo para retirar</span><strong>{{ date(fulfillment.readyAt) }}</strong></div>
+                }
+                @if (fulfillment.completedAt) {
+                  <div class="compact-fact"><span>Entregado</span><strong>{{ date(fulfillment.completedAt) }}</strong></div>
+                }
+              </div>
+              @if (canMarkReady(orderDetail)) {
+                <button class="button button-primary" type="button" [disabled]="mutationLoading()" (click)="updateFulfillment('READY_FOR_PICKUP')">Marcar listo para retirar</button>
+              }
+              @if (canMarkCompleted(orderDetail)) {
+                <button class="button button-primary" type="button" [disabled]="mutationLoading()" (click)="updateFulfillment('COMPLETED')">Marcar como entregado</button>
+              }
+            } @else {
+              <p class="muted">Este pedido es anterior al sistema de entrega.</p>
+            }
           </article>
         </section>
       } @else {
@@ -199,6 +238,7 @@ export class AdminOrdersComponent implements OnInit {
   readonly loading = signal(true);
   readonly error = signal(false);
   readonly message = signal('');
+  readonly mutationLoading = signal(false);
   status: '' | AdminOrderStatus = '';
   dateFrom = '';
   dateTo = '';
@@ -278,6 +318,7 @@ export class AdminOrdersComponent implements OnInit {
   show(id: string): void {
     this.loading.set(true);
     this.error.set(false);
+    this.message.set('');
     this.api
       .order(id)
       .pipe(finalize(() => this.loading.set(false)))
@@ -308,5 +349,44 @@ export class AdminOrdersComponent implements OnInit {
 
   statusLabel(value: string): string {
     return orderStatusLabel(value);
+  }
+
+  fulfillmentMethodLabel(method: string): string {
+    return method === 'PICKUP' ? 'Retiro coordinado' : method;
+  }
+
+  fulfillmentStatusLabel(status: string): string {
+    return {
+      PENDING: 'Pendiente de preparación',
+      READY_FOR_PICKUP: 'Listo para retirar',
+      COMPLETED: 'Entregado',
+    }[status] ?? status;
+  }
+
+  canMarkReady(detail: AdminOrderDetail): boolean {
+    return detail.order.status === 'PAID' && detail.fulfillment?.status === 'PENDING';
+  }
+
+  canMarkCompleted(detail: AdminOrderDetail): boolean {
+    return detail.order.status !== 'REFUNDED' && detail.fulfillment?.status === 'READY_FOR_PICKUP';
+  }
+
+  updateFulfillment(status: 'READY_FOR_PICKUP' | 'COMPLETED'): void {
+    const detail = this.detail();
+    if (!detail || this.mutationLoading()) return;
+    const confirmation = status === 'READY_FOR_PICKUP'
+      ? '¿Marcar este pedido como listo para retirar?'
+      : '¿Confirmar que el pedido fue entregado?';
+    if (!window.confirm(confirmation)) return;
+
+    this.message.set('');
+    this.mutationLoading.set(true);
+    this.api
+      .updateFulfillment(detail.order.id, { status })
+      .pipe(finalize(() => this.mutationLoading.set(false)))
+      .subscribe({
+        next: () => this.show(detail.order.id),
+        error: (error: unknown) => this.message.set(adminErrorMessage(error, 'No pudimos actualizar la entrega.')),
+      });
   }
 }

@@ -7,7 +7,12 @@ import { BottomNavigationComponent } from '../../../shared/components/bottom-nav
 import { CartStore } from '../../core/cart.store';
 import { PublicProduct, PublicProductMedia, PublicProductVariant } from '../../core/commerce.models';
 import { formatArsFromCents } from '../../core/money.util';
-import { productPriceLabel, selectCoverMedia } from '../../core/product-media.util';
+import {
+  galleryForVariant,
+  productPriceLabel,
+  selectGalleryCover,
+  selectVariantDisplayMedia,
+} from '../../core/product-media.util';
 import { PublicCommerceApiService } from '../../core/public-commerce-api.service';
 
 @Component({
@@ -34,9 +39,9 @@ import { PublicCommerceApiService } from '../../core/public-commerce-api.service
                 <div class="grid h-full place-items-center font-black text-[var(--color-text-muted)]">Gatarsis</div>
               }
             </div>
-            @if (item.media.length > 1) {
+            @if (galleryMedia(item).length > 1) {
               <div class="mt-4 flex gap-3 overflow-auto">
-                @for (media of sortedMedia(item); track media.id) {
+                @for (media of galleryMedia(item); track media.id) {
                   <button
                     type="button"
                     class="size-20 shrink-0 overflow-hidden rounded-xl border border-[var(--color-border)]"
@@ -137,20 +142,23 @@ export class ProductDetailPageComponent implements OnInit {
         next: (products) => {
           const product = products.find((item) => item.slug === slug) ?? null;
           this.product.set(product);
-          this.selectedMedia.set(product ? selectCoverMedia(product) : null);
-          this.selectedVariant.set(product?.variants.find((variant) => variant.availableStock > 0) ?? null);
+          const variant = product?.variants.find((item) => item.availableStock > 0) ?? null;
+          this.selectedVariant.set(variant);
+          this.selectedMedia.set(product ? selectGalleryCover(galleryForVariant(product, variant)) : null);
           this.error.set(!product);
         },
         error: () => this.error.set(true),
       });
   }
 
-  sortedMedia(product: PublicProduct): PublicProductMedia[] {
-    return [...product.media].sort((a, b) => a.sortOrder - b.sortOrder);
+  galleryMedia(product: PublicProduct): PublicProductMedia[] {
+    return galleryForVariant(product, this.selectedVariant());
   }
 
   selectVariant(variant: PublicProductVariant): void {
     this.selectedVariant.set(variant);
+    const product = this.product();
+    this.selectedMedia.set(product ? selectGalleryCover(galleryForVariant(product, variant)) : null);
     this.quantity.set(1);
   }
 
@@ -165,7 +173,7 @@ export class ProductDetailPageComponent implements OnInit {
       unitPriceInCents: variant.priceInCents,
       quantity: this.quantity(),
       availableStock: variant.availableStock,
-      imageUrl: this.selectedMedia()?.url ?? null,
+      imageUrl: selectVariantDisplayMedia(product, variant)?.url ?? null,
     });
     this.added.set(true);
   }

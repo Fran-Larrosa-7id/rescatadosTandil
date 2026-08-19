@@ -8,7 +8,11 @@ export type AdminDomainErrorCode =
   | 'PAYMENT_NOT_REFUNDABLE'
   | 'IDEMPOTENCY_CONFLICT'
   | 'PAYMENT_NOT_FOUND'
-  | 'INVALID_DATE_RANGE';
+  | 'INVALID_DATE_RANGE'
+  | 'ORDER_NOT_PAID'
+  | 'INVALID_FULFILLMENT_TRANSITION'
+  | 'FULFILLMENT_NOT_ALLOWED'
+  | 'FULFILLMENT_NOT_FOUND';
 
 interface DomainErrorBody {
   code?: string;
@@ -23,6 +27,10 @@ const messages: Record<AdminDomainErrorCode, string> = {
   IDEMPOTENCY_CONFLICT: 'La operación ya fue solicitada con una clave de idempotencia diferente.',
   PAYMENT_NOT_FOUND: 'No encontramos el pago solicitado.',
   INVALID_DATE_RANGE: 'La fecha desde no puede ser posterior a la fecha hasta.',
+  ORDER_NOT_PAID: 'El pedido todavía no tiene un pago confirmado.',
+  INVALID_FULFILLMENT_TRANSITION: 'Este cambio de estado ya no es válido.',
+  FULFILLMENT_NOT_ALLOWED: 'No se puede modificar la entrega de este pedido.',
+  FULFILLMENT_NOT_FOUND: 'La entrega no está disponible para este pedido.',
 };
 
 function isDomainErrorBody(value: unknown): value is DomainErrorBody {

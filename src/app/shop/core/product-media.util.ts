@@ -1,8 +1,41 @@
-import { PublicProduct, PublicProductMedia } from './commerce.models';
+import { PublicProduct, PublicProductMedia, PublicProductVariant } from './commerce.models';
 
 export function selectCoverMedia(product: PublicProduct): PublicProductMedia | null {
-  const sorted = [...product.media].sort((a, b) => a.sortOrder - b.sortOrder);
+  const general = selectCoverFromMedia(product.media);
+  if (general) return general;
+  const variantMedia = product.variants
+    .filter((variant) => variant.availableStock > 0)
+    .flatMap((variant) => sortedMedia(variant.media ?? []));
+  return variantMedia.find((item) => item.isCover) ?? variantMedia[0] ?? null;
+}
+
+export function galleryForVariant(
+  product: PublicProduct,
+  variant: PublicProductVariant | null,
+): PublicProductMedia[] {
+  const specific = sortedMedia(variant?.media ?? []);
+  if (specific.length) return specific;
+  return sortedMedia(product.media);
+}
+
+export function selectGalleryCover(media: PublicProductMedia[]): PublicProductMedia | null {
+  const sorted = sortedMedia(media);
   return sorted.find((item) => item.isCover) ?? sorted[0] ?? null;
+}
+
+export function selectVariantDisplayMedia(
+  product: PublicProduct,
+  variant: PublicProductVariant,
+): PublicProductMedia | null {
+  return selectGalleryCover(galleryForVariant(product, variant));
+}
+
+function selectCoverFromMedia(media: PublicProductMedia[]): PublicProductMedia | null {
+  return selectGalleryCover(media);
+}
+
+function sortedMedia(media: PublicProductMedia[]): PublicProductMedia[] {
+  return [...media].sort((a, b) => a.sortOrder - b.sortOrder);
 }
 
 export function activeVariants(product: PublicProduct) {

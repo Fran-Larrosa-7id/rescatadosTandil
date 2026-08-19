@@ -16,6 +16,7 @@ export interface PublicProductVariant {
   size: string | null;
   priceInCents: number;
   availableStock: number;
+  media?: PublicProductMedia[];
 }
 
 export interface PublicProduct {
@@ -29,9 +30,19 @@ export interface PublicProduct {
 
 export interface ReserveCheckoutRequest {
   items: Array<{ variantId: string; quantity: number }>;
+  customer: {
+    name: string;
+    email: string;
+    phone: string;
+  };
+  fulfillment: {
+    method: 'PICKUP';
+    note?: string | null;
+  };
 }
 
 export type PublicOrderStatus =
+  | 'awaiting_payment'
   | 'AWAITING_PAYMENT'
   | 'PAYMENT_PENDING'
   | 'PAID'
