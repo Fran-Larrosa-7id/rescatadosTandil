@@ -280,6 +280,14 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
 button:focus-visible,
 a:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--color-accent), white 35%);

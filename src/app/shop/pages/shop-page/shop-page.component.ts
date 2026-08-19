@@ -39,7 +39,7 @@ import { productPriceLabel, selectCoverMedia } from '../../core/product-media.ut
           @for (product of products(); track product.id) {
             <article class="group border-b border-[var(--color-border)] pb-6">
               <a [routerLink]="['/tienda', product.slug]" class="block" [attr.aria-label]="'Ver producto ' + product.name">
-                <div class="aspect-[4/5] overflow-hidden rounded-2xl bg-[var(--color-surface)]">
+                <div class="aspect-[3/2] overflow-hidden rounded-2xl bg-[var(--color-surface)]">
                   @if (cover(product); as media) {
                     <img
                       class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"

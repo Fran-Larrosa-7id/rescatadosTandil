@@ -37,6 +37,7 @@ interface VariantForm {
   active: boolean;
   sortOrder: number;
   lowStockThreshold: number | null;
+  initialStock: number;
 }
 
 interface MediaForm {
@@ -279,7 +280,18 @@ interface MediaForm {
               <label>Nombre<input [(ngModel)]="variant()!.name" name="variantName" required /></label>
               <label>SKU<input [(ngModel)]="variant()!.sku" name="sku" required /></label>
               <label>Precio (ARS)<input [(ngModel)]="variant()!.price" name="variantPrice" inputmode="decimal" required /></label>
-              <label>Stock mínimo<input [(ngModel)]="variant()!.lowStockThreshold" name="lowStockThreshold" type="number" min="0" /></label>
+              @if (!variant()!.id) {
+                <label>
+                  Stock inicial
+                  <input [(ngModel)]="variant()!.initialStock" name="initialStock" type="number" min="0" step="1" required />
+                  <small>Cantidad disponible al crear la variante.</small>
+                </label>
+              }
+              <label>
+                Stock mínimo
+                <input [(ngModel)]="variant()!.lowStockThreshold" name="lowStockThreshold" type="number" min="0" />
+                <small>Cuando el stock disponible llegue a este valor se considera bajo.</small>
+              </label>
               <label>Color<input [(ngModel)]="variant()!.color" name="color" /></label>
               <label>Talle<input [(ngModel)]="variant()!.size" name="size" /></label>
               <label>Orden<input [(ngModel)]="variant()!.sortOrder" name="variantSortOrder" type="number" /></label>
@@ -521,6 +533,7 @@ export class AdminProductEditorComponent implements OnInit {
       active: true,
       sortOrder: 0,
       lowStockThreshold: null,
+      initialStock: 0,
     });
   }
 
@@ -535,6 +548,7 @@ export class AdminProductEditorComponent implements OnInit {
       active: item.active,
       sortOrder: item.sortOrder,
       lowStockThreshold: item.lowStockThreshold,
+      initialStock: 0,
     });
   }
 
@@ -546,7 +560,7 @@ export class AdminProductEditorComponent implements OnInit {
       this.feedback('error', 'Ingresá un precio válido.');
       return;
     }
-    const body: CreateAdminVariantRequest = {
+    const baseBody: UpdateAdminVariantRequest = {
       sku: draft.sku,
       name: draft.name,
       color: nullable(draft.color),
@@ -556,8 +570,23 @@ export class AdminProductEditorComponent implements OnInit {
       sortOrder: draft.sortOrder,
       lowStockThreshold: draft.lowStockThreshold,
     };
+    if (!draft.id && (!Number.isInteger(Number(draft.initialStock)) || Number(draft.initialStock) < 0)) {
+      this.feedback('error', 'Ingresá un stock inicial entero igual o mayor a cero.');
+      return;
+    }
+    const body: CreateAdminVariantRequest = {
+      sku: draft.sku,
+      name: draft.name,
+      color: nullable(draft.color),
+      size: nullable(draft.size),
+      priceInCents,
+      active: draft.active,
+      sortOrder: draft.sortOrder,
+      lowStockThreshold: draft.lowStockThreshold,
+      initialStock: Number(draft.initialStock),
+    };
     const operation = draft.id
-      ? this.api.updateVariant(draft.id, body as UpdateAdminVariantRequest)
+      ? this.api.updateVariant(draft.id, baseBody)
       : this.api.createVariant(this.id, body);
     operation.subscribe({
       next: () => {

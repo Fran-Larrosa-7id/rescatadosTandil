@@ -67,6 +67,7 @@ describe('AdminApiService contracts', () => {
         active: true,
         sortOrder: 1,
         lowStockThreshold: 2,
+        initialStock: 10,
       })
       .subscribe();
 
@@ -81,6 +82,7 @@ describe('AdminApiService contracts', () => {
       active: true,
       sortOrder: 1,
       lowStockThreshold: 2,
+      initialStock: 10,
     });
     create.flush({ id: 'variant-id', productId: 'product-id', sku: 'SKU-1', name: 'Talle M', color: 'negro', size: 'M', priceInCents: 1500000, active: true, sortOrder: 1, lowStockThreshold: 2, createdAt: '2026-01-01T00:00:00Z', updatedAt: '2026-01-01T00:00:00Z' });
 

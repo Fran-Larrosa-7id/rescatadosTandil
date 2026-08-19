@@ -100,6 +100,7 @@ export interface CreateAdminVariantRequest {
   active?: boolean;
   sortOrder?: number;
   lowStockThreshold?: number | null;
+  initialStock: number;
 }
 
 export interface UpdateAdminVariantRequest {

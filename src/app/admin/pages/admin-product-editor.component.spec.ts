@@ -304,6 +304,48 @@ describe('AdminProductEditorComponent ProductMedia UX', () => {
     });
     http.expectOne(`${ADMIN_API_BASE_URL}/products/product-id`).flush(productDetail());
   });
+
+  it('creates a variant with initialStock and keeps low stock threshold separate', () => {
+    component.newVariant();
+    component.variant.update((draft) => ({
+      ...draft!, name: 'Talle M', sku: 'SKU-M', price: '1500', lowStockThreshold: 2, initialStock: 10,
+    }));
+
+    component.saveVariant();
+
+    const request = http.expectOne(`${ADMIN_API_BASE_URL}/products/product-id/variants`);
+    expect(request.request.body).toEqual({
+      name: 'Talle M', sku: 'SKU-M', priceInCents: 150000, color: null, size: null,
+      sortOrder: 0, lowStockThreshold: 2, active: true, initialStock: 10,
+    });
+    request.flush({ id: 'variant-id', productId: 'product-id', sku: 'SKU-M', name: 'Talle M', color: null, size: null, priceInCents: 150000, active: true, sortOrder: 0, lowStockThreshold: 2, createdAt: '2026-01-01T00:00:00Z', updatedAt: '2026-01-01T00:00:00Z' });
+    http.expectOne(`${ADMIN_API_BASE_URL}/products/product-id`).flush(productDetail());
+  });
+
+  it('does not create a variant with a negative or fractional initial stock', () => {
+    component.newVariant();
+    component.variant.update((draft) => ({ ...draft!, name: 'Talle M', sku: 'SKU-M', price: '1500', initialStock: -1 }));
+    component.saveVariant();
+    expect(component.notice()?.message).toBe('Ingresá un stock inicial entero igual o mayor a cero.');
+    http.expectNone(`${ADMIN_API_BASE_URL}/products/product-id/variants`);
+
+    component.variant.update((draft) => ({ ...draft!, initialStock: 1.5 }));
+    component.saveVariant();
+    http.expectNone(`${ADMIN_API_BASE_URL}/products/product-id/variants`);
+  });
+
+  it('never sends initialStock when editing an existing variant', () => {
+    component.editVariant({
+      id: 'variant-id', productId: 'product-id', sku: 'SKU-M', name: 'Talle M', color: null, size: null,
+      priceInCents: 150000, active: true, sortOrder: 0, lowStockThreshold: 2,
+      createdAt: '2026-01-01T00:00:00Z', updatedAt: '2026-01-01T00:00:00Z',
+    });
+    component.saveVariant();
+    const request = http.expectOne(`${ADMIN_API_BASE_URL}/variants/variant-id`);
+    expect(request.request.body).not.toHaveProperty('initialStock');
+    request.flush({ id: 'variant-id', productId: 'product-id', sku: 'SKU-M', name: 'Talle M', color: null, size: null, priceInCents: 150000, active: true, sortOrder: 0, lowStockThreshold: 2, createdAt: '2026-01-01T00:00:00Z', updatedAt: '2026-01-01T00:00:00Z' });
+    http.expectOne(`${ADMIN_API_BASE_URL}/products/product-id`).flush(productDetail());
+  });
 });
 
 function validProductForm() {
