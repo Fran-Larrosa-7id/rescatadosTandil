@@ -1,6 +1,7 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { finalize } from 'rxjs';
+import { catchError, concat, EMPTY, exhaustMap, finalize, of, Subscription, takeUntil, takeWhile, timer } from 'rxjs';
 import { AppFooterComponent } from '../../../shared/components/app-footer/app-footer.component';
 import { AppHeaderComponent } from '../../../shared/components/app-header/app-header.component';
 import { BottomNavigationComponent } from '../../../shared/components/bottom-navigation/bottom-navigation.component';
@@ -10,7 +11,8 @@ import { PublicOrderStatus, PublicOrderStatusResponse } from '../../core/commerc
 import { PublicCommerceApiService } from '../../core/public-commerce-api.service';
 
 const TERMINAL: PublicOrderStatus[] = ['PAID', 'EXPIRED', 'CANCELLED', 'REFUNDED'];
-const MAX_ATTEMPTS = 10;
+const POLLING_INTERVAL_MS = 5_000;
+const POLLING_TIMEOUT_MS = 120_000;
 
 @Component({
   standalone: true,
@@ -57,7 +59,7 @@ const MAX_ATTEMPTS = 10;
         }
 
         <div class="mt-8 grid gap-3 sm:grid-cols-2">
-          @if (isPending()) {
+          @if (isPending() && !pollingTimedOut()) {
             <div class="sm:col-span-2 flex items-center gap-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] px-4 py-4 text-left">
               <span class="relative grid size-11 shrink-0 place-items-center" aria-hidden="true">
                 <span class="absolute inset-0 rounded-full border-2 border-[color-mix(in_srgb,var(--color-accent)_26%,transparent)]"></span>
@@ -65,6 +67,14 @@ const MAX_ATTEMPTS = 10;
                 <app-icon name="clock" class="size-4 text-[var(--color-accent)]" />
               </span>
               <p class="text-sm font-semibold leading-6 text-[var(--color-text-muted)]">Confirmando con Mercado Pago. Si ya completaste el pago, no vuelvas a pagarlo.</p>
+            </div>
+          }
+          @if (isPending() && pollingTimedOut()) {
+            <div class="sm:col-span-2 rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-4 text-left">
+              <p class="text-sm font-semibold leading-6 text-[var(--color-text-muted)]">La confirmación está demorando más de lo habitual. Podés consultar nuevamente el estado.</p>
+              <button class="button-primary mt-4 min-h-11 rounded-xl px-5 font-extrabold" type="button" [disabled]="loading()" (click)="consult()">
+                Consultar estado
+              </button>
             </div>
           }
           <a class="inline-flex min-h-12 items-center justify-center rounded-xl border border-[var(--color-border)] px-5 font-extrabold transition hover:border-[var(--color-accent)]" routerLink="/tienda">
@@ -80,18 +90,19 @@ const MAX_ATTEMPTS = 10;
     <app-bottom-navigation />
   `,
 })
-export class CheckoutStatusPageComponent implements OnInit, OnDestroy {
+export class CheckoutStatusPageComponent implements OnInit {
   readonly status = signal<PublicOrderStatus | null>(null);
   readonly orderId = signal<string | null>(null);
   readonly loading = signal(false);
   readonly error = signal('');
-  private attempts = 0;
-  private timer: ReturnType<typeof setTimeout> | null = null;
+  readonly pollingTimedOut = signal(false);
+  private pollingSubscription: Subscription | null = null;
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly api: PublicCommerceApiService,
     private readonly cart: CartStore,
+    private readonly destroyRef: DestroyRef,
   ) {}
 
   ngOnInit(): void {
@@ -104,32 +115,16 @@ export class CheckoutStatusPageComponent implements OnInit, OnDestroy {
       this.error.set('No encontramos un pedido válido para consultar.');
       return;
     }
-    this.consult();
-  }
-
-  ngOnDestroy(): void {
-    if (this.timer) clearTimeout(this.timer);
+    this.startPolling(orderId);
   }
 
   consult(): void {
     const orderId = this.orderId();
-    if (!orderId) return;
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = null;
-    }
-    this.loading.set(true);
-    this.error.set('');
-    this.api
-      .orderStatus(orderId)
-      .pipe(finalize(() => this.loading.set(false)))
-      .subscribe({
-        next: (response) => this.handleStatus(response),
-        error: () => {
-          this.error.set('No pudimos consultar el estado del pedido.');
-          this.scheduleNextCheck(5000);
-        },
-      });
+    if (!orderId || this.loading()) return;
+
+    this.checkStatus(orderId, false).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (response) => this.handleStatus(response),
+    });
   }
 
   title(): string {
@@ -177,32 +172,62 @@ export class CheckoutStatusPageComponent implements OnInit, OnDestroy {
     return this.status() === 'AWAITING_PAYMENT' || this.status() === 'PAYMENT_PENDING';
   }
 
+  private startPolling(orderId: string): void {
+    this.pollingSubscription?.unsubscribe();
+    this.pollingTimedOut.set(false);
+
+    this.pollingSubscription = concat(of(0), timer(POLLING_INTERVAL_MS, POLLING_INTERVAL_MS))
+      .pipe(
+        takeUntil(timer(POLLING_TIMEOUT_MS)),
+        exhaustMap(() => this.checkStatus(orderId, true)),
+        takeWhile((response) => !TERMINAL.includes(response.status), true),
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          if (this.isPending() && !TERMINAL.includes(this.status()!)) {
+            this.pollingTimedOut.set(true);
+          }
+          this.pollingSubscription = null;
+        }),
+      )
+      .subscribe({ next: (response) => this.handleStatus(response) });
+  }
+
+  private checkStatus(orderId: string, willRetryAutomatically: boolean) {
+    this.loading.set(true);
+    this.error.set('');
+    return this.api.orderStatus(orderId).pipe(
+      finalize(() => this.loading.set(false)),
+      catchError(() => {
+        this.error.set(
+          willRetryAutomatically
+            ? 'No pudimos consultar el estado del pedido. Vamos a intentar nuevamente.'
+            : 'No pudimos consultar el estado del pedido. Podés intentarlo nuevamente.',
+        );
+        return EMPTY;
+      }),
+    );
+  }
+
   private handleStatus(response: PublicOrderStatusResponse): void {
     this.status.set(response.status);
     this.orderId.set(response.orderId);
+
     if (this.isPending()) {
       this.cart.saveCheckoutContext({
         orderId: response.orderId,
         status: response.status,
         reservationExpiresAt: response.reservationExpiresAt,
       });
+      return;
     }
+
     if (response.status === 'PAID') {
       this.cart.clear();
       this.cart.clearCheckoutContext();
-    }
-    if (response.status === 'EXPIRED' || response.status === 'CANCELLED' || response.status === 'REFUNDED') this.cart.clearCheckoutContext();
-    if (TERMINAL.includes(response.status)) {
       return;
     }
-    this.scheduleNextCheck();
-  }
 
-  private scheduleNextCheck(delay = 3000): void {
-    if (++this.attempts >= MAX_ATTEMPTS) {
-      return;
-    }
-    this.timer = setTimeout(() => this.consult(), delay);
+    this.cart.clearCheckoutContext();
   }
 }
 
