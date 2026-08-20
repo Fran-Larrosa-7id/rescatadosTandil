@@ -10,7 +10,7 @@ import { IconComponent } from '../icon/icon.component';
   selector: 'app-header',
   imports: [RouterLink, RouterLinkActive, IconComponent],
   template: `
-    <header class="surface-glass border-b">
+    <header class="surface-glass border-b sm:fixed w-full z-50">
       <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <a
           routerLink="/"

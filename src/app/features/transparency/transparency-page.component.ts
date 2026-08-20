@@ -25,13 +25,13 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
     <main id="contenido" class="mx-auto max-w-6xl px-4 py-10 sm:px-6 md:py-16 lg:px-8">
       <section
         appReveal
-        class="grid gap-8 rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 shadow-sm md:p-8 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-center"
+        class="transparency-hero grid gap-8 rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 shadow-sm md:p-8 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-center"
       >
         <div>
           <p
-            class="inline-flex items-center gap-2 rounded-full bg-[var(--color-danger-bg)] px-3 py-1.5 text-xs font-extrabold uppercase text-[var(--color-accent)]"
+            class="transparency-debt-badge inline-flex items-center gap-2 rounded-full bg-[var(--color-danger-bg)] px-3 py-1.5 text-xs font-extrabold uppercase text-[var(--color-accent)]"
           >
-            <app-icon name="receipt" class="size-4" />
+              <app-icon name="receipt" class="transparency-badge-icon size-4" />
             Deuda veterinaria activa
           </p>
           <h1 class="mt-5 max-w-3xl text-4xl font-black leading-tight md:text-6xl">
@@ -43,12 +43,12 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           </p>
         </div>
 
-        <div class="rounded-2xl bg-[var(--color-surface)] p-6 shadow-inner">
+        <div class="transparency-debt-panel rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-inner">
           <p class="text-xs font-bold uppercase tracking-[0.08em] text-[var(--color-text-muted)]">
             Total a pagar
           </p>
           <p
-            class="mt-3 break-words text-[clamp(2.4rem,8vw,4.25rem)] font-black leading-none text-[var(--color-accent)]"
+            class="transparency-debt-amount mt-3 max-w-full whitespace-nowrap text-[clamp(2rem,5.2vw,3.5rem)] font-black leading-none tracking-[-0.05em] tabular-nums"
           >
             {{ formattedDebt }}
           </p>
@@ -64,7 +64,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
         >
           <div class="flex items-start gap-4">
             <span
-              class="inline-flex size-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--color-recovering-bg)] text-[var(--color-accent)]"
+              class="transparency-help-icon inline-flex size-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--color-recovering-bg)] text-[var(--color-accent)]"
             >
               <app-icon name="wallet" class="size-6" />
             </span>
@@ -78,7 +78,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           </div>
 
           <dl
-            class="mt-7 grid gap-4 rounded-2xl bg-[var(--color-surface)] p-4 md:grid-cols-[1fr_auto] md:items-end"
+            class="transparency-transfer mt-7 grid gap-4 rounded-2xl bg-[var(--color-surface)] p-4 md:grid-cols-[1fr_auto] md:items-end"
           >
             <div class="space-y-4">
               <div
@@ -119,7 +119,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           </dl>
         </article>
 
-        <article class="rounded-3xl bg-[var(--color-surface)] p-6 shadow-sm md:p-8">
+        <article class="transparency-clinic rounded-3xl bg-[var(--color-surface)] p-6 shadow-sm md:p-8">
           <div class="flex items-start gap-4">
             <span
               class="inline-flex size-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--color-card)] text-[var(--color-accent)]"
