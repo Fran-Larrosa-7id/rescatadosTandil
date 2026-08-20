@@ -34,9 +34,19 @@ describe('public product helpers', () => {
     expect(selectVariantDisplayMedia(product, product.variants[0])?.id).toBe('specific');
   });
 
-  it('shows the lowest configured price without adding a misleading prefix', () => {
+  it('shows an exact price for one sellable variant or equal variant prices', () => {
+    expect(productPriceLabel(makeProduct({ prices: [1500000] }), money)).toBe('$15000');
     expect(productPriceLabel(makeProduct({ prices: [1500000, 1500000] }), money)).toBe('$15000');
-    expect(productPriceLabel(makeProduct({ prices: [2500000, 1500000] }), money)).toBe('$15000');
+  });
+
+  it('shows Desde the lowest sellable price when variant prices differ, regardless of their order', () => {
+    expect(productPriceLabel(makeProduct({ prices: [2500000, 1500000, 2000000] }), money)).toBe('Desde $15000');
+    expect(productPriceLabel(makeProduct({ prices: [1500000, 2500000, 2000000] }), money)).toBe('Desde $15000');
+  });
+
+  it('ignores out-of-stock or invalid variant prices and never invents a zero price', () => {
+    expect(productPriceLabel(makeProduct({ prices: [0, 1500000], stocks: [4, 0] }), money)).toBe('Sin precio');
+    expect(productPriceLabel(makeProduct({ prices: [2500000, 1500000], stocks: [0, 3] }), money)).toBe('$15000');
   });
 });
 
@@ -45,7 +55,11 @@ function money(value: number): string {
 }
 
 function makeProduct(
-  partial: Partial<PublicProduct> & { prices?: number[]; variantMedia?: PublicProduct['variants'][number]['media'][] },
+  partial: Partial<PublicProduct> & {
+    prices?: number[];
+    stocks?: number[];
+    variantMedia?: PublicProduct['variants'][number]['media'][];
+  },
 ): PublicProduct {
   return {
     id: 'product-id',
@@ -59,7 +73,7 @@ function makeProduct(
       color: null,
       size: null,
       priceInCents: price,
-      availableStock: 1,
+      availableStock: partial.stocks?.[index] ?? 1,
       media: partial.variantMedia?.[index],
     })),
   };

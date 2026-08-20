@@ -59,20 +59,6 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
             Detrás de cada rescate hay una historia de supervivencia. Conocé a los animales que hoy
             necesitan una mano para salir adelante.
           </p>
-          <div class="mt-8 grid gap-3 sm:flex">
-            <a
-              href="#ayudar"
-              class="button-primary inline-flex min-h-12 items-center justify-center rounded-full px-8 font-extrabold shadow-sm"
-            >
-              Quiero ayudar
-            </a>
-            <a
-              routerLink="/casos"
-              class="inline-flex min-h-12 items-center justify-center rounded-full border border-[var(--color-text-muted)] px-8 font-extrabold text-[var(--color-text)] hover:border-[var(--color-accent)]"
-            >
-              Ver los casos
-            </a>
-          </div>
         </div>
       </section>
 

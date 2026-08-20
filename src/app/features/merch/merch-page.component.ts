@@ -39,7 +39,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
             class="soft-chip inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-extrabold uppercase tracking-wide text-[var(--color-accent)]"
           >
             <app-icon name="shop" class="size-4" />
-            Tienda solidaria
+            Tienda online
           </p>
           <p class="mt-6 max-w-xl text-lg text-[var(--color-text-muted)] md:text-xl">
             Productos creados para ayudar a sostener los rescates.
@@ -215,7 +215,7 @@ export class MerchPageComponent {
     event.preventDefault();
     this.document.getElementById('coleccion-gatarsis')?.scrollIntoView({
       behavior: 'smooth',
-      block: 'start'
+      block: 'start',
     });
   }
 }

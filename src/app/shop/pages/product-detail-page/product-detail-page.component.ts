@@ -179,7 +179,8 @@ export class ProductDetailPageComponent implements OnInit {
   }
 
   priceLabel(product: PublicProduct): string {
-    return productPriceLabel(product, formatArsFromCents);
+    const variant = this.selectedVariant();
+    return variant ? formatArsFromCents(variant.priceInCents) : productPriceLabel(product, formatArsFromCents);
   }
 
   money(value: number): string {

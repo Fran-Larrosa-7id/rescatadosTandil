@@ -8,11 +8,7 @@ import { ShareButtonComponent } from '../share-button/share-button.component';
   selector: 'app-donation-card',
   imports: [CopyAliasButtonComponent, ShareButtonComponent],
   template: `
-    <section
-      id="ayudar"
-      class="surface-elevated rounded-2xl border p-6"
-      [class.md:p-8]="large()"
-    >
+    <section id="ayudar" class="surface-elevated rounded-2xl border p-6" [class.md:p-8]="large()">
       <h2 class="text-2xl font-extrabold">{{ title() }}</h2>
       <p class="mt-3 text-[var(--color-text-muted)]">
         Transferencia directa a la cuenta de la rescatista para ayudar con los gastos veterinarios.
@@ -57,10 +53,10 @@ import { ShareButtonComponent } from '../share-button/share-button.component';
         </div>
       }
     </section>
-  `
+  `,
 })
 export class DonationCardComponent {
-  readonly title = input('Tu aporte directo');
+  readonly title = input('Tu aporte');
   readonly large = input(false);
   readonly buttonVariant = input<'primary' | 'secondary'>('secondary');
   readonly shareTitle = input('');

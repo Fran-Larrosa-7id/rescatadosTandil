@@ -43,9 +43,11 @@ export function activeVariants(product: PublicProduct) {
 }
 
 export function productPriceLabel(product: PublicProduct, formatter: (value: number) => string): string {
-  const variants = product.variants;
+  const variants = product.variants.filter(
+    (variant) => variant.availableStock > 0 && Number.isFinite(variant.priceInCents) && variant.priceInCents > 0,
+  );
   if (!variants.length) return 'Sin precio';
   const prices = variants.map((variant) => variant.priceInCents);
   const min = Math.min(...prices);
-  return formatter(min);
+  return prices.every((price) => price === min) ? formatter(min) : `Desde ${formatter(min)}`;
 }

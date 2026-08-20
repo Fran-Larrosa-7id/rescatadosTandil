@@ -84,13 +84,6 @@ import { IconComponent } from '../icon/icon.component';
               <app-icon name="moon" class="size-5" />
             }
           </button>
-          <a
-            [routerLink]="['/donde-va-tu-ayuda']"
-            fragment="ayudar"
-            class="button-primary rounded-full px-4 py-2 text-sm font-extrabold shadow-sm transition sm:px-6"
-          >
-            Ayudar
-          </a>
         </div>
       </div>
     </header>
