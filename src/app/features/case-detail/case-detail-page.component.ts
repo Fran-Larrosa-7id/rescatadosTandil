@@ -72,7 +72,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
               />
 
               <nav
-                aria-label="Navegacion del caso"
+                aria-label="Navegación del caso"
                 appReveal
                 [appRevealDelay]="120"
                 class="mt-8 overflow-x-auto border-b border-[var(--color-border)]"
@@ -92,14 +92,14 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
                     class="border-b-2 border-transparent px-1 py-3 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
                     (click)="scrollToSection('necesidades')"
                   >
-                    Que necesita hoy
+                    Qué necesita hoy
                   </button>
                   <button
                     type="button"
                     class="border-b-2 border-transparent px-1 py-3 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
                     (click)="scrollToSection('historial-clinico')"
                   >
-                    Historial clinico
+                    Historial clínico
                   </button>
                 </div>
               </nav>
@@ -185,7 +185,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
         <section class="mx-auto max-w-3xl px-4 py-20 text-center sm:px-6">
           <h1 class="text-4xl font-black">No encontramos este caso.</h1>
           <p class="mt-4 text-[var(--color-text-muted)]">
-            Puede que el enlace haya cambiado o que el caso todavia no este cargado.
+            Puede que el enlace haya cambiado o que el caso todavía no esté cargado.
           </p>
           <a
             routerLink="/casos"

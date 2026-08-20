@@ -148,7 +148,7 @@ describe('AdminProductEditorComponent ProductMedia UX', () => {
 
     component.saveProduct();
 
-    expect(component.initialMediaError()).toBe('IngresÃ¡ una descripciÃ³n de la imagen.');
+    expect(component.initialMediaError()).toBe('Ingresá una descripción de la imagen.');
     http.expectNone(`${ADMIN_API_BASE_URL}/products`);
   });
 
@@ -165,7 +165,7 @@ describe('AdminProductEditorComponent ProductMedia UX', () => {
 
     component.saveProduct();
 
-    expect(component.initialMediaError()).toBe('IngresÃ¡ una descripciÃ³n de la imagen.');
+    expect(component.initialMediaError()).toBe('Ingresá una descripción de la imagen.');
     http.expectNone(`${ADMIN_API_BASE_URL}/products`);
   });
 

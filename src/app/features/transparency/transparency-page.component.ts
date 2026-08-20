@@ -38,8 +38,8 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
             Transparencia para ayudar mejor
           </h1>
           <p class="mt-5 max-w-2xl text-lg text-[var(--color-text-muted)] md:text-xl">
-            Cada numero refleja una vida en recuperacion. Nuestra prioridad es saldar las cuentas de
-            quienes ya estan sanando para poder ayudar a los que siguen esperando.
+            Cada número refleja una vida en recuperación. Nuestra prioridad es saldar las cuentas de
+            quienes ya están sanando para poder ayudar a los que siguen esperando.
           </p>
         </div>
 
@@ -71,8 +71,8 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
             <div>
               <h2 class="text-2xl font-extrabold">Datos para ayudar</h2>
               <p class="mt-2 text-[var(--color-text-muted)]">
-                Transferencia directa a la cuenta de la rescatista para cubrir atencion, medicacion
-                e internaciones.
+                Transferencia directa a la cuenta de la rescatista para ayudar con los gastos
+                veterinarios.
               </p>
             </div>
           </div>
@@ -134,7 +134,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
             </div>
           </div>
           <p class="mt-5 text-[var(--color-text-muted)]">
-            Tambien podes colaborar directamente en la clinica. Acercate a recepcion y avisá que el
+            También podés colaborar directamente en la clínica. Acercate a recepción y avisá que el
             aporte es para los rescates de Gatarsis.
           </p>
           <div
@@ -143,7 +143,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
             <iframe
               class="absolute inset-0 h-full w-full"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6345.545974524255!2d-59.1445204!3d-37.324204699999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95911f4128af5d19%3A0xe61909a2682661b9!2sCl%C3%ADnica%20Veterinaria%20San%20Lorenzo!5e0!3m2!1ses!2sar!4v1786305112384!5m2!1ses!2sar"
-              title="Ubicacion de Clinica Veterinaria San Lorenzo"
+              title="Ubicación de Clínica Veterinaria San Lorenzo"
               loading="lazy"
               referrerpolicy="strict-origin-when-cross-origin"
               allowfullscreen
@@ -181,7 +181,7 @@ export class TransparencyPageComponent {
   protected readonly expenseCategories = [
     {
       title: 'Atención veterinaria',
-      description: 'Consultas, estudios, internaciones y cirugías necesarias según cada caso..',
+      description: 'Consultas, estudios, internaciones y cirugías necesarias según cada caso.',
     },
     {
       title: 'Tratamientos y medicación',

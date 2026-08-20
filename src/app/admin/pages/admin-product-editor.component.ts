@@ -478,7 +478,7 @@ export class AdminProductEditorComponent implements OnInit {
             },
             error: (error: unknown) => {
               this.initialMediaError.set(mediaErrorMessage(error));
-              this.feedback('success', 'Producto creado. RevisÃ¡ la imagen inicial.');
+              this.feedback('success', 'Producto creado. Revisá la imagen inicial.');
               void this.router.navigate(['/admin/products', saved.id]);
               this.loadProduct();
             },
@@ -517,8 +517,8 @@ export class AdminProductEditorComponent implements OnInit {
   initialMediaValidationMessage(): string {
     if (this.id || !this.initialMediaRequested()) return '';
     const draft = this.initialMedia();
-    if (!draft.url.trim()) return 'IngresÃ¡ una URL vÃ¡lida para la imagen.';
-    if (draft.alt.trim().length < 1) return 'IngresÃ¡ una descripciÃ³n de la imagen.';
+    if (!draft.url.trim()) return 'Ingresá una URL válida para la imagen.';
+    if (draft.alt.trim().length < 1) return 'Ingresá una descripción de la imagen.';
     return '';
   }
 

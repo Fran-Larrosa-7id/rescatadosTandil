@@ -5,7 +5,11 @@ import { AppFooterComponent } from '../../../shared/components/app-footer/app-fo
 import { AppHeaderComponent } from '../../../shared/components/app-header/app-header.component';
 import { BottomNavigationComponent } from '../../../shared/components/bottom-navigation/bottom-navigation.component';
 import { CartStore } from '../../core/cart.store';
-import { PublicProduct, PublicProductMedia, PublicProductVariant } from '../../core/commerce.models';
+import {
+  PublicProduct,
+  PublicProductMedia,
+  PublicProductVariant,
+} from '../../core/commerce.models';
 import { formatArsFromCents } from '../../core/money.util';
 import {
   galleryForVariant,
@@ -21,10 +25,14 @@ import { PublicCommerceApiService } from '../../core/public-commerce-api.service
   template: `
     <app-header />
     <main id="contenido" class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <a routerLink="/tienda" class="text-sm font-bold text-[var(--color-accent)]">Volver a tienda</a>
+      <a routerLink="/tienda" class="text-sm font-bold text-[var(--color-accent)]"
+        >Volver a tienda</a
+      >
 
       @if (loading()) {
-        <div class="mt-10 rounded-2xl border border-[var(--color-border)] p-8">Cargando producto...</div>
+        <div class="mt-10 rounded-2xl border border-[var(--color-border)] p-8">
+          Cargando producto...
+        </div>
       } @else if (error()) {
         <div class="mt-10 rounded-2xl border border-[var(--color-border)] p-8" role="alert">
           No pudimos cargar este producto.
@@ -34,9 +42,18 @@ import { PublicCommerceApiService } from '../../core/public-commerce-api.service
           <div>
             <div class="aspect-[4/5] overflow-hidden rounded-2xl bg-[var(--color-surface)]">
               @if (selectedMedia(); as media) {
-                <img class="h-full w-full object-cover" [src]="media.url" [alt]="media.alt" decoding="async" />
+                <img
+                  class="h-full w-full object-cover"
+                  [src]="media.url"
+                  [alt]="media.alt"
+                  decoding="async"
+                />
               } @else {
-                <div class="grid h-full place-items-center font-black text-[var(--color-text-muted)]">Gatarsis</div>
+                <div
+                  class="grid h-full place-items-center font-black text-[var(--color-text-muted)]"
+                >
+                  Gatarsis
+                </div>
               }
             </div>
             @if (galleryMedia(item).length > 1) {
@@ -48,7 +65,12 @@ import { PublicCommerceApiService } from '../../core/public-commerce-api.service
                     (click)="selectedMedia.set(media)"
                     [attr.aria-label]="'Ver imagen ' + media.alt"
                   >
-                    <img class="h-full w-full object-cover" [src]="media.url" [alt]="media.alt" loading="lazy" />
+                    <img
+                      class="h-full w-full object-cover"
+                      [src]="media.url"
+                      [alt]="media.alt"
+                      loading="lazy"
+                    />
                   </button>
                 }
               </div>
@@ -56,7 +78,9 @@ import { PublicCommerceApiService } from '../../core/public-commerce-api.service
           </div>
 
           <div class="lg:pt-8">
-            <p class="text-sm font-extrabold uppercase tracking-wide text-[var(--color-accent)]">Tienda Gatarsis</p>
+            <p class="text-sm font-extrabold uppercase tracking-wide text-[var(--color-accent)]">
+              Tienda Gatarsis
+            </p>
             <h1 class="mt-3 text-4xl font-black">{{ item.name }}</h1>
             @if (item.shortDescription) {
               <p class="mt-4 text-lg text-[var(--color-text-muted)]">{{ item.shortDescription }}</p>
@@ -64,20 +88,26 @@ import { PublicCommerceApiService } from '../../core/public-commerce-api.service
             <p class="mt-6 text-2xl font-black">{{ priceLabel(item) }}</p>
 
             <fieldset class="mt-8">
-              <legend class="text-sm font-extrabold uppercase tracking-wide text-[var(--color-text-muted)]">Variante</legend>
+              <legend
+                class="text-sm font-extrabold uppercase tracking-wide text-[var(--color-text-muted)]"
+              >
+                Variante
+              </legend>
               <div class="mt-3 grid gap-3">
                 @for (variant of item.variants; track variant.id) {
                   <button
                     type="button"
                     class="flex items-center justify-between rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] px-4 py-3 text-left disabled:opacity-50"
-                    [style.border-color]="selectedVariant()?.id === variant.id ? 'var(--color-accent)' : null"
+                    [style.border-color]="
+                      selectedVariant()?.id === variant.id ? 'var(--color-accent)' : null
+                    "
                     [disabled]="variant.availableStock <= 0"
                     (click)="selectVariant(variant)"
                   >
                     <span>
                       <strong>{{ variant.name }}</strong>
                       <small class="block text-[var(--color-text-muted)]">
-                        {{ variantMeta(variant) }} · {{ variant.sku }}
+                        {{ variantMeta(variant) }}
                       </small>
                     </span>
                     <span class="font-black">{{ money(variant.priceInCents) }}</span>
@@ -89,9 +119,23 @@ import { PublicCommerceApiService } from '../../core/public-commerce-api.service
             @if (selectedVariant(); as variant) {
               <p class="mt-5 font-bold">{{ stockText(variant) }}</p>
               <div class="mt-5 flex items-center gap-3">
-                <button class="rounded-full border border-[var(--color-border)] px-4 py-2" type="button" aria-label="Disminuir cantidad" (click)="quantity.set(max(1, quantity() - 1))">-</button>
+                <button
+                  class="rounded-full border border-[var(--color-border)] px-4 py-2"
+                  type="button"
+                  aria-label="Disminuir cantidad"
+                  (click)="quantity.set(max(1, quantity() - 1))"
+                >
+                  -
+                </button>
                 <span class="min-w-8 text-center font-black">{{ quantity() }}</span>
-                <button class="rounded-full border border-[var(--color-border)] px-4 py-2" type="button" aria-label="Aumentar cantidad" (click)="quantity.set(min(variant.availableStock, quantity() + 1))">+</button>
+                <button
+                  class="rounded-full border border-[var(--color-border)] px-4 py-2"
+                  type="button"
+                  aria-label="Aumentar cantidad"
+                  (click)="quantity.set(min(variant.availableStock, quantity() + 1))"
+                >
+                  +
+                </button>
               </div>
               <button
                 class="button-primary mt-6 min-h-12 rounded-full px-7 font-extrabold disabled:opacity-50"
@@ -102,12 +146,16 @@ import { PublicCommerceApiService } from '../../core/public-commerce-api.service
                 Agregar al carrito
               </button>
               @if (added()) {
-                <p class="mt-3 font-bold text-[#23623a]" aria-live="polite">Producto agregado al carrito.</p>
+                <p class="mt-3 font-bold text-[#23623a]" aria-live="polite">
+                  Producto agregado al carrito.
+                </p>
               }
             } @else {
               <p class="mt-5 font-bold text-[var(--color-text-muted)]">Sin stock.</p>
             }
-            <p class="mt-5 text-sm text-[var(--color-text-muted)]">El stock se reserva recién al iniciar el pago.</p>
+            <p class="mt-5 text-sm text-[var(--color-text-muted)]">
+              El stock se reserva recién al iniciar el pago.
+            </p>
           </div>
         </section>
       }
@@ -144,7 +192,9 @@ export class ProductDetailPageComponent implements OnInit {
           this.product.set(product);
           const variant = product?.variants.find((item) => item.availableStock > 0) ?? null;
           this.selectedVariant.set(variant);
-          this.selectedMedia.set(product ? selectGalleryCover(galleryForVariant(product, variant)) : null);
+          this.selectedMedia.set(
+            product ? selectGalleryCover(galleryForVariant(product, variant)) : null,
+          );
           this.error.set(!product);
         },
         error: () => this.error.set(true),
@@ -158,7 +208,9 @@ export class ProductDetailPageComponent implements OnInit {
   selectVariant(variant: PublicProductVariant): void {
     this.selectedVariant.set(variant);
     const product = this.product();
-    this.selectedMedia.set(product ? selectGalleryCover(galleryForVariant(product, variant)) : null);
+    this.selectedMedia.set(
+      product ? selectGalleryCover(galleryForVariant(product, variant)) : null,
+    );
     this.quantity.set(1);
   }
 
@@ -180,7 +232,9 @@ export class ProductDetailPageComponent implements OnInit {
 
   priceLabel(product: PublicProduct): string {
     const variant = this.selectedVariant();
-    return variant ? formatArsFromCents(variant.priceInCents) : productPriceLabel(product, formatArsFromCents);
+    return variant
+      ? formatArsFromCents(variant.priceInCents)
+      : productPriceLabel(product, formatArsFromCents);
   }
 
   money(value: number): string {

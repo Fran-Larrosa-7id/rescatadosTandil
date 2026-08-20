@@ -122,7 +122,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
               routerLink="/merch"
               class="button-primary mt-7 inline-flex min-h-12 items-center justify-center rounded-full px-7 font-extrabold shadow-sm"
             >
-              Ver mas...
+              Ver más...
               <app-icon name="arrow" class="ml-2 size-4" />
             </a>
           </div>
