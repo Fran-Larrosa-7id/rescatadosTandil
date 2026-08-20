@@ -34,9 +34,9 @@ describe('public product helpers', () => {
     expect(selectVariantDisplayMedia(product, product.variants[0])?.id).toBe('specific');
   });
 
-  it('shows exact price or Desde without averaging variants', () => {
+  it('shows the lowest configured price without adding a misleading prefix', () => {
     expect(productPriceLabel(makeProduct({ prices: [1500000, 1500000] }), money)).toBe('$15000');
-    expect(productPriceLabel(makeProduct({ prices: [2500000, 1500000] }), money)).toBe('Desde $15000');
+    expect(productPriceLabel(makeProduct({ prices: [2500000, 1500000] }), money)).toBe('$15000');
   });
 });
 

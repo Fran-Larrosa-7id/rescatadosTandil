@@ -35,9 +35,9 @@ import { productPriceLabel, selectCoverMedia } from '../../core/product-media.ut
           </button>
         </div>
       } @else if (products().length) {
-        <section class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <section class="mt-10 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
           @for (product of products(); track product.id) {
-            <article class="group border-b border-[var(--color-border)] pb-6">
+            <article class="group">
               <a [routerLink]="['/tienda', product.slug]" class="block" [attr.aria-label]="'Ver producto ' + product.name">
                 <div class="aspect-[3/2] overflow-hidden rounded-2xl bg-[var(--color-surface)]">
                   @if (cover(product); as media) {
@@ -55,16 +55,18 @@ import { productPriceLabel, selectCoverMedia } from '../../core/product-media.ut
                   }
                 </div>
                 <div class="mt-4 flex items-start justify-between gap-4">
-                  <div>
+                  <div class="min-w-0">
                     <h2 class="text-xl font-black">{{ product.name }}</h2>
                     @if (product.shortDescription) {
                       <p class="mt-1 text-sm text-[var(--color-text-muted)]">{{ product.shortDescription }}</p>
                     }
-                    <p class="mt-2 text-sm font-bold text-[var(--color-text-muted)]">{{ stockLabel(product) }}</p>
                   </div>
-                  <p class="shrink-0 font-black">{{ priceLabel(product) }}</p>
+                  <p class="shrink-0 text-lg font-black">{{ priceLabel(product) }}</p>
                 </div>
-                <span class="mt-4 inline-flex text-sm font-extrabold text-[var(--color-accent)]">Ver producto</span>
+                <div class="mt-3 flex items-center justify-between gap-4 border-t border-[var(--color-border)] pt-3">
+                  <p class="text-sm font-bold text-[var(--color-text-muted)]">{{ stockLabel(product) }}</p>
+                  <span class="text-sm font-extrabold text-[var(--color-accent)]">Ver producto</span>
+                </div>
               </a>
             </article>
           }

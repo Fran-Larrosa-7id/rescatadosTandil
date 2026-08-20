@@ -47,6 +47,5 @@ export function productPriceLabel(product: PublicProduct, formatter: (value: num
   if (!variants.length) return 'Sin precio';
   const prices = variants.map((variant) => variant.priceInCents);
   const min = Math.min(...prices);
-  const allSame = prices.every((price) => price === min);
-  return `${allSame ? '' : 'Desde '}${formatter(min)}`;
+  return formatter(min);
 }
