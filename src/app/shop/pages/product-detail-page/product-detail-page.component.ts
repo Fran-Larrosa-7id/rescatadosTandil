@@ -1,9 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { AppFooterComponent } from '../../../shared/components/app-footer/app-footer.component';
 import { AppHeaderComponent } from '../../../shared/components/app-header/app-header.component';
 import { BottomNavigationComponent } from '../../../shared/components/bottom-navigation/bottom-navigation.component';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { CartStore } from '../../core/cart.store';
 import {
   PublicProduct,
@@ -18,16 +19,27 @@ import {
   selectVariantDisplayMedia,
 } from '../../core/product-media.util';
 import { PublicCommerceApiService } from '../../core/public-commerce-api.service';
+import { publicVariantLabel, variantColor } from '../../core/variant-color.util';
+import { PhotoSwipeService } from '../../../core/services/photo-swipe.service';
 
 @Component({
   standalone: true,
-  imports: [RouterLink, AppHeaderComponent, AppFooterComponent, BottomNavigationComponent],
+  imports: [
+    RouterLink,
+    AppHeaderComponent,
+    AppFooterComponent,
+    BottomNavigationComponent,
+    IconComponent,
+  ],
   template: `
     <app-header />
-    <main id="contenido" class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <a routerLink="/tienda" class="text-sm font-bold text-[var(--color-accent)]"
-        >Volver a tienda</a
+    <main id="contenido" class="mx-auto max-w-7xl px-4 py-8 pb-28 sm:px-6 sm:py-10 lg:px-8">
+      <a
+        routerLink="/tienda"
+        class="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-[var(--color-accent)]"
       >
+        <app-icon name="arrow" class="size-4 rotate-180" /> Volver a tienda
+      </a>
 
       @if (loading()) {
         <div class="mt-10 rounded-2xl border border-[var(--color-border)] p-8">
@@ -38,9 +50,14 @@ import { PublicCommerceApiService } from '../../core/public-commerce-api.service
           No pudimos cargar este producto.
         </div>
       } @else if (product(); as item) {
-        <section class="mt-8 grid gap-10 lg:grid-cols-[1.05fr_.95fr]">
+        <section class="mt-6 grid gap-8 lg:grid-cols-[1.05fr_.95fr] lg:gap-12">
           <div>
-            <div class="aspect-[4/5] overflow-hidden rounded-2xl bg-[var(--color-surface)]">
+            <button
+              type="button"
+              class="group relative block aspect-[3/2] w-full overflow-hidden rounded-3xl border-0 bg-[var(--color-surface)] p-0 text-left lg:aspect-[4/5]"
+              (click)="openGallery(item)"
+              aria-label="Abrir galería de producto en tamaño completo"
+            >
               @if (selectedMedia(); as media) {
                 <img
                   class="h-full w-full object-cover"
@@ -55,7 +72,10 @@ import { PublicCommerceApiService } from '../../core/public-commerce-api.service
                   Gatarsis
                 </div>
               }
-            </div>
+              @if (galleryMedia(item).length) {
+                <span class="gallery-expand-control absolute bottom-3 right-3 inline-flex size-10 items-center justify-center rounded-full text-[var(--color-text)] shadow-sm backdrop-blur transition group-hover:scale-105" aria-hidden="true"><app-icon name="expand" class="size-5" /></span>
+              }
+            </button>
             @if (galleryMedia(item).length > 1) {
               <div class="mt-4 flex gap-3 overflow-auto">
                 @for (media of galleryMedia(item); track media.id) {
@@ -77,15 +97,15 @@ import { PublicCommerceApiService } from '../../core/public-commerce-api.service
             }
           </div>
 
-          <div class="lg:pt-8">
+          <div class="lg:pt-4">
             <p class="text-sm font-extrabold uppercase tracking-wide text-[var(--color-accent)]">
               Tienda Gatarsis
             </p>
-            <h1 class="mt-3 text-4xl font-black">{{ item.name }}</h1>
+            <h1 class="mt-2 text-4xl font-black tracking-tight">{{ item.name }}</h1>
             @if (item.shortDescription) {
               <p class="mt-4 text-lg text-[var(--color-text-muted)]">{{ item.shortDescription }}</p>
             }
-            <p class="mt-6 text-2xl font-black">{{ priceLabel(item) }}</p>
+            <p class="mt-5 text-3xl font-black transition-opacity">{{ priceLabel(item) }}</p>
 
             <fieldset class="mt-8">
               <legend
@@ -93,22 +113,26 @@ import { PublicCommerceApiService } from '../../core/public-commerce-api.service
               >
                 Variante
               </legend>
-              <div class="mt-3 grid gap-3">
+              <div class="mt-3 grid gap-2 sm:grid-cols-2">
                 @for (variant of item.variants; track variant.id) {
                   <button
                     type="button"
-                    class="flex items-center justify-between rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] px-4 py-3 text-left disabled:opacity-50"
+                    class="flex min-h-14 items-center justify-between rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] px-3.5 py-2.5 text-left transition hover:border-[var(--color-accent)] disabled:cursor-not-allowed disabled:opacity-50"
                     [style.border-color]="
                       selectedVariant()?.id === variant.id ? 'var(--color-accent)' : null
                     "
                     [disabled]="variant.availableStock <= 0"
+                    [attr.aria-pressed]="selectedVariant()?.id === variant.id"
                     (click)="selectVariant(variant)"
                   >
-                    <span>
-                      <strong>{{ variant.name }}</strong>
-                      <small class="block text-[var(--color-text-muted)]">
-                        {{ variantMeta(variant) }}
-                      </small>
+                    <span class="flex min-w-0 items-center gap-2">
+                      @if (colorDot(variant); as color) {
+                        <span
+                          class="size-3 shrink-0 rounded-full border border-black/15"
+                          [style.background-color]="color"
+                        ></span>
+                      }
+                      <strong>{{ variantMeta(variant) }}</strong>
                     </span>
                     <span class="font-black">{{ money(variant.priceInCents) }}</span>
                   </button>
@@ -117,34 +141,42 @@ import { PublicCommerceApiService } from '../../core/public-commerce-api.service
             </fieldset>
 
             @if (selectedVariant(); as variant) {
-              <p class="mt-5 font-bold">{{ stockText(variant) }}</p>
-              <div class="mt-5 flex items-center gap-3">
-                <button
-                  class="rounded-full border border-[var(--color-border)] px-4 py-2"
-                  type="button"
-                  aria-label="Disminuir cantidad"
-                  (click)="quantity.set(max(1, quantity() - 1))"
+              <p class="mt-5 font-bold" [class.text-[#23623a]]="variant.availableStock > 0">
+                {{ stockText(variant) }}
+              </p>
+              <div class="flex gap-4">
+                <div
+                  class="mt-4 inline-flex items-center rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-1"
                 >
-                  -
-                </button>
-                <span class="min-w-8 text-center font-black">{{ quantity() }}</span>
+                  <button
+                    class="grid size-10 place-items-center rounded-lg transition hover:bg-[var(--color-recovering-bg)]"
+                    type="button"
+                    aria-label="Disminuir cantidad"
+                    (click)="quantity.set(max(1, quantity() - 1))"
+                  >
+                    <app-icon name="minus" class="size-4" />
+                  </button>
+                  <span class="min-w-10 text-center font-black">{{ quantity() }}</span>
+                  <button
+                    class="grid size-10 place-items-center rounded-lg transition hover:bg-[var(--color-recovering-bg)]"
+                    type="button"
+                    aria-label="Aumentar cantidad"
+                    (click)="quantity.set(min(variant.availableStock, quantity() + 1))"
+                  >
+                    <app-icon name="plus" class="size-4" />
+                  </button>
+                </div>
                 <button
-                  class="rounded-full border border-[var(--color-border)] px-4 py-2"
+                  class="text-[13px] button-primary mt-5 inline-flex min-h-12 w-full items-center justify-center gap-4 rounded-xl px-7 font-extrabold disabled:opacity-50 sm:w-auto"
                   type="button"
-                  aria-label="Aumentar cantidad"
-                  (click)="quantity.set(min(variant.availableStock, quantity() + 1))"
+                  [disabled]="variant.availableStock <= 0"
+                  (click)="addToCart(item, variant)"
                 >
-                  +
+                  <app-icon name="wallet" class="size-5" />
+                  {{ added() ? 'Agregado al carrito' : 'Agregar al carrito' }}
                 </button>
               </div>
-              <button
-                class="button-primary mt-6 min-h-12 rounded-full px-7 font-extrabold disabled:opacity-50"
-                type="button"
-                [disabled]="variant.availableStock <= 0"
-                (click)="addToCart(item, variant)"
-              >
-                Agregar al carrito
-              </button>
+
               @if (added()) {
                 <p class="mt-3 font-bold text-[#23623a]" aria-live="polite">
                   Producto agregado al carrito.
@@ -154,7 +186,8 @@ import { PublicCommerceApiService } from '../../core/public-commerce-api.service
               <p class="mt-5 font-bold text-[var(--color-text-muted)]">Sin stock.</p>
             }
             <p class="mt-5 text-sm text-[var(--color-text-muted)]">
-              El stock se reserva recién al iniciar el pago.
+              <app-icon name="info" class="mr-1 inline size-4 align-text-bottom" />
+              El stock se reserva cuando iniciás el pago.
             </p>
           </div>
         </section>
@@ -174,6 +207,7 @@ export class ProductDetailPageComponent implements OnInit {
   readonly added = signal(false);
   readonly min = Math.min;
   readonly max = Math.max;
+  private readonly photoSwipe = inject(PhotoSwipeService);
 
   constructor(
     private readonly api: PublicCommerceApiService,
@@ -228,6 +262,7 @@ export class ProductDetailPageComponent implements OnInit {
       imageUrl: selectVariantDisplayMedia(product, variant)?.url ?? null,
     });
     this.added.set(true);
+    setTimeout(() => this.added.set(false), 2500);
   }
 
   priceLabel(product: PublicProduct): string {
@@ -242,11 +277,24 @@ export class ProductDetailPageComponent implements OnInit {
   }
 
   stockText(variant: PublicProductVariant): string {
-    if (variant.availableStock <= 0) return 'Sin stock';
-    return variant.availableStock <= 3 ? `Quedan ${variant.availableStock}` : 'Disponible';
+    return variant.availableStock <= 0 ? 'Sin stock' : 'Disponible';
   }
 
   variantMeta(variant: PublicProductVariant): string {
-    return [variant.color, variant.size].filter(Boolean).join(' / ') || 'Variante';
+    return publicVariantLabel(variant);
+  }
+
+  colorDot(variant: PublicProductVariant): string | null {
+    return variantColor(variant);
+  }
+
+  async openGallery(product: PublicProduct): Promise<void> {
+    const media = this.galleryMedia(product);
+    const selectedId = this.selectedMedia()?.id;
+    const index = Math.max(0, media.findIndex((item) => item.id === selectedId));
+    await this.photoSwipe.open(
+      media.map((item) => ({ src: item.url, alt: item.alt, width: 1600, height: 1200 })),
+      index,
+    );
   }
 }

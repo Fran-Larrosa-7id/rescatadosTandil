@@ -122,15 +122,15 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
               routerLink="/merch"
               class="button-primary mt-7 inline-flex min-h-12 items-center justify-center rounded-full px-7 font-extrabold shadow-sm"
             >
-              Ver más...
+              Ver tienda
               <app-icon name="arrow" class="ml-2 size-4" />
             </a>
           </div>
-          <div class="grid grid-cols-2 gap-3">
-            @for (product of merchProducts; track product.slug) {
+          <div class="home-merch-carousel overflow-hidden">
+            <div class="home-merch-track">
+            @for (product of merchCarouselProducts; track $index) {
               <div
-                class="overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)]"
-                [class.mt-6]="$odd"
+                class="home-merch-slide overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)]"
               >
                 <img
                   class="aspect-[3/4] h-full w-full object-cover"
@@ -143,6 +143,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
                 />
               </div>
             }
+            </div>
           </div>
         </div>
       </section>
@@ -156,8 +157,6 @@ export class HomePageComponent {
   private readonly casesService = inject(RescueCasesService);
   protected readonly donationConfig = DONATION_CONFIG;
   protected readonly featuredCases = this.casesService.getFeatured();
-  protected readonly merchProducts = MERCH_PRODUCTS.filter((product) => product.featured).slice(
-    0,
-    2,
-  );
+  protected readonly merchProducts = MERCH_PRODUCTS.filter((product) => product.featured).slice(0, 4);
+  protected readonly merchCarouselProducts = [...this.merchProducts, ...this.merchProducts];
 }

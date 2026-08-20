@@ -26,6 +26,7 @@ export class ShareButtonComponent {
   readonly text = input.required<string>();
   readonly showLabel = input(false);
   readonly fullWidth = input(false);
+  readonly variant = input<'primary' | 'secondary'>('secondary');
 
   protected readonly feedback = signal('');
   protected readonly label = signal('Compartir');
@@ -53,7 +54,10 @@ export class ShareButtonComponent {
 
   protected buttonClasses(): string {
     const widthClass = this.fullWidth() ? 'w-full' : 'min-w-11';
+    const variantClasses = this.variant() === 'primary'
+      ? 'bg-[var(--color-accent)] text-white shadow-sm hover:bg-[var(--color-accent-hover)]'
+      : 'surface-card border text-[var(--color-text)] hover:border-[var(--color-accent)]';
 
-    return `surface-card inline-flex min-h-11 ${widthClass} items-center justify-center rounded-full border px-4 py-3 text-sm font-bold text-[var(--color-text)] transition hover:border-[var(--color-accent)] active:scale-[0.98]`;
+    return `inline-flex min-h-12 ${widthClass} items-center justify-center rounded-full border border-transparent px-5 py-3 text-sm font-extrabold transition active:scale-[0.98] ${variantClasses}`;
   }
 }

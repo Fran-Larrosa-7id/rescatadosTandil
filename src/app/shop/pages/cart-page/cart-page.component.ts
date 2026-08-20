@@ -5,6 +5,7 @@ import { finalize, switchMap, tap } from 'rxjs';
 import { AppFooterComponent } from '../../../shared/components/app-footer/app-footer.component';
 import { AppHeaderComponent } from '../../../shared/components/app-header/app-header.component';
 import { BottomNavigationComponent } from '../../../shared/components/bottom-navigation/bottom-navigation.component';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { CartStore } from '../../core/cart.store';
 import { formatArsFromCents } from '../../core/money.util';
 import { PublicCommerceApiService } from '../../core/public-commerce-api.service';
@@ -19,16 +20,16 @@ type CheckoutState =
 
 @Component({
   standalone: true,
-  imports: [FormsModule, RouterLink, AppHeaderComponent, AppFooterComponent, BottomNavigationComponent],
+  imports: [FormsModule, RouterLink, AppHeaderComponent, AppFooterComponent, BottomNavigationComponent, IconComponent],
   template: `
     <app-header />
-    <main id="contenido" class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+    <main id="contenido" class="mx-auto max-w-6xl px-4 py-8 pb-28 sm:px-6 sm:py-10 lg:px-8">
       <h1 class="text-4xl font-black">Tu carrito</h1>
       @if (cart.items().length) {
-        <section class="mt-8 grid gap-10 lg:grid-cols-[1fr_22rem]">
-          <div class="divide-y divide-[var(--color-border)] border-y border-[var(--color-border)]">
+        <section class="mt-7 grid gap-8 lg:grid-cols-[1fr_24rem]">
+          <div class="divide-y divide-[var(--color-border)] rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] px-4 sm:px-5">
             @for (item of cart.items(); track item.variantId) {
-              <article class="grid gap-4 py-5 sm:grid-cols-[5rem_1fr_auto] sm:items-center">
+              <article class="grid grid-cols-[4.75rem_1fr] gap-x-4 gap-y-2 py-4 sm:grid-cols-[5rem_1fr_auto] sm:items-center">
                 <div class="size-20 overflow-hidden rounded-xl bg-[var(--color-surface)]">
                   @if (item.imageUrl) {
                     <img class="h-full w-full object-cover" [src]="item.imageUrl" [alt]="item.productName" loading="lazy" />
@@ -36,30 +37,34 @@ type CheckoutState =
                 </div>
                 <div>
                   <h2 class="text-lg font-black">{{ item.productName }}</h2>
-                  <p class="text-sm text-[var(--color-text-muted)]">{{ item.variantName }} · {{ item.sku }}</p>
-                  <button class="mt-2 text-sm font-bold text-[var(--color-accent)]" type="button" (click)="cart.remove(item.variantId)">
-                    Eliminar
+                  <p class="mt-1 text-sm font-bold text-[var(--color-text-muted)]">{{ item.variantName }}</p>
+                  <button class="mt-2 grid size-10 place-items-center rounded-lg text-[var(--color-text-muted)] transition hover:bg-[var(--color-danger-bg)] hover:text-[#bd2944]" type="button" [attr.aria-label]="'Eliminar ' + item.productName + ', variante ' + item.variantName" (click)="cart.remove(item.variantId)">
+                    <app-icon name="trash" class="size-4" />
                   </button>
                 </div>
-                <div class="flex items-center justify-between gap-5 sm:justify-end">
-                  <div class="flex items-center gap-2">
-                    <button class="rounded-full border border-[var(--color-border)] px-3 py-1" type="button" aria-label="Disminuir cantidad" (click)="cart.setQuantity(item.variantId, item.quantity - 1)">-</button>
-                    <span class="min-w-7 text-center font-black">{{ item.quantity }}</span>
-                    <button class="rounded-full border border-[var(--color-border)] px-3 py-1" type="button" aria-label="Aumentar cantidad" (click)="cart.setQuantity(item.variantId, item.quantity + 1)">+</button>
+                <div class="col-span-2 mt-1 flex items-center justify-between gap-5 sm:col-span-1 sm:mt-0 sm:justify-end">
+                  <div class="inline-flex items-center rounded-xl border border-[var(--color-border)] p-1">
+                    <button class="grid size-9 place-items-center rounded-lg hover:bg-[var(--color-recovering-bg)]" type="button" aria-label="Disminuir cantidad" (click)="cart.setQuantity(item.variantId, item.quantity - 1)"><app-icon name="minus" class="size-4" /></button>
+                    <span class="min-w-8 text-center font-black">{{ item.quantity }}</span>
+                    <button class="grid size-9 place-items-center rounded-lg hover:bg-[var(--color-recovering-bg)]" type="button" aria-label="Aumentar cantidad" (click)="cart.setQuantity(item.variantId, item.quantity + 1)"><app-icon name="plus" class="size-4" /></button>
                   </div>
-                  <strong>{{ money(item.unitPriceInCents * item.quantity) }}</strong>
+                  <div class="text-right">
+                    @if (item.quantity > 1) { <span class="block text-xs text-[var(--color-text-muted)]">{{ item.quantity }} × {{ money(item.unitPriceInCents) }}</span> }
+                    <strong>{{ money(item.unitPriceInCents * item.quantity) }}</strong>
+                  </div>
                 </div>
               </article>
             }
           </div>
 
-          <aside class="h-max border-t border-[var(--color-border)] pt-5">
+          <aside class="h-max rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 lg:sticky lg:top-5">
+            <p class="text-sm font-extrabold uppercase tracking-wide text-[var(--color-accent)]">Resumen</p>
             <div class="flex justify-between text-lg">
               <span>Subtotal</span>
               <strong>{{ money(cart.subtotalInCents()) }}</strong>
             </div>
             <p class="mt-3 text-sm text-[var(--color-text-muted)]">
-              El stock se reserva recién al iniciar el pago.
+              <app-icon name="info" class="mr-1 inline size-4 align-text-bottom" /> El stock se reserva cuando iniciás el pago.
             </p>
             <section class="mt-6 border-t border-[var(--color-border)] pt-5">
               <p class="text-base font-black">Datos para coordinar el retiro</p>
@@ -98,20 +103,21 @@ type CheckoutState =
               </section>
             } @else {
               <button
-                class="button-primary mt-6 min-h-12 w-full rounded-full px-6 font-extrabold disabled:opacity-50"
+                class="button-primary mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-6 font-extrabold disabled:opacity-50"
                 type="button"
                 [disabled]="state() !== 'IDLE' && state() !== 'ERROR'"
                 (click)="checkout()"
               >
-                {{ ctaLabel() }}
+                <app-icon name="arrow" class="size-4" /> {{ ctaLabel() }}
               </button>
             }
           </aside>
         </section>
       } @else {
-        <div class="mt-8 rounded-2xl border border-[var(--color-border)] p-8">
-          <p class="text-xl font-black">Tu carrito está vacío.</p>
-          <a class="button-primary mt-5 inline-flex rounded-full px-6 py-3 font-extrabold" routerLink="/tienda">Ver tienda</a>
+        <div class="surface-card mx-auto mt-8 max-w-md rounded-3xl border p-7 text-center">
+          <span class="mx-auto grid size-14 place-items-center rounded-2xl bg-[var(--color-recovering-bg)] text-[var(--color-accent)]"><app-icon name="shop" class="size-7" /></span>
+          <p class="mt-4 text-lg font-black">Todavía no agregaste productos.</p>
+          <a class="button-primary mt-5 inline-flex min-h-12 items-center gap-2 rounded-xl px-6 font-extrabold" routerLink="/tienda"><app-icon name="shop" class="size-5" /> Ver tienda</a>
         </div>
       }
     </main>

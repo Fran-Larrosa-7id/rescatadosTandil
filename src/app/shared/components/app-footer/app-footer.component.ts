@@ -8,7 +8,9 @@ import { IconComponent } from '../icon/icon.component';
   selector: 'app-footer',
   imports: [RouterLink, IconComponent],
   template: `
-    <footer class="border-t border-[var(--color-border)] bg-white pb-24 pt-10 md:pb-10">
+    <footer
+      class="mt-auto border-t border-[var(--color-border)] bg-[var(--color-card)] pb-24 pt-7 md:pb-7"
+    >
       <div class="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
         <a
           routerLink="/"
@@ -18,8 +20,8 @@ import { IconComponent } from '../icon/icon.component';
           <span>{{ brandName }}</span>
         </a>
 
-        <p class="mt-8 text-xs text-[var(--color-text-muted)]">
-          © 2026 {{ brandName }}. Hecho por
+        <p class="mt-5 text-xs text-[var(--color-text-muted)]">
+          © 2026 {{ brandName }} Hecho por
           <a
             href="https://github.com/FranciscoLarrosa96/"
             target="_blank"
@@ -28,7 +30,6 @@ import { IconComponent } from '../icon/icon.component';
           >
             Francisco Larrosa
           </a>
-          .
         </p>
       </div>
     </footer>

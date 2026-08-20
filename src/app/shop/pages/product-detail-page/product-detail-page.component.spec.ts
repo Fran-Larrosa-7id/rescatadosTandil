@@ -58,7 +58,7 @@ describe('ProductDetailPageComponent variant pricing', () => {
     expect(component.selectedVariant()?.id).toBe('black');
     expect(component.priceLabel(product)).toBe(component.money(100));
     expect(component.selectedMedia()?.id).toBe('black-image');
-    expect(component.stockText(product.variants[1])).toBe('Quedan 1');
+    expect(component.stockText(product.variants[1])).toBe('Disponible');
     expect(component.quantity()).toBe(1);
 
     component.selectVariant(product.variants[2]);

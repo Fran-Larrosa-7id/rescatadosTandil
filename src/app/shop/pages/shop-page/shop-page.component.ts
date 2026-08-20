@@ -4,6 +4,7 @@ import { finalize } from 'rxjs';
 import { AppFooterComponent } from '../../../shared/components/app-footer/app-footer.component';
 import { AppHeaderComponent } from '../../../shared/components/app-header/app-header.component';
 import { BottomNavigationComponent } from '../../../shared/components/bottom-navigation/bottom-navigation.component';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { PublicCommerceApiService } from '../../core/public-commerce-api.service';
 import { PublicProduct } from '../../core/commerce.models';
 import { formatArsFromCents } from '../../core/money.util';
@@ -11,10 +12,10 @@ import { productPriceLabel, selectCoverMedia } from '../../core/product-media.ut
 
 @Component({
   standalone: true,
-  imports: [RouterLink, AppHeaderComponent, AppFooterComponent, BottomNavigationComponent],
+  imports: [RouterLink, AppHeaderComponent, AppFooterComponent, BottomNavigationComponent, IconComponent],
   template: `
     <app-header />
-    <main id="contenido" class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <main id="contenido" class="mx-auto max-w-7xl flex-1 px-4 py-10 pb-28 sm:px-6 sm:pb-10 lg:px-8">
       <section class="max-w-3xl">
         <p class="text-sm font-extrabold uppercase tracking-wide text-[var(--color-accent)]">
           Tienda online
@@ -43,18 +44,18 @@ import { productPriceLabel, selectCoverMedia } from '../../core/product-media.ut
           </button>
         </div>
       } @else if (products().length) {
-        <section class="mt-10 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+        <section class="mt-10 grid grid-cols-[repeat(auto-fit,minmax(min(100%,16rem),1fr))] gap-5 sm:gap-6">
           @for (product of products(); track product.id) {
-            <article class="group">
+            <article class="group max-sm:rounded-2xl max-sm:border max-sm:border-[var(--color-border)] max-sm:bg-[var(--color-card)] max-sm:p-3 max-sm:shadow-[0_8px_20px_rgba(58,45,72,0.06)]">
               <a
                 [routerLink]="['/tienda', product.slug]"
                 class="block"
                 [attr.aria-label]="'Ver producto ' + product.name"
               >
-                <div class="aspect-[3/2] overflow-hidden rounded-2xl bg-[var(--color-surface)]">
+                <div class="product-media-hover relative aspect-[3/2] overflow-hidden rounded-2xl bg-[var(--color-surface)] transition-shadow duration-200 ease-out group-hover:shadow-[0_12px_24px_rgba(58,45,72,0.14)]">
                   @if (cover(product); as media) {
                     <img
-                      class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+                      class="h-full w-full object-cover"
                       [src]="media.url"
                       [alt]="media.alt"
                       loading="lazy"
@@ -85,9 +86,7 @@ import { productPriceLabel, selectCoverMedia } from '../../core/product-media.ut
                   <p class="text-sm font-bold text-[var(--color-text-muted)]">
                     {{ stockLabel(product) }}
                   </p>
-                  <span class="text-sm font-extrabold text-[var(--color-accent)]"
-                    >Ver producto</span
-                  >
+                  <span class="inline-flex items-center gap-1 text-sm font-extrabold text-[var(--color-accent)]">Ver producto <app-icon name="arrow" class="size-4" /></span>
                 </div>
               </a>
             </article>
@@ -105,6 +104,7 @@ import { productPriceLabel, selectCoverMedia } from '../../core/product-media.ut
     <app-footer />
     <app-bottom-navigation />
   `,
+  styles: `:host { display: flex; min-height: 100dvh; flex-direction: column; }`,
 })
 export class ShopPageComponent implements OnInit {
   readonly products = signal<PublicProduct[]>([]);

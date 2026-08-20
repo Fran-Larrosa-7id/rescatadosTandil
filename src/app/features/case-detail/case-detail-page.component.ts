@@ -12,7 +12,6 @@ import { AppHeaderComponent } from '../../shared/components/app-header/app-heade
 import { CaseGalleryComponent } from '../../shared/components/case-gallery/case-gallery.component';
 import { CurrentNeedsComponent } from '../../shared/components/current-needs/current-needs.component';
 import { DonationCardComponent } from '../../shared/components/donation-card/donation-card.component';
-import { CopyAliasButtonComponent } from '../../shared/components/copy-alias-button/copy-alias-button.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { ShareButtonComponent } from '../../shared/components/share-button/share-button.component';
 import { StatusBadgeComponent } from '../../shared/components/status-badge/status-badge.component';
@@ -28,7 +27,6 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
     CaseGalleryComponent,
     CurrentNeedsComponent,
     DonationCardComponent,
-    CopyAliasButtonComponent,
     IconComponent,
     ShareButtonComponent,
     StatusBadgeComponent,
@@ -176,9 +174,8 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
         <div
           class="surface-glass fixed inset-x-0 bottom-0 z-40 border-t px-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] pt-3 lg:hidden"
         >
-          <div class="mx-auto flex max-w-md gap-3">
-            <app-copy-alias-button class="min-w-0 flex-1" [text]="alias" [variant]="'primary'" />
-            <app-share-button [title]="shareTitle(item.name)" [text]="item.summary" />
+          <div class="mx-auto flex max-w-md">
+            <app-share-button class="min-w-0 flex-1" [title]="shareTitle(item.name)" [text]="item.summary" [showLabel]="true" [fullWidth]="true" [variant]="'primary'" />
           </div>
         </div>
       } @else {

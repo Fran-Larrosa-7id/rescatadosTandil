@@ -91,16 +91,22 @@
 }
 
 .preorder-glass {
-  background:
-    linear-gradient(135deg, color-mix(in srgb, var(--color-card) 86%, transparent), color-mix(in srgb, var(--color-recovering-bg) 42%, transparent));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-card) 86%, transparent),
+    color-mix(in srgb, var(--color-recovering-bg) 42%, transparent)
+  );
   border-color: color-mix(in srgb, var(--color-accent) 28%, var(--color-border));
   box-shadow: var(--shadow-elevated);
   backdrop-filter: blur(12px);
 }
 
 :root.dark .preorder-glass {
-  background:
-    linear-gradient(135deg, color-mix(in srgb, var(--color-surface-elevated) 88%, transparent), color-mix(in srgb, var(--color-recovering-bg) 38%, transparent));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-surface-elevated) 88%, transparent),
+    color-mix(in srgb, var(--color-recovering-bg) 38%, transparent)
+  );
 }
 
 .soft-chip {
@@ -236,6 +242,54 @@
   }
 }
 
+.home-merch-carousel {
+  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+}
+
+.home-merch-track {
+  display: flex;
+  gap: 0.75rem;
+  width: max-content;
+  animation: home-merch-carousel 28s linear infinite;
+}
+
+.home-merch-carousel:hover .home-merch-track {
+  animation-play-state: paused;
+}
+
+.home-merch-slide {
+  width: clamp(9rem, 17vw, 12rem);
+  flex: 0 0 auto;
+}
+
+.product-media-hover::after {
+  position: absolute;
+  top: -65%;
+  left: -75%;
+  width: 90%;
+  height: 230%;
+  content: '';
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, rgb(254, 254, 255), transparent);
+  transform: rotate(-18deg) translateX(-70%);
+  transition:
+    transform 1980ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 160ms ease;
+}
+
+.group:hover .product-media-hover::after,
+.group:focus-within .product-media-hover::after {
+  opacity: 1;
+  transform: rotate(-18deg) translateX(250%);
+}
+
+@keyframes home-merch-carousel {
+  to {
+    transform: translateX(calc(-50% - 0.375rem));
+  }
+}
+
 :root.dark .gallery-expand-control {
   background-color: color-mix(in srgb, var(--color-card) 82%, transparent);
   border-color: color-mix(in srgb, var(--color-text) 22%, transparent);
@@ -269,15 +323,20 @@ body {
   margin: 0;
   background: var(--color-bg);
   color: var(--color-text);
-  font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
+  font-family: Manrope, Inter, ui-sans-serif, system-ui, sans-serif;
   line-height: 1.5;
 }
 
 button,
 a {
   -webkit-tap-highlight-color: transparent;
+}
+
+h1,
+h2,
+h3,
+.font-black {
+  font-family: 'Bricolage Grotesque', Manrope, sans-serif;
 }
 
 button {
@@ -335,6 +394,20 @@ a:focus-visible {
     mask-image: none;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
+  }
+
+  .home-merch-carousel {
+    overflow-x: auto;
+    mask-image: none;
+    scroll-snap-type: x mandatory;
+  }
+
+  .home-merch-track {
+    width: auto;
+    animation: none;
+  }
+  .home-merch-slide {
+    scroll-snap-align: start;
   }
 
   .merch-hero-track {
