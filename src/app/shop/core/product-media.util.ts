@@ -19,7 +19,10 @@ export function galleryForVariant(
   const color = variant ? variantAttribute(variant, 'color') : null;
   if (color) {
     const sameColorMedia = product.variants
-      .filter((candidate) => candidate.id !== variant?.id && variantAttribute(candidate, 'color') === color)
+      .filter(
+        (candidate) =>
+          candidate.id !== variant?.id && variantAttribute(candidate, 'color') === color,
+      )
       .flatMap((candidate) => sortedMedia(candidate.media ?? []));
     if (sameColorMedia.length) return sameColorMedia;
   }
@@ -50,12 +53,18 @@ export function activeVariants(product: PublicProduct) {
   return product.variants.filter((variant) => variant.availableStock > 0);
 }
 
-export function productPriceLabel(product: PublicProduct, formatter: (value: number) => string): string {
+export function productPriceLabel(
+  product: PublicProduct,
+  formatter: (value: number) => string,
+): string {
   const variants = product.variants.filter(
-    (variant) => variant.availableStock > 0 && Number.isFinite(variant.priceInCents) && variant.priceInCents > 0,
+    (variant) =>
+      variant.availableStock > 0 &&
+      Number.isFinite(variant.priceInCents) &&
+      variant.priceInCents > 0,
   );
   if (!variants.length) return 'Sin precio';
   const prices = variants.map((variant) => variant.priceInCents);
   const min = Math.min(...prices);
-  return prices.every((price) => price === min) ? formatter(min) : `Desde ${formatter(min)}`;
+  return prices.every((price) => price === min) ? formatter(min) : `${formatter(min)}`;
 }

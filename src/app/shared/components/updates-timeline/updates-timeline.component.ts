@@ -22,7 +22,7 @@ import { IconComponent } from '../icon/icon.component';
             </time>
             <h3 class="mt-3 text-xl font-extrabold leading-snug">{{ update.title }}</h3>
             @for (paragraph of update.paragraphs; track paragraph) {
-              <p class="mt-4 leading-7 text-[var(--color-text-muted)]">{{ paragraph }}</p>
+              <p class="mt-4 leading-7 text-[var(--color-text-muted)] sm:text-justify">{{ paragraph }}</p>
             }
           </article>
         }
@@ -44,7 +44,7 @@ import { IconComponent } from '../icon/icon.component';
                 </time>
                 <h3 class="mt-3 text-xl font-extrabold leading-snug">{{ update.title }}</h3>
                 @for (paragraph of update.paragraphs; track paragraph) {
-                  <p class="mt-4 leading-7 text-[var(--color-text-muted)]">{{ paragraph }}</p>
+                  <p class="mt-4 leading-7 text-[var(--color-text-muted)] sm:text-justify">{{ paragraph }}</p>
                 }
               </article>
             }

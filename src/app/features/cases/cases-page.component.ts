@@ -28,7 +28,8 @@ type CaseFilter = RescueCaseStatus | 'all';
       <div appReveal class="max-w-3xl">
         <h1 class="text-5xl font-black leading-tight">Sus historias</h1>
         <p class="mt-3 text-lg text-[var(--color-text-muted)]">
-          Conocé a cada uno, descubrí su historia y seguí el camino recorrido desde su rescate.
+          Conocé a cada uno y seguí su evolución, tratamientos y recuperación desde el momento de su
+          rescate.
         </p>
       </div>
 

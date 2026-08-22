@@ -64,7 +64,7 @@ import { IconComponent } from '../icon/icon.component';
             class="inline-flex items-center gap-1.5 rounded-full border border-transparent px-3 py-2 text-[var(--color-text)] transition hover:bg-[var(--color-recovering-bg)] hover:text-[var(--color-accent)]"
             ariaCurrentWhenActive="page"
           >
-            <app-icon name="shop" class="size-4" />
+            <app-icon name="cart" class="size-4" />
             <span>Carrito ({{ cart.totalItems() }})</span>
           </a>
         </nav>

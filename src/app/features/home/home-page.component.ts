@@ -114,7 +114,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           class="grid gap-7 rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 md:grid-cols-[0.9fr_1.1fr] md:items-center md:p-8"
         >
           <div>
-            <h2 class="mt-5 text-4xl font-black">Tu compra también rescata.</h2>
+            <h2 class="mt-5 text-4xl font-black">Tu compra también rescata</h2>
             <p class="mt-3 max-w-xl text-[var(--color-text-muted)]">
               Productos creados para ayudar a sostener nuestros rescates
             </p>
@@ -128,21 +128,21 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           </div>
           <div class="home-merch-carousel overflow-hidden">
             <div class="home-merch-track">
-            @for (product of merchCarouselProducts; track $index) {
-              <div
-                class="home-merch-slide overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)]"
-              >
-                <img
-                  class="aspect-[3/4] h-full w-full object-cover"
-                  [ngSrc]="product.coverImage.src"
-                  [alt]="product.coverImage.alt"
-                  [width]="product.coverImage.width"
-                  [height]="product.coverImage.height"
-                  loading="lazy"
-                  sizes="(min-width: 768px) 26vw, 45vw"
-                />
-              </div>
-            }
+              @for (product of merchCarouselProducts; track $index) {
+                <div
+                  class="home-merch-slide overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)]"
+                >
+                  <img
+                    class="aspect-[3/4] h-full w-full object-cover"
+                    [ngSrc]="product.coverImage.src"
+                    [alt]="product.coverImage.alt"
+                    [width]="product.coverImage.width"
+                    [height]="product.coverImage.height"
+                    loading="lazy"
+                    sizes="(min-width: 768px) 26vw, 45vw"
+                  />
+                </div>
+              }
             </div>
           </div>
         </div>
@@ -157,6 +157,9 @@ export class HomePageComponent {
   private readonly casesService = inject(RescueCasesService);
   protected readonly donationConfig = DONATION_CONFIG;
   protected readonly featuredCases = this.casesService.getFeatured();
-  protected readonly merchProducts = MERCH_PRODUCTS.filter((product) => product.featured).slice(0, 4);
+  protected readonly merchProducts = MERCH_PRODUCTS.filter((product) => product.featured).slice(
+    0,
+    4,
+  );
   protected readonly merchCarouselProducts = [...this.merchProducts, ...this.merchProducts];
 }

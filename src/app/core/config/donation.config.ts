@@ -5,7 +5,7 @@ export const DONATION_CONFIG = {
   currentDebt: 1_500_000,
   debtUpdatedAt: '05/08/2026',
   veterinary: {
-    name: 'Clínica San Lorenzo',
+    name: 'Clínica Veterinaria San Lorenzo',
     address: 'San Lorenzo 947, Tandil',
   },
 } as const;

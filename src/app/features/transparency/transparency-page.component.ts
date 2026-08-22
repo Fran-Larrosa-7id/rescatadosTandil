@@ -31,7 +31,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           <p
             class="transparency-debt-badge inline-flex items-center gap-2 rounded-full bg-[var(--color-danger-bg)] px-3 py-1.5 text-xs font-extrabold uppercase text-[var(--color-accent)]"
           >
-              <app-icon name="receipt" class="transparency-badge-icon size-4" />
+            <app-icon name="receipt" class="transparency-badge-icon size-4" />
             Deuda veterinaria activa
           </p>
           <h1 class="mt-5 max-w-3xl text-4xl font-black leading-tight md:text-6xl">
@@ -43,7 +43,9 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           </p>
         </div>
 
-        <div class="transparency-debt-panel rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-inner">
+        <div
+          class="transparency-debt-panel rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-inner"
+        >
           <p class="text-xs font-bold uppercase tracking-[0.08em] text-[var(--color-text-muted)]">
             Total a pagar
           </p>
@@ -119,7 +121,9 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           </dl>
         </article>
 
-        <article class="transparency-clinic rounded-3xl bg-[var(--color-surface)] p-6 shadow-sm md:p-8">
+        <article
+          class="transparency-clinic rounded-3xl bg-[var(--color-surface)] p-6 shadow-sm md:p-8"
+        >
           <div class="flex items-start gap-4">
             <span
               class="inline-flex size-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--color-card)] text-[var(--color-accent)]"
@@ -134,8 +138,8 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
             </div>
           </div>
           <p class="mt-5 text-[var(--color-text-muted)]">
-            También podés colaborar directamente en la clínica. Acercate a recepción y avisá que el
-            aporte es para los rescates de Gatarsis.
+            También podés colaborar directamente en la clínica veterinaria. Acercate a recepción y
+            avisá que el aporte es para los rescates de Aldana Salazar.
           </p>
           <div
             class="relative mt-6 aspect-[16/10] overflow-hidden rounded-2xl border border-[var(--color-border)] bg-white"
@@ -150,24 +154,6 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
             ></iframe>
           </div>
         </article>
-      </section>
-
-      <section appReveal class="mt-14">
-        <h2 class="text-3xl font-black">Detrás de cada rescate</h2>
-        <div class="mt-6 grid gap-4 md:grid-cols-3">
-          @for (item of expenseCategories; track item.title) {
-            <article
-              appReveal
-              [appRevealDelay]="$index * 90"
-              class="rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 shadow-sm"
-            >
-              <h3 class="font-extrabold">{{ item.title }}</h3>
-              <p class="mt-2 text-sm leading-6 text-[var(--color-text-muted)]">
-                {{ item.description }}
-              </p>
-            </article>
-          }
-        </div>
       </section>
     </main>
 

@@ -5,6 +5,7 @@ export type IconName =
   | 'briefcase'
   | 'calculator'
   | 'calendar'
+  | 'cart'
   | 'car'
   | 'check'
   | 'chevron'
@@ -63,6 +64,7 @@ export class IconComponent {
     briefcase: 'M9 7V5h6v2m-11 3h16v9H4v-9Zm0 3c5 2 11 2 16 0',
     calculator: 'M6 3h12v18H6V3Zm3 4h6M9 12h.01M15 12h.01M9 16h.01M15 16h.01',
     calendar: 'M6 3v3m12-3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Z',
+    cart: 'M3 5h2l2.4 10.2a2 2 0 0 0 2 1.5h7.4a2 2 0 0 0 1.9-1.4L20 9H7m3 12a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm7 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z',
     car: 'm5 16-1-3 2-5h12l2 5-1 3M6 16h12v3h-2v-2H8v2H6v-3Zm1-3h.01M17 13h.01',
     check: 'M20 6 9 17l-5-5',
     chevron: 'm9 18 6-6-6-6',

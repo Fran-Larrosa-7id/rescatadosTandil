@@ -108,7 +108,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
                 class="mt-12 max-w-[68ch] scroll-mt-24 rounded-2xl bg-[var(--color-card)] p-6 shadow-sm md:bg-transparent md:p-0 md:shadow-none"
               >
                 <h2 class="text-3xl font-extrabold">Su historia</h2>
-                <div class="mt-5 space-y-6 leading-7 text-[var(--color-text)]">
+                <div class="mt-5 space-y-6 leading-7 text-[var(--color-text)] sm:text-justify">
                   @for (paragraph of item.story.slice(0, 3); track paragraph) {
                     <p>{{ paragraph }}</p>
                   }

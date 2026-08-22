@@ -21,7 +21,7 @@ import { IconComponent } from '../icon/icon.component';
         </a>
 
         <p class="mt-5 text-xs text-[var(--color-text-muted)]">
-          © 2026 {{ brandName }} Hecho por
+          © 2026 {{ brandName }}. Hecho por
           <a
             href="https://github.com/FranciscoLarrosa96/"
             target="_blank"
