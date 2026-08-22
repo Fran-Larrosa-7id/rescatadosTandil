@@ -1,9 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { adminErrorMessage } from '../core/admin-domain-error';
-import { AdminFeedback, AdminFeedbackKind } from '../core/admin-feedback';
+import { AdminFeedback, AdminFeedbackKind, AdminFeedbackService } from '../core/admin-feedback';
 import { AdminApiService } from '../core/admin-api.service';
 import {
   AdminProductDetail,
@@ -17,6 +17,8 @@ import {
   UpdateAdminVariantRequest,
 } from '../core/admin.models';
 import { formatArsFromCents } from '../core/admin-formatters';
+import { RescueImage } from '../../core/models/rescue-image.model';
+import { PhotoSwipeService } from '../../core/services/photo-swipe.service';
 
 interface ProductForm {
   name: string;
@@ -47,6 +49,12 @@ interface MediaForm {
   alt: string;
   sortOrder: number;
   isCover: boolean;
+}
+
+interface DeletionTarget {
+  kind: 'product' | 'variant';
+  id: string;
+  name: string;
 }
 
 @Component({
@@ -184,7 +192,10 @@ interface MediaForm {
               <h2>Variantes</h2>
               <p>SKU, precio y atributos de venta.</p>
             </div>
-            <button type="button" class="button button-secondary" (click)="newVariant()">Agregar variante</button>
+            <div class="actions">
+              <button type="button" class="button button-secondary" (click)="newVariant()">Agregar variante</button>
+              <button type="button" class="button button-primary" (click)="openVariantGenerator()">Generar variantes</button>
+            </div>
           </div>
           @if (product()?.variants?.length) {
             <div class="table-wrap">
@@ -216,10 +227,26 @@ interface MediaForm {
                       <td>{{ item.name }}</td>
                       <td><code>{{ item.sku }}</code></td>
                       <td>{{ ars(item.priceInCents) }}</td>
-                      <td>{{ item.color || '—' }} / {{ item.size || '—' }}</td>
+                      <td>
+                        {{ item.attributes?.['color'] || item.color || '—' }} / {{ item.attributes?.['size'] || item.size || '—' }}
+                        @if (hasLegacyMultipleSizes(item)) {
+                          <p class="muted">
+                            <span>Esta variante contiene varios talles en un único registro.</span>
+                            <button type="button" (click)="openVariantGenerator(item)">Recrear correctamente</button>
+                          </p>
+                        }
+                      </td>
                       <td>{{ item.lowStockThreshold ?? '—' }}</td>
                       <td>{{ item.active ? 'Activa' : 'Inactiva' }}</td>
-                      <td><button type="button" class="action-button" (click)="editVariant(item)">Editar</button></td>
+                      <td class="table-actions">
+                        <button type="button" class="action-button" (click)="editVariant(item)">Editar</button>
+                        <button
+                          type="button"
+                          class="danger-action"
+                          [attr.aria-label]="'Eliminar variante ' + item.name"
+                          (click)="requestVariantDeletion(item)"
+                        >Eliminar</button>
+                      </td>
                     </tr>
                   }
                 </tbody>
@@ -240,15 +267,21 @@ interface MediaForm {
           </div>
           @if (generalMedia().length) {
             <div class="media-grid">
-              @for (item of generalMedia(); track item.id) {
+              @for (item of generalMedia(); track item.id; let index = $index) {
                 <article class="media-card">
-                  <div class="media-preview">
+                  <button
+                    type="button"
+                    class="media-preview"
+                    style="border: 0; padding: 0; cursor: pointer"
+                    (click)="openMediaViewer(generalMedia(), index)"
+                    [attr.aria-label]="'Abrir ' + item.alt + ' en tamaño completo'"
+                  >
                     @if (failedImages().has(item.id)) {
                       <span>No se pudo cargar la imagen.</span>
                     } @else {
                       <img [src]="item.url" [alt]="item.alt" (error)="markImageFailed(item.id)" />
                     }
-                  </div>
+                  </button>
                   <div class="media-copy">
                     <strong>{{ item.alt }}</strong>
                     <span>Orden {{ item.sortOrder }}</span>
@@ -266,6 +299,17 @@ interface MediaForm {
           } @else {
             <p class="empty compact">Todavía no hay imágenes.</p>
           }
+        </section>
+
+        <section class="editor-section danger-zone">
+          <div class="section-heading">
+            <h2>Zona de peligro</h2>
+            <p>El producto dejará de estar disponible en la tienda.</p>
+          </div>
+          <div class="section-heading inline-heading">
+            <p>Si nunca tuvo actividad se eliminará definitivamente. Si tiene historial, se archivará para conservar los registros.</p>
+            <button type="button" class="button button-danger" (click)="requestProductDeletion()">Eliminar producto</button>
+          </div>
         </section>
       }
 
@@ -293,7 +337,11 @@ interface MediaForm {
                 <small>Cuando el stock disponible llegue a este valor se considera bajo.</small>
               </label>
               <label>Color<input [(ngModel)]="variant()!.color" name="color" /></label>
-              <label>Talle<input [(ngModel)]="variant()!.size" name="size" /></label>
+              <label>
+                Talle
+                <input [(ngModel)]="variant()!.size" name="size" />
+                <small>Un solo talle por variante.</small>
+              </label>
               <label>Orden<input [(ngModel)]="variant()!.sortOrder" name="variantSortOrder" type="number" /></label>
               <label class="check align-end"><input [(ngModel)]="variant()!.active" name="variantActive" type="checkbox" /> Activa</label>
             </div>
@@ -308,15 +356,21 @@ interface MediaForm {
                 </div>
                 @if (variantMedia(variant()!.id!).length) {
                   <div class="media-grid compact">
-                    @for (item of variantMedia(variant()!.id!); track item.id) {
+                    @for (item of variantMedia(variant()!.id!); track item.id; let index = $index) {
                       <article class="media-card">
-                        <div class="media-preview">
+                        <button
+                          type="button"
+                          class="media-preview"
+                          style="border: 0; padding: 0; cursor: pointer"
+                          (click)="openMediaViewer(variantMedia(variant()!.id!), index)"
+                          [attr.aria-label]="'Abrir ' + item.alt + ' en tamaño completo'"
+                        >
                           @if (failedImages().has(item.id)) {
                             <span>No se pudo cargar la imagen.</span>
                           } @else {
                             <img [src]="item.url" [alt]="item.alt" (error)="markImageFailed(item.id)" />
                           }
-                        </div>
+                        </button>
                         <div class="media-copy">
                           <strong>{{ item.alt }}</strong>
                           <span>Orden {{ item.sortOrder }}</span>
@@ -341,6 +395,153 @@ interface MediaForm {
               <button class="button button-primary">Guardar variante</button>
             </div>
           </form>
+        </div>
+      }
+
+      @if (variantGenerator()) {
+        <div class="dialog-backdrop">
+          <section class="dialog generator-dialog" aria-labelledby="variant-generator-title">
+            <header>
+              <div>
+                <h2 id="variant-generator-title">Generar variantes</h2>
+                <p>Creá combinaciones reales. Cada una tendrá SKU, precio y stock propios.</p>
+              </div>
+              <button type="button" class="close-button" (click)="closeVariantGenerator()" aria-label="Cerrar">×</button>
+            </header>
+
+            <div class="generator-controls">
+              <fieldset>
+                <legend>Colores</legend>
+                @if (variantGenerator()!.colors.length) {
+                  <div class="chip-list">
+                    @for (color of variantGenerator()!.colors; track color) {
+                      <button type="button" class="button button-secondary" (click)="removeGeneratorColor(color)">{{ color }} <span aria-hidden="true">×</span></button>
+                    }
+                  </div>
+                }
+                <div class="add-attribute">
+                  <input
+                    [ngModel]="variantGenerator()!.colorInput"
+                    (ngModelChange)="updateVariantGenerator('colorInput', $event)"
+                    name="generatorColor"
+                    placeholder="Blanco"
+                    (keydown.enter)="$event.preventDefault(); addGeneratorColor()"
+                  />
+                  <button type="button" class="button button-secondary" (click)="addGeneratorColor()">Agregar color</button>
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend>Talles</legend>
+                <div class="size-options">
+                  @for (size of commonSizes; track size) {
+                    <button
+                      type="button"
+                      class="button button-secondary size-option"
+                      [class.is-selected]="variantGenerator()!.sizes.includes(size)"
+                      (click)="toggleGeneratorSize(size)"
+                    >{{ size }}</button>
+                  }
+                </div>
+                @if (customGeneratorSizes().length) {
+                  <div class="chip-list">
+                    @for (size of customGeneratorSizes(); track size) {
+                      <button type="button" class="button button-secondary" (click)="removeGeneratorSize(size)">{{ size }} <span aria-hidden="true">×</span></button>
+                    }
+                  </div>
+                }
+                <div class="add-attribute">
+                  <input
+                    [ngModel]="variantGenerator()!.customSize"
+                    (ngModelChange)="updateVariantGenerator('customSize', $event)"
+                    name="generatorCustomSize"
+                    placeholder="Otro talle"
+                    (keydown.enter)="$event.preventDefault(); addCustomGeneratorSize()"
+                  />
+                  <button type="button" class="button button-secondary" (click)="addCustomGeneratorSize()">Otro talle</button>
+                </div>
+              </fieldset>
+
+              <div class="form-grid">
+                <label>Precio base (ARS)<input [ngModel]="variantGenerator()!.price" (ngModelChange)="updateVariantGenerator('price', $event)" name="generatorPrice" inputmode="decimal" /></label>
+                <label>Prefijo SKU<input [ngModel]="variantGenerator()!.skuPrefix" (ngModelChange)="updateVariantGenerator('skuPrefix', $event)" name="generatorPrefix" placeholder="REM-GAT" /></label>
+                <label>Orden inicial<input [ngModel]="variantGenerator()!.sortOrder" (ngModelChange)="updateVariantGenerator('sortOrder', $event)" name="generatorSortOrder" type="number" /></label>
+                <label>Stock inicial<input [ngModel]="variantGenerator()!.initialStock" (ngModelChange)="updateVariantGenerator('initialStock', $event)" name="generatorInitialStock" type="number" min="0" step="1" /></label>
+                <label class="check align-end"><input [ngModel]="variantGenerator()!.active" (ngModelChange)="updateVariantGenerator('active', $event)" name="generatorActive" type="checkbox" /> Activas</label>
+              </div>
+            </div>
+
+            <section class="generator-preview">
+              <div class="section-heading inline-heading">
+                <div>
+                  <h3>Vista previa</h3>
+                  <p>{{ creatableGeneratedVariants().length }} combinaciones listas para crear.</p>
+                </div>
+                <button type="button" class="button button-secondary" (click)="refreshGeneratedVariants()">Actualizar vista previa</button>
+              </div>
+              @if (generatedVariants().length) {
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>Combinación</th><th>Nombre</th><th>SKU</th><th>Precio</th><th>Stock inicial</th><th>Activa</th><th>Estado</th></tr></thead>
+                    <tbody>
+                      @for (draft of generatedVariants(); track $index; let index = $index) {
+                        <tr [class.row-muted]="draft.exists">
+                          <td>{{ draft.color || 'Sin color' }} / {{ draft.size || 'Sin talle' }}</td>
+                          <td><input [ngModel]="draft.name" (ngModelChange)="updateGeneratedVariant(index, 'name', $event)" [name]="'generatedName' + index" /></td>
+                          <td><input [ngModel]="draft.sku" (ngModelChange)="updateGeneratedVariant(index, 'sku', $event)" [name]="'generatedSku' + index" /></td>
+                          <td><input [ngModel]="draft.price" (ngModelChange)="updateGeneratedVariant(index, 'price', $event)" [name]="'generatedPrice' + index" inputmode="decimal" /></td>
+                          <td><input [ngModel]="draft.initialStock" (ngModelChange)="updateGeneratedVariant(index, 'initialStock', $event)" [name]="'generatedStock' + index" type="number" min="0" step="1" /></td>
+                          <td><input [ngModel]="draft.active" (ngModelChange)="updateGeneratedVariant(index, 'active', $event)" [name]="'generatedActive' + index" type="checkbox" /></td>
+                          <td>
+                            @if (draft.exists) { <span class="status-mark is-muted">Ya existe</span> }
+                            @else if (draft.error) { <span class="status-mark status-requires_review">{{ draft.error }}</span> }
+                            @else { <span class="status-mark">Lista</span> }
+                          </td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              } @else {
+                <p class="empty compact">Elegí al menos un color o un talle para generar combinaciones.</p>
+              }
+            </section>
+
+            @if (generationResult()) {
+              <p class="feedback" [class]="generationHasFailures() ? 'feedback error' : 'feedback success'" aria-live="polite">{{ generationResult() }}</p>
+            }
+            <p class="generator-stock-note">Podés definir el stock inicial de cada combinación. Al recrear datos históricos empieza en 0: nunca repartimos stock automáticamente.</p>
+            <div class="actions">
+              <button type="button" class="button button-quiet" (click)="closeVariantGenerator()">Cancelar</button>
+              <button type="button" class="button button-primary" [disabled]="generating() || !creatableGeneratedVariants().length" (click)="createGeneratedVariants()">
+                {{ generating() ? generationProgressLabel() : 'Crear ' + creatableGeneratedVariants().length + ' variantes' }}
+              </button>
+            </div>
+          </section>
+        </div>
+      }
+
+      @if (deletionTarget()) {
+        <div class="dialog-backdrop">
+          <section class="dialog danger-dialog" role="dialog" aria-modal="true" aria-labelledby="deletion-title">
+            <header>
+              <h2 id="deletion-title">{{ deletionTarget()!.kind === 'product' ? 'Eliminar producto' : 'Eliminar variante' }}</h2>
+              <button type="button" class="close-button" (click)="cancelDeletion()" [disabled]="deleting()" aria-label="Cerrar">×</button>
+            </header>
+            <p>
+              ¿Querés eliminar {{ deletionTarget()!.kind === 'product' ? 'el producto' : 'la variante' }}
+              <strong>“{{ deletionTarget()!.name }}”</strong>?
+            </p>
+            <p class="muted">
+              Si posee ventas o movimientos históricos, se archivará en lugar de borrarse para conservar los registros.
+            </p>
+            <div class="actions">
+              <button type="button" class="button button-quiet" (click)="cancelDeletion()" [disabled]="deleting()" autofocus>Cancelar</button>
+              <button type="button" class="button button-danger" (click)="confirmDeletion()" [disabled]="deleting()">
+                {{ deleting() ? 'Eliminando...' : deletionTarget()!.kind === 'product' ? 'Eliminar producto' : 'Eliminar variante' }}
+              </button>
+            </div>
+          </section>
         </div>
       }
 
@@ -394,11 +595,19 @@ interface MediaForm {
   styleUrl: './admin-pages.css',
 })
 export class AdminProductEditorComponent implements OnInit {
+  private readonly photoSwipe = inject(PhotoSwipeService);
   id: string | null = null;
   readonly dirty = signal(false);
   readonly saving = signal(false);
   readonly product = signal<AdminProductDetail | null>(null);
   readonly variant = signal<VariantForm | null>(null);
+  readonly variantGenerator = signal<VariantGeneratorForm | null>(null);
+  readonly generatedVariants = signal<GeneratedVariantDraft[]>([]);
+  readonly generating = signal(false);
+  readonly generationResult = signal('');
+  readonly generationProgress = signal({ created: 0, total: 0, failed: 0 });
+  readonly deletionTarget = signal<DeletionTarget | null>(null);
+  readonly deleting = signal(false);
   readonly media = signal<MediaForm | null>(null);
   readonly initialMedia = signal<MediaForm>(defaultInitialMedia());
   readonly notice = signal<AdminFeedback | null>(null);
@@ -407,6 +616,7 @@ export class AdminProductEditorComponent implements OnInit {
   readonly failedImages = signal(new Set<string>());
   readonly draftImageFailed = signal(false);
   readonly initialImageFailed = signal(false);
+  readonly commonSizes = ['S', 'M', 'L', 'XL', 'XXL'];
   model: ProductForm = {
     name: '',
     slug: '',
@@ -420,6 +630,7 @@ export class AdminProductEditorComponent implements OnInit {
     private readonly api: AdminApiService,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
+    private readonly globalFeedback: AdminFeedbackService,
   ) {}
 
   ngOnInit(): void {
@@ -441,6 +652,18 @@ export class AdminProductEditorComponent implements OnInit {
 
   variantPreview(variant: AdminProductVariant): AdminProductMedia | null {
     return this.coverFrom(this.variantMedia(variant.id)) ?? this.coverFrom(this.generalMedia());
+  }
+
+  async openMediaViewer(media: readonly AdminProductMedia[], index: number): Promise<void> {
+    await this.photoSwipe.open(
+      media.map((item) => ({
+        src: item.url,
+        alt: item.alt,
+        width: 1600,
+        height: 1200,
+      }) satisfies RescueImage),
+      index,
+    );
   }
 
   markDirty(): void {
@@ -522,6 +745,247 @@ export class AdminProductEditorComponent implements OnInit {
     return '';
   }
 
+  openVariantGenerator(legacy?: AdminProductVariant): void {
+    const color = legacy ? variantValue(legacy, 'color') : '';
+    const legacySizes = legacy ? splitLegacySizes(variantValue(legacy, 'size')) : [];
+    const next: VariantGeneratorForm = {
+      colors: color ? [color] : [],
+      colorInput: '',
+      sizes: legacySizes,
+      customSize: '',
+      price: legacy ? centsToArsInput(legacy.priceInCents) : '',
+      skuPrefix: skuPrefix(this.product()?.slug || this.model.slug),
+      sortOrder: this.nextVariantSortOrder(),
+      initialStock: 0,
+      active: true,
+    };
+    this.variantGenerator.set(next);
+    this.generationResult.set('');
+    this.generationProgress.set({ created: 0, total: 0, failed: 0 });
+    this.refreshGeneratedVariants();
+  }
+
+  closeVariantGenerator(): void {
+    if (this.generating()) return;
+    this.variantGenerator.set(null);
+    this.generatedVariants.set([]);
+    this.generationResult.set('');
+  }
+
+  updateVariantGenerator(field: keyof VariantGeneratorForm, value: string | number | boolean): void {
+    this.variantGenerator.update((draft) => {
+      if (!draft) return draft;
+      return {
+        ...draft,
+        [field]: field === 'sortOrder' || field === 'initialStock' ? Number(value) : value,
+      } as VariantGeneratorForm;
+    });
+    if (field !== 'colorInput' && field !== 'customSize') this.refreshGeneratedVariants();
+  }
+
+  addGeneratorColor(): void {
+    const draft = this.variantGenerator();
+    const color = draft?.colorInput.trim();
+    if (!draft || !color || draft.colors.some((item) => normalized(item) === normalized(color))) return;
+    this.variantGenerator.set({ ...draft, colors: [...draft.colors, color], colorInput: '' });
+    this.refreshGeneratedVariants();
+  }
+
+  removeGeneratorColor(color: string): void {
+    this.variantGenerator.update((draft) =>
+      draft ? { ...draft, colors: draft.colors.filter((item) => item !== color) } : draft,
+    );
+    this.refreshGeneratedVariants();
+  }
+
+  toggleGeneratorSize(size: string): void {
+    this.variantGenerator.update((draft) => {
+      if (!draft) return draft;
+      return {
+        ...draft,
+        sizes: draft.sizes.includes(size)
+          ? draft.sizes.filter((item) => item !== size)
+          : [...draft.sizes, size],
+      };
+    });
+    this.refreshGeneratedVariants();
+  }
+
+  addCustomGeneratorSize(): void {
+    const draft = this.variantGenerator();
+    const size = draft?.customSize.trim();
+    if (!draft || !size || !isSingleSize(size) || draft.sizes.some((item) => normalized(item) === normalized(size))) {
+      return;
+    }
+    this.variantGenerator.set({ ...draft, sizes: [...draft.sizes, size], customSize: '' });
+    this.refreshGeneratedVariants();
+  }
+
+  removeGeneratorSize(size: string): void {
+    this.variantGenerator.update((draft) =>
+      draft ? { ...draft, sizes: draft.sizes.filter((item) => item !== size) } : draft,
+    );
+    this.refreshGeneratedVariants();
+  }
+
+  customGeneratorSizes(): string[] {
+    return this.variantGenerator()?.sizes.filter((size) => !this.commonSizes.includes(size)) ?? [];
+  }
+
+  refreshGeneratedVariants(): void {
+    const draft = this.variantGenerator();
+    if (!draft) return;
+    const colors = draft.colors.length ? draft.colors : [''];
+    const sizes = draft.sizes.length ? draft.sizes : [''];
+    if (!draft.colors.length && !draft.sizes.length) {
+      this.generatedVariants.set([]);
+      return;
+    }
+    const existing = this.product()?.variants ?? [];
+    const combinations = colors.flatMap((color) =>
+      sizes.map((size) => ({ color, size })),
+    );
+    const rows = combinations.map(({ color, size }, index) => ({
+        color,
+        size,
+        name: [this.product()?.name || this.model.name, color, size].filter(Boolean).join(' '),
+        sku: generatedSku(draft.skuPrefix, color, size),
+        price: draft.price,
+        active: draft.active,
+        sortOrder: Number(draft.sortOrder) + index,
+        initialStock: Number(draft.initialStock),
+        exists: existing.some((item) => sameCombination(item, color, size)),
+        error: null,
+      }));
+    this.generatedVariants.set(this.withDuplicateSkuErrors(rows));
+    this.generationResult.set('');
+  }
+
+  updateGeneratedVariant(
+    index: number,
+    field: 'name' | 'sku' | 'price' | 'initialStock' | 'active',
+    value: string | number | boolean,
+  ): void {
+    this.generatedVariants.update((items) =>
+      this.withDuplicateSkuErrors(items.map((item, itemIndex) =>
+        itemIndex === index
+          ? { ...item, [field]: field === 'initialStock' ? Number(value) : value }
+          : item,
+      )),
+    );
+    this.generationResult.set('');
+  }
+
+  creatableGeneratedVariants(): GeneratedVariantDraft[] {
+    return this.generatedVariants().filter((item) => !item.exists && !item.error);
+  }
+
+  hasLegacyMultipleSizes(item: AdminProductVariant): boolean {
+    return splitLegacySizes(variantValue(item, 'size')).length > 1;
+  }
+
+  generationHasFailures(): boolean {
+    return this.generationProgress().failed > 0;
+  }
+
+  generationProgressLabel(): string {
+    const progress = this.generationProgress();
+    return 'Creando ' + (progress.created + progress.failed) + ' de ' + progress.total + '...';
+  }
+
+  createGeneratedVariants(): void {
+    if (!this.id || this.generating()) return;
+    const queue = this.creatableGeneratedVariants();
+    if (!queue.length) return;
+    this.generating.set(true);
+    this.generationProgress.set({ created: 0, total: queue.length, failed: 0 });
+    this.generationResult.set('');
+    this.createNextGeneratedVariant(queue);
+  }
+
+  private createNextGeneratedVariant(queue: GeneratedVariantDraft[]): void {
+    const draft = queue.shift();
+    if (!draft || !this.id) {
+      const progress = this.generationProgress();
+      this.generating.set(false);
+      this.generationResult.set(
+        progress.failed
+          ? progress.created + ' variantes creadas y ' + progress.failed + ' no pudieron crearse. Corregí las filas marcadas y volvé a intentarlo.'
+          : progress.created + ' variantes creadas. Recordá cargar el stock de cada combinación.',
+      );
+      this.feedback(
+        progress.failed ? 'error' : 'success',
+        progress.failed ? 'La generación terminó con errores.' : 'Variantes creadas. Recordá cargar el stock.',
+      );
+      this.loadProduct();
+      return;
+    }
+    const priceInCents = arsToCents(draft.price);
+    if (
+      priceInCents === null ||
+      priceInCents < 1 ||
+      !draft.name.trim() ||
+      !draft.sku.trim() ||
+      !Number.isInteger(Number(draft.initialStock)) ||
+      Number(draft.initialStock) < 0
+    ) {
+      this.markGeneratedVariantError(draft.sku, 'Revisá nombre, SKU, precio y stock inicial.');
+      this.generationProgress.update((progress) => ({ ...progress, failed: progress.failed + 1 }));
+      this.createNextGeneratedVariant(queue);
+      return;
+    }
+    const attributes = {
+      ...(draft.color.trim() ? { color: draft.color.trim() } : {}),
+      ...(draft.size.trim() ? { size: draft.size.trim() } : {}),
+    };
+    const body: CreateAdminVariantRequest = {
+      name: draft.name.trim(),
+      sku: draft.sku.trim(),
+      color: nullable(draft.color),
+      size: nullable(draft.size),
+      ...(Object.keys(attributes).length ? { attributes } : {}),
+      priceInCents,
+      active: draft.active,
+      sortOrder: draft.sortOrder,
+      lowStockThreshold: null,
+      initialStock: Number(draft.initialStock),
+    };
+    this.api.createVariant(this.id, body).subscribe({
+      next: () => {
+        this.generationProgress.update((progress) => ({ ...progress, created: progress.created + 1 }));
+        this.createNextGeneratedVariant(queue);
+      },
+      error: (error: unknown) => {
+        this.markGeneratedVariantError(draft.sku, adminErrorMessage(error, 'No se pudo crear.'));
+        this.generationProgress.update((progress) => ({ ...progress, failed: progress.failed + 1 }));
+        this.createNextGeneratedVariant(queue);
+      },
+    });
+  }
+
+  private markGeneratedVariantError(sku: string, error: string): void {
+    this.generatedVariants.update((items) =>
+      items.map((item) => item.sku === sku ? { ...item, error } : item),
+    );
+  }
+
+  private withDuplicateSkuErrors(items: GeneratedVariantDraft[]): GeneratedVariantDraft[] {
+    const repeated = new Set(
+      items
+        .map((item) => normalized(item.sku))
+        .filter((sku, index, values) => sku && values.indexOf(sku) !== index),
+    );
+    return items.map((item) => ({
+      ...item,
+      error: repeated.has(normalized(item.sku)) ? 'SKU repetido en la vista previa.' : null,
+    }));
+  }
+
+  private nextVariantSortOrder(): number {
+    const variants = this.product()?.variants ?? [];
+    return variants.length ? Math.max(...variants.map((item) => item.sortOrder)) + 1 : 0;
+  }
+
   newVariant(): void {
     this.variant.set({
       id: null,
@@ -542,8 +1006,8 @@ export class AdminProductEditorComponent implements OnInit {
       id: item.id,
       sku: item.sku,
       name: item.name,
-      color: item.color ?? '',
-      size: item.size ?? '',
+      color: item.attributes?.['color'] ?? item.color ?? '',
+      size: item.attributes?.['size'] ?? item.size ?? '',
       price: (item.priceInCents / 100).toFixed(2).replace('.', ','),
       active: item.active,
       sortOrder: item.sortOrder,
@@ -555,16 +1019,22 @@ export class AdminProductEditorComponent implements OnInit {
   saveVariant(): void {
     const draft = this.variant();
     if (!this.id || !draft) return;
+    if (!isSingleSize(draft.size)) {
+      this.feedback('error', 'Cada variante debe tener un solo talle.');
+      return;
+    }
     const priceInCents = arsToCents(draft.price);
     if (priceInCents === null || priceInCents < 1) {
       this.feedback('error', 'Ingresá un precio válido.');
       return;
     }
+    const attributes = variantAttributes(draft);
     const baseBody: UpdateAdminVariantRequest = {
       sku: draft.sku,
       name: draft.name,
       color: nullable(draft.color),
       size: nullable(draft.size),
+      ...(attributes ? { attributes } : {}),
       priceInCents,
       active: draft.active,
       sortOrder: draft.sortOrder,
@@ -579,6 +1049,7 @@ export class AdminProductEditorComponent implements OnInit {
       name: draft.name,
       color: nullable(draft.color),
       size: nullable(draft.size),
+      ...(attributes ? { attributes } : {}),
       priceInCents,
       active: draft.active,
       sortOrder: draft.sortOrder,
@@ -653,6 +1124,60 @@ export class AdminProductEditorComponent implements OnInit {
         this.loadProduct();
       },
       error: (error: unknown) => this.mediaError.set(mediaErrorMessage(error)),
+    });
+  }
+
+  requestProductDeletion(): void {
+    const product = this.product();
+    if (!product) return;
+    this.deletionTarget.set({ kind: 'product', id: product.id, name: product.name });
+  }
+
+  requestVariantDeletion(item: AdminProductVariant): void {
+    this.deletionTarget.set({
+      kind: 'variant',
+      id: item.id,
+      name: variantDeletionLabel(item),
+    });
+  }
+
+  cancelDeletion(): void {
+    if (!this.deleting()) this.deletionTarget.set(null);
+  }
+
+  confirmDeletion(): void {
+    const target = this.deletionTarget();
+    if (!target || this.deleting()) return;
+    this.deleting.set(true);
+    const operation = target.kind === 'product'
+      ? this.api.deleteProduct(target.id)
+      : this.api.deleteVariant(target.id);
+    operation.subscribe({
+      next: (response) => {
+        this.deleting.set(false);
+        this.deletionTarget.set(null);
+        if (target.kind === 'product') {
+          const message = response.result === 'DELETED'
+            ? 'Producto eliminado.'
+            : 'El producto tenía historial asociado y fue archivado.';
+          this.feedback('success', message);
+          this.globalFeedback.show('success', message);
+          void this.router.navigate(['/admin/products']);
+          return;
+        }
+        this.variant.set(null);
+        this.feedback(
+          'success',
+          response.result === 'DELETED'
+            ? 'Variante eliminada.'
+            : 'La variante tenía historial asociado y fue archivada.',
+        );
+        this.loadProduct();
+      },
+      error: (error: unknown) => {
+        this.deleting.set(false);
+        this.feedback('error', adminErrorMessage(error, 'No pudimos eliminar el elemento.'));
+      },
     });
   }
 
@@ -752,6 +1277,95 @@ function defaultInitialMedia(): MediaForm {
 
 function nullable(value: string): string | null {
   return value.trim() || null;
+}
+
+interface VariantGeneratorForm {
+  colors: string[];
+  colorInput: string;
+  sizes: string[];
+  customSize: string;
+  price: string;
+  skuPrefix: string;
+  sortOrder: number;
+  initialStock: number;
+  active: boolean;
+}
+
+interface GeneratedVariantDraft {
+  color: string;
+  size: string;
+  name: string;
+  sku: string;
+  price: string;
+  active: boolean;
+  sortOrder: number;
+  initialStock: number;
+  exists: boolean;
+  error: string | null;
+}
+
+function variantAttributes(draft: VariantForm): Record<string, string> | undefined {
+  const attributes = {
+    ...(nullable(draft.color) ? { color: draft.color.trim() } : {}),
+    ...(nullable(draft.size) ? { size: draft.size.trim() } : {}),
+  };
+  return Object.keys(attributes).length ? attributes : undefined;
+}
+
+function isSingleSize(value: string): boolean {
+  return !value.trim() || (!/[,;/]/.test(value) && !/\s/.test(value.trim()));
+}
+
+function variantValue(variant: AdminProductVariant, key: 'color' | 'size'): string {
+  return variant.attributes?.[key] ?? variant[key] ?? '';
+}
+
+function variantDeletionLabel(variant: AdminProductVariant): string {
+  const color = variantValue(variant, 'color');
+  const size = variantValue(variant, 'size');
+  return [variant.name, color && 'Color ' + color, size && 'Talle ' + size]
+    .filter(Boolean)
+    .join(' · ');
+}
+
+function splitLegacySizes(value: string): string[] {
+  if (!/[,;/]/.test(value)) return [];
+  return value
+    .split(/[,;/]/)
+    .map((item) => item.trim())
+    .filter((item) => !!item && isSingleSize(item));
+}
+
+function sameCombination(variant: AdminProductVariant, color: string, size: string): boolean {
+  return normalized(variantValue(variant, 'color')) === normalized(color)
+    && normalized(variantValue(variant, 'size')) === normalized(size);
+}
+
+function normalized(value: string): string {
+  return value.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
+function skuPrefix(value: string): string {
+  return normalizeSkuPart(value);
+}
+
+function generatedSku(prefix: string, color: string, size: string): string {
+  return [skuPrefix(prefix), color ? normalizeSkuPart(color).slice(0, 3) : '', size ? normalizeSkuPart(size) : '']
+    .filter(Boolean)
+    .join('-');
+}
+
+function normalizeSkuPart(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase()
+    .replace(/[^A-Z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function centsToArsInput(value: number): string {
+  return (value / 100).toFixed(2).replace('.', ',');
 }
 
 function arsToCents(value: string): number | null {

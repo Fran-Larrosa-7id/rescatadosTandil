@@ -5,6 +5,7 @@ import { ADMIN_API_BASE_URL } from './admin-api.config';
 import {
   AdminAuditLog,
   AdminAuditQuery,
+  AdminCatalogDeletionResult,
   AdminDashboard,
   AdminFlatPage,
   AdminInventoryItem,
@@ -71,6 +72,10 @@ export class AdminApiService {
     return this.http.patch<AdminProductDetail>(`${ADMIN_API_BASE_URL}/products/${productId}`, body);
   }
 
+  deleteProduct(productId: string): Observable<AdminCatalogDeletionResult> {
+    return this.http.delete<AdminCatalogDeletionResult>(`${ADMIN_API_BASE_URL}/products/${productId}`);
+  }
+
   createVariant(productId: string, body: CreateAdminVariantRequest): Observable<AdminProductVariant> {
     return this.http.post<AdminProductVariant>(
       `${ADMIN_API_BASE_URL}/products/${productId}/variants`,
@@ -84,6 +89,10 @@ export class AdminApiService {
 
   updateVariant(variantId: string, body: UpdateAdminVariantRequest): Observable<AdminProductVariant> {
     return this.http.patch<AdminProductVariant>(`${ADMIN_API_BASE_URL}/variants/${variantId}`, body);
+  }
+
+  deleteVariant(variantId: string): Observable<AdminCatalogDeletionResult> {
+    return this.http.delete<AdminCatalogDeletionResult>(`${ADMIN_API_BASE_URL}/variants/${variantId}`);
   }
 
   createMedia(productId: string, body: CreateAdminProductMediaRequest): Observable<AdminProductMedia> {

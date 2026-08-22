@@ -124,6 +124,18 @@ describe('AdminApiService contracts', () => {
     remove.flush(null);
   });
 
+  it('uses the catalog deletion endpoints and preserves the explicit result', () => {
+    api.deleteProduct('product-id').subscribe((response) => expect(response.result).toBe('ARCHIVED'));
+    const product = http.expectOne(ADMIN_API_BASE_URL + '/products/product-id');
+    expect(product.request.method).toBe('DELETE');
+    product.flush({ result: 'ARCHIVED' });
+
+    api.deleteVariant('variant-id').subscribe((response) => expect(response.result).toBe('DELETED'));
+    const variant = http.expectOne(ADMIN_API_BASE_URL + '/variants/variant-id');
+    expect(variant.request.method).toBe('DELETE');
+    variant.flush({ result: 'DELETED' });
+  });
+
   it('posts restock and adjusts to a target stockOnHand', () => {
     api.restock('variant-id', 3, 'Ingreso').subscribe();
     const restock = http.expectOne(`${ADMIN_API_BASE_URL}/inventory/variant-id/restock`);

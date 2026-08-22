@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { formatAdminDate } from '../core/admin-formatters';
 import { AdminApiService } from '../core/admin-api.service';
+import { AdminFeedbackService } from '../core/admin-feedback';
 import { AdminProductListItem } from '../core/admin.models';
 
 @Component({
@@ -19,6 +20,10 @@ import { AdminProductListItem } from '../core/admin.models';
         </div>
         <a class="button button-primary" routerLink="/admin/products/new">Nuevo producto</a>
       </header>
+
+      @if (feedback.current(); as message) {
+        <p class="feedback" [class]="'feedback ' + message.kind" aria-live="polite">{{ message.message }}</p>
+      }
 
       <section class="filters filter-panel">
         <label>
@@ -102,7 +107,10 @@ export class AdminProductsComponent implements OnInit {
   search = '';
   active: '' | 'true' | 'false' = '';
 
-  constructor(private readonly api: AdminApiService) {}
+  constructor(
+    private readonly api: AdminApiService,
+    readonly feedback: AdminFeedbackService,
+  ) {}
 
   ngOnInit(): void {
     this.load();

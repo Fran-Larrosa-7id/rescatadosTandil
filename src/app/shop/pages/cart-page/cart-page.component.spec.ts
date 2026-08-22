@@ -43,6 +43,11 @@ describe('CartPageComponent checkout', () => {
     localStorage.clear();
   });
 
+  it('shows the human variant label without exposing its SKU', () => {
+    expect(fixture.nativeElement.textContent).toContain('Variante');
+    expect(fixture.nativeElement.textContent).not.toContain('SKU');
+  });
+
   it('double click creates only one reserve request', () => {
     const redirect = vi
       .spyOn(component as unknown as { redirectTo: (url: string) => void }, 'redirectTo')

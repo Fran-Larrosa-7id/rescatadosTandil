@@ -49,6 +49,7 @@ export interface AdminProductVariant {
   name: string;
   color: string | null;
   size: string | null;
+  attributes?: Record<string, string> | null;
   priceInCents: number;
   active: boolean;
   sortOrder: number;
@@ -96,6 +97,7 @@ export interface CreateAdminVariantRequest {
   name: string;
   color?: string | null;
   size?: string | null;
+  attributes?: Record<string, string>;
   priceInCents: number;
   active?: boolean;
   sortOrder?: number;
@@ -108,10 +110,15 @@ export interface UpdateAdminVariantRequest {
   name?: string;
   color?: string | null;
   size?: string | null;
+  attributes?: Record<string, string>;
   priceInCents?: number;
   active?: boolean;
   sortOrder?: number;
   lowStockThreshold?: number | null;
+}
+
+export interface AdminCatalogDeletionResult {
+  result: 'DELETED' | 'ARCHIVED';
 }
 
 export interface CreateAdminProductMediaRequest {

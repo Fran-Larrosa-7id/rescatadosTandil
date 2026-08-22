@@ -322,6 +322,218 @@ describe('AdminProductEditorComponent ProductMedia UX', () => {
     http.expectOne(`${ADMIN_API_BASE_URL}/products/product-id`).flush(productDetail());
   });
 
+  it('sends color and size as structured attributes for a concrete SKU combination', () => {
+    component.newVariant();
+    component.variant.update((draft) => ({
+      ...draft!,
+      name: 'Remera Blanco M',
+      sku: 'REM-BLA-M',
+      color: 'Blanco',
+      size: 'M',
+      price: '1500',
+      initialStock: 4,
+    }));
+
+    component.saveVariant();
+
+    const request = http.expectOne(`${ADMIN_API_BASE_URL}/products/product-id/variants`);
+    expect(request.request.body).toEqual(expect.objectContaining({
+      color: 'Blanco',
+      size: 'M',
+      attributes: { color: 'Blanco', size: 'M' },
+    }));
+    request.flush({
+      id: 'variant-id', productId: 'product-id', sku: 'REM-BLA-M', name: 'Remera Blanco M',
+      color: 'Blanco', size: 'M', attributes: { color: 'Blanco', size: 'M' },
+      priceInCents: 150000, active: true, sortOrder: 0, lowStockThreshold: null,
+      createdAt: '2026-01-01T00:00:00Z', updatedAt: '2026-01-01T00:00:00Z',
+    });
+    http.expectOne(`${ADMIN_API_BASE_URL}/products/product-id`).flush(productDetail());
+  });
+
+  it('generates one editable preview per color and size combination', () => {
+    component.product.set(productDetail({ name: 'Remera Gatarsis', slug: 'remera-gatarsis' }));
+    component.openVariantGenerator();
+    component.variantGenerator.update((draft) => ({
+      ...draft!,
+      colors: ['Blanco', 'Negro'],
+      sizes: ['S', 'M'],
+      price: '1500',
+      skuPrefix: 'REM-GAT',
+    }));
+    component.refreshGeneratedVariants();
+
+    expect(component.generatedVariants()).toEqual(expect.arrayContaining([
+      expect.objectContaining({ color: 'Blanco', size: 'S', name: 'Remera Gatarsis Blanco S', sku: 'REM-GAT-BLA-S', price: '1500' }),
+      expect.objectContaining({ color: 'Blanco', size: 'M', sku: 'REM-GAT-BLA-M' }),
+      expect.objectContaining({ color: 'Negro', size: 'S', sku: 'REM-GAT-NEG-S' }),
+      expect.objectContaining({ color: 'Negro', size: 'M', sku: 'REM-GAT-NEG-M' }),
+    ]));
+    expect(component.generatedVariants()).toHaveLength(4);
+  });
+
+  it('keeps preview names, SKU and prices editable before creation', () => {
+    component.product.set(productDetail({ name: 'Remera Gatarsis' }));
+    component.openVariantGenerator();
+    component.variantGenerator.update((draft) => ({
+      ...draft!, colors: ['Lila'], sizes: ['XL'], price: '1500', skuPrefix: 'REM-GAT',
+    }));
+    component.refreshGeneratedVariants();
+
+    component.updateGeneratedVariant(0, 'name', 'Remera edición Lila XL');
+    component.updateGeneratedVariant(0, 'sku', 'REM-ESPECIAL-XL');
+    component.updateGeneratedVariant(0, 'price', '1600');
+
+    expect(component.generatedVariants()[0]).toEqual(expect.objectContaining({
+      name: 'Remera edición Lila XL', sku: 'REM-ESPECIAL-XL', price: '1600',
+    }));
+  });
+
+  it('creates generated variants with one structured size and an editable initial stock per row', () => {
+    component.product.set(productDetail({ name: 'Remera Gatarsis' }));
+    component.openVariantGenerator();
+    component.variantGenerator.update((draft) => ({
+      ...draft!, colors: ['Blanco'], sizes: ['S', 'M'], price: '1500', skuPrefix: 'REM-GAT', initialStock: 8,
+    }));
+    component.refreshGeneratedVariants();
+    component.updateGeneratedVariant(0, 'initialStock', 4);
+
+    component.createGeneratedVariants();
+
+    const first = http.expectOne(ADMIN_API_BASE_URL + '/products/product-id/variants');
+    expect(first.request.body).toEqual(expect.objectContaining({
+      sku: 'REM-GAT-BLA-S', attributes: { color: 'Blanco', size: 'S' }, initialStock: 4,
+    }));
+    first.flush(createdVariant('REM-GAT-BLA-S', 'Blanco', 'S'));
+    const second = http.expectOne(ADMIN_API_BASE_URL + '/products/product-id/variants');
+    expect(second.request.body).toEqual(expect.objectContaining({
+      sku: 'REM-GAT-BLA-M', attributes: { color: 'Blanco', size: 'M' }, initialStock: 8,
+    }));
+    second.flush(createdVariant('REM-GAT-BLA-M', 'Blanco', 'M'));
+    http.expectOne(ADMIN_API_BASE_URL + '/products/product-id').flush(productDetail());
+
+    expect(component.generationResult()).toContain('2 variantes creadas');
+  });
+
+  it('supports color-only and size-only generated products', () => {
+    component.product.set(productDetail({ name: 'Producto' }));
+    component.openVariantGenerator();
+    component.variantGenerator.update((draft) => ({
+      ...draft!, colors: ['Blanco', 'Negro'], sizes: [], price: '1000', skuPrefix: 'LLA',
+    }));
+    component.refreshGeneratedVariants();
+    expect(component.generatedVariants().map((item) => [item.color, item.size])).toEqual([
+      ['Blanco', ''], ['Negro', ''],
+    ]);
+
+    component.variantGenerator.update((draft) => ({ ...draft!, colors: [], sizes: ['S', 'M'] }));
+    component.refreshGeneratedVariants();
+    expect(component.generatedVariants().map((item) => [item.color, item.size])).toEqual([
+      ['', 'S'], ['', 'M'],
+    ]);
+  });
+
+  it('marks existing combinations and legacy CSV variants without splitting their stock', () => {
+    component.product.set(productDetail({
+      variants: [
+        createdVariant('REM-BLA-M', 'Blanco', 'M'),
+        { ...createdVariant('REM-OLD', 'Blanco', 'S,M,L,XL'), attributes: undefined },
+      ],
+    }));
+    component.openVariantGenerator();
+    component.variantGenerator.update((draft) => ({
+      ...draft!, colors: ['Blanco'], sizes: ['S', 'M'], price: '1500', skuPrefix: 'REM-GAT',
+    }));
+    component.refreshGeneratedVariants();
+
+    expect(component.generatedVariants().find((item) => item.size === 'M')?.exists).toBe(true);
+    expect(component.creatableGeneratedVariants().map((item) => item.size)).toEqual(['S']);
+    expect(component.hasLegacyMultipleSizes(component.product()!.variants[1])).toBe(true);
+
+    component.openVariantGenerator(component.product()!.variants[1]);
+    expect(component.variantGenerator()!.sizes).toEqual(['S', 'M', 'L', 'XL']);
+  });
+
+  it('reports partial generator failures and does not retry them automatically', () => {
+    component.product.set(productDetail({ name: 'Remera Gatarsis' }));
+    component.openVariantGenerator();
+    component.variantGenerator.update((draft) => ({
+      ...draft!, colors: ['Blanco'], sizes: ['S', 'M'], price: '1500', skuPrefix: 'REM-GAT',
+    }));
+    component.refreshGeneratedVariants();
+
+    component.createGeneratedVariants();
+    http.expectOne(ADMIN_API_BASE_URL + '/products/product-id/variants').flush(createdVariant('REM-GAT-BLA-S', 'Blanco', 'S'));
+    http.expectOne(ADMIN_API_BASE_URL + '/products/product-id/variants').flush(
+      { code: 'SKU_ALREADY_EXISTS' },
+      { status: 409, statusText: 'Conflict' },
+    );
+    http.expectOne(ADMIN_API_BASE_URL + '/products/product-id').flush(productDetail());
+
+    expect(component.generationResult()).toContain('1 no pudieron crearse');
+    expect(component.generatedVariants().find((item) => item.size === 'M')?.error).toBe('Ya existe una variante con ese SKU.');
+    http.expectNone(ADMIN_API_BASE_URL + '/products/product-id/variants');
+  });
+
+  it('opens the product deletion confirmation and cancel does not call the API', () => {
+    component.product.set(productDetail({ name: 'Producto de prueba' }));
+
+    component.requestProductDeletion();
+
+    expect(component.deletionTarget()).toEqual({
+      kind: 'product', id: 'product-id', name: 'Producto de prueba',
+    });
+    component.cancelDeletion();
+    expect(component.deletionTarget()).toBeNull();
+    http.expectNone(ADMIN_API_BASE_URL + '/products/product-id');
+  });
+
+  it('deletes a product or reports it was archived before returning to the list', () => {
+    component.product.set(productDetail({ name: 'Producto con historial' }));
+    component.requestProductDeletion();
+
+    component.confirmDeletion();
+
+    const request = http.expectOne(ADMIN_API_BASE_URL + '/products/product-id');
+    expect(request.request.method).toBe('DELETE');
+    request.flush({ result: 'ARCHIVED' });
+
+    expect(component.notice()?.message).toBe('El producto tenía historial asociado y fue archivado.');
+    expect(router.navigate).toHaveBeenCalledWith(['/admin/products']);
+  });
+
+  it('removes a variant through its endpoint and refreshes the editor for an archive result', () => {
+    const variant = createdVariant('REM-BLA-M', 'Blanco', 'M');
+    component.product.set(productDetail({ variants: [variant] }));
+    component.requestVariantDeletion(variant);
+
+    component.confirmDeletion();
+
+    const request = http.expectOne(ADMIN_API_BASE_URL + '/variants/' + variant.id);
+    expect(request.request.method).toBe('DELETE');
+    request.flush({ result: 'ARCHIVED' });
+    http.expectOne(ADMIN_API_BASE_URL + '/products/product-id').flush(productDetail({
+      variants: [{ ...variant, active: false }],
+    }));
+
+    expect(component.notice()?.message).toBe('La variante tenía historial asociado y fue archivada.');
+    expect(component.product()?.variants[0].active).toBe(false);
+  });
+
+  it('renders destructive product and variant actions with accessible labels', () => {
+    const variant = createdVariant('REM-BLA-M', 'Blanco', 'M');
+    component.id = 'product-id';
+    component.product.set(productDetail({ variants: [variant] }));
+
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('Zona de peligro');
+    expect(fixture.nativeElement.textContent).toContain('Eliminar producto');
+    expect(
+      fixture.nativeElement.querySelector('[aria-label^="Eliminar variante"]'),
+    ).not.toBeNull();
+  });
+
   it('does not create a variant with a negative or fractional initial stock', () => {
     component.newVariant();
     component.variant.update((draft) => ({ ...draft!, name: 'Talle M', sku: 'SKU-M', price: '1500', initialStock: -1 }));
@@ -331,6 +543,23 @@ describe('AdminProductEditorComponent ProductMedia UX', () => {
 
     component.variant.update((draft) => ({ ...draft!, initialStock: 1.5 }));
     component.saveVariant();
+    http.expectNone(`${ADMIN_API_BASE_URL}/products/product-id/variants`);
+  });
+
+  it('rejects multiple sizes in one variant', () => {
+    component.newVariant();
+    component.variant.update((draft) => ({
+      ...draft!,
+      name: 'Remera Blanca',
+      sku: 'REM-BLA',
+      price: '1500',
+      size: 'S,M,L,XL',
+      initialStock: 4,
+    }));
+
+    component.saveVariant();
+
+    expect(component.notice()?.message).toBe('Cada variante debe tener un solo talle.');
     http.expectNone(`${ADMIN_API_BASE_URL}/products/product-id/variants`);
   });
 
@@ -356,6 +585,24 @@ function validProductForm() {
     featured: false,
     sortOrder: 0,
     active: true,
+  };
+}
+
+function createdVariant(sku: string, color: string, size: string) {
+  return {
+    id: sku.toLowerCase(),
+    productId: 'product-id',
+    sku,
+    name: 'Variante ' + color + ' ' + size,
+    color,
+    size,
+    attributes: { color, size },
+    priceInCents: 150000,
+    active: true,
+    sortOrder: 0,
+    lowStockThreshold: null,
+    createdAt: '2026-01-01T00:00:00Z',
+    updatedAt: '2026-01-01T00:00:00Z',
   };
 }
 

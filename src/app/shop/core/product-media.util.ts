@@ -1,4 +1,5 @@
 import { PublicProduct, PublicProductMedia, PublicProductVariant } from './commerce.models';
+import { variantAttribute } from './variant-color.util';
 
 export function selectCoverMedia(product: PublicProduct): PublicProductMedia | null {
   const general = selectCoverFromMedia(product.media);
@@ -15,6 +16,13 @@ export function galleryForVariant(
 ): PublicProductMedia[] {
   const specific = sortedMedia(variant?.media ?? []);
   if (specific.length) return specific;
+  const color = variant ? variantAttribute(variant, 'color') : null;
+  if (color) {
+    const sameColorMedia = product.variants
+      .filter((candidate) => candidate.id !== variant?.id && variantAttribute(candidate, 'color') === color)
+      .flatMap((candidate) => sortedMedia(candidate.media ?? []));
+    if (sameColorMedia.length) return sameColorMedia;
+  }
   return sortedMedia(product.media);
 }
 

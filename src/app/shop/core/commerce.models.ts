@@ -8,12 +8,15 @@ export interface PublicProductMedia {
   isCover: boolean;
 }
 
+export type VariantAttributes = Readonly<Record<string, string>>;
+
 export interface PublicProductVariant {
   id: string;
   sku: string;
   name: string;
   color: string | null;
   size: string | null;
+  attributes?: VariantAttributes | null;
   priceInCents: number;
   availableStock: number;
   media?: PublicProductMedia[];
