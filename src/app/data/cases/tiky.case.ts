@@ -19,7 +19,7 @@ import type { RescueCase } from '../../core/models/rescue-case.model';
 export const TIKY_CASE = {
   slug: 'tiky',
   name: 'Tiky',
-  status: 'recovering',
+  statuses: ['recovering', 'closed'],
   featured: true,
 
   summary:

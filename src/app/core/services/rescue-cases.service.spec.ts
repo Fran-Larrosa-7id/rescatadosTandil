@@ -25,13 +25,14 @@ describe('RescueCasesService', () => {
     expect(service.getFeatured().every((item) => item.featured)).toBe(true);
   });
 
-  it('exposes Tiky through the detail, featured and recovering collections', () => {
+  it('exposes Tiky through the detail, featured, recovering and adopted collections', () => {
     const tiky = service.getBySlug('tiky');
 
     expect(tiky?.featured).toBe(true);
-    expect(tiky?.status).toBe('recovering');
+    expect(tiky?.statuses).toEqual(['recovering', 'closed']);
     expect(service.getFeatured()).toContain(tiky);
     expect(service.getByStatus('recovering')).toContain(tiky);
+    expect(service.getByStatus('closed')).toContain(tiky);
   });
 
   it('keeps slugs unique', () => {

@@ -27,7 +27,7 @@ import type { RescueCase } from '../../core/models/rescue-case.model';
 export const MAXINE_CASE = {
   slug: 'maxine',
   name: 'Maxine',
-  status: 'memorial',
+  statuses: ['memorial'],
   featured: false,
 
   summary:

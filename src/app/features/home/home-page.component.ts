@@ -128,16 +128,16 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           </div>
           <div class="home-merch-carousel overflow-hidden">
             <div class="home-merch-track">
-              @for (product of merchCarouselProducts; track $index) {
+              @for (image of merchCarouselImages; track $index) {
                 <div
                   class="home-merch-slide overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)]"
                 >
                   <img
                     class="aspect-[3/4] h-full w-full object-cover"
-                    [ngSrc]="product.coverImage.src"
-                    [alt]="product.coverImage.alt"
-                    [width]="product.coverImage.width"
-                    [height]="product.coverImage.height"
+                    [ngSrc]="image.src"
+                    [alt]="image.alt"
+                    [width]="image.width"
+                    [height]="image.height"
                     loading="lazy"
                     sizes="(min-width: 768px) 26vw, 45vw"
                   />
@@ -157,9 +157,9 @@ export class HomePageComponent {
   private readonly casesService = inject(RescueCasesService);
   protected readonly donationConfig = DONATION_CONFIG;
   protected readonly featuredCases = this.casesService.getFeatured();
-  protected readonly merchProducts = MERCH_PRODUCTS.filter((product) => product.featured).slice(
-    0,
-    4,
-  );
-  protected readonly merchCarouselProducts = [...this.merchProducts, ...this.merchProducts];
+  private readonly merchImages = MERCH_PRODUCTS.flatMap((product) => [
+    product.coverImage,
+    ...product.gallery,
+  ]);
+  protected readonly merchCarouselImages = [...this.merchImages, ...this.merchImages];
 }

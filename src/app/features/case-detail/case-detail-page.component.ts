@@ -48,7 +48,11 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           <div class="mt-6 grid gap-8 lg:grid-cols-[1fr_360px] lg:items-start">
             <div>
               <div appReveal class="mb-6">
-                <app-status-badge [status]="item.status" />
+                <div class="flex flex-wrap gap-2">
+                  @for (status of item.statuses; track status) {
+                    <app-status-badge [status]="status" />
+                  }
+                </div>
                 <h1 class="mt-5 text-5xl font-black leading-tight">{{ item.name }}</h1>
                 <p class="mt-4 max-w-3xl text-lg text-[var(--color-text-muted)]">
                   {{ item.summary }}
@@ -82,13 +86,6 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
                     (click)="scrollToSection('historia')"
                   >
                     Historia
-                  </button>
-                  <button
-                    type="button"
-                    class="border-b-2 border-transparent px-1 py-3 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
-                    (click)="scrollToSection('necesidades')"
-                  >
-                    Qué necesita hoy
                   </button>
                   <button
                     type="button"

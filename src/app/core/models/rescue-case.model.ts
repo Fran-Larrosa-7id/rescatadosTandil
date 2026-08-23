@@ -1,11 +1,6 @@
 import { RescueImage } from './rescue-image.model';
 
-export type RescueCaseStatus =
-  | 'needs-help'
-  | 'treatment'
-  | 'recovering'
-  | 'closed'
-  | 'memorial';
+export type RescueCaseStatus = 'needs-help' | 'treatment' | 'recovering' | 'closed' | 'memorial';
 
 export interface RescueNeed {
   readonly title: string;
@@ -22,7 +17,7 @@ export interface RescueCaseUpdate {
 export interface RescueCase {
   readonly slug: string;
   readonly name: string;
-  readonly status: RescueCaseStatus;
+  readonly statuses: readonly RescueCaseStatus[];
   readonly featured: boolean;
   readonly summary: string;
   readonly coverImage: RescueImage;
@@ -37,24 +32,24 @@ export interface RescueCase {
 export const CASE_STATUS_META = {
   'needs-help': {
     label: 'Necesita ayuda',
-    tone: 'danger'
+    tone: 'danger',
   },
   treatment: {
     label: 'En tratamiento',
-    tone: 'neutral'
+    tone: 'neutral',
   },
   recovering: {
-    label: 'En recuperación',
-    tone: 'success'
+    label: 'Recuperado',
+    tone: 'success',
   },
   closed: {
-    label: 'Caso cerrado',
-    tone: 'neutral'
+    label: 'Adoptado',
+    tone: 'neutral',
   },
   memorial: {
     label: 'En memoria',
-    tone: 'muted'
-  }
+    tone: 'muted',
+  },
 } satisfies Record<
   RescueCaseStatus,
   { readonly label: string; readonly tone: 'danger' | 'neutral' | 'success' | 'muted' }

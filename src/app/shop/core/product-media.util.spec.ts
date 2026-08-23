@@ -39,9 +39,9 @@ describe('public product helpers', () => {
     expect(productPriceLabel(makeProduct({ prices: [1500000, 1500000] }), money)).toBe('$15000');
   });
 
-  it('shows Desde the lowest sellable price when variant prices differ, regardless of their order', () => {
-    expect(productPriceLabel(makeProduct({ prices: [2500000, 1500000, 2000000] }), money)).toBe('Desde $15000');
-    expect(productPriceLabel(makeProduct({ prices: [1500000, 2500000, 2000000] }), money)).toBe('Desde $15000');
+  it('shows the lowest sellable price when variant prices differ, regardless of their order', () => {
+    expect(productPriceLabel(makeProduct({ prices: [2500000, 1500000, 2000000] }), money)).toBe('$15000');
+    expect(productPriceLabel(makeProduct({ prices: [1500000, 2500000, 2000000] }), money)).toBe('$15000');
   });
 
   it('ignores out-of-stock or invalid variant prices and never invents a zero price', () => {

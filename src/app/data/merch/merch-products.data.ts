@@ -6,5 +6,5 @@ import { REMERAS_GATARSIS_PRODUCT } from './products/remeras-gatarsis.product';
 export const MERCH_PRODUCTS = [
   BOLSAS_GATARSIS_PRODUCT,
   LLAVEROS_GATARSIS_PRODUCT,
-  REMERAS_GATARSIS_PRODUCT
+  REMERAS_GATARSIS_PRODUCT,
 ] satisfies readonly MerchProduct[];

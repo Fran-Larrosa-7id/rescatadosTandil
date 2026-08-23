@@ -7,7 +7,7 @@ import { RescueCase, RescueCaseStatus } from '../models/rescue-case.model';
   providedIn: 'root'
 })
 export class RescueCasesService {
-  readonly cases = RESCUE_CASES;
+  readonly cases: readonly RescueCase[] = RESCUE_CASES;
 
   getBySlug(slug: string): RescueCase | undefined {
     return this.cases.find((item) => item.slug === slug);
@@ -22,6 +22,6 @@ export class RescueCasesService {
       return this.cases;
     }
 
-    return this.cases.filter((item) => item.status === status);
+    return this.cases.filter((item) => item.statuses.includes(status));
   }
 }

@@ -21,8 +21,10 @@ import { StatusBadgeComponent } from '../status-badge/status-badge.component';
             fill
             loading="lazy"
           />
-          <div class="absolute left-4 top-4">
-            <app-status-badge [status]="item().status" />
+          <div class="absolute left-4 top-4 flex max-w-[calc(100%-2rem)] flex-wrap gap-2">
+            @for (status of item().statuses; track status) {
+              <app-status-badge [status]="status" />
+            }
           </div>
         </div>
         <div class="p-5">

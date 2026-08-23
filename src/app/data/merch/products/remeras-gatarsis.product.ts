@@ -6,24 +6,24 @@ export const REMERAS_GATARSIS_PRODUCT = {
   tagline: '',
   description: '',
   coverImage: {
-    src: 'images/products/remera-mod-1.jpg',
+    src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1787421199/ChatGPT_Image_22_ago_2026_02_53_04_p.m.png',
     alt: 'Remera Gatarsis',
     width: 1390,
     height: 1132,
   },
   gallery: [
-    {
-      src: 'images/products/remera-mod-2.jpg',
-      alt: 'Otro diseño de remera Gatarsis',
-      width: 1380,
-      height: 1140,
-    },
-    {
-      src: 'images/products/remera-mod-3.jpg',
-      alt: 'Diseño alternativo de remera Gatarsis',
-      width: 1402,
-      height: 1122,
-    },
+    // {
+    //   src: 'images/products/remera-mod-2.jpg',
+    //   alt: 'Otro diseño de remera Gatarsis',
+    //   width: 1380,
+    //   height: 1140,
+    // },
+    // {
+    //   src: 'images/products/remera-mod-3.jpg',
+    //   alt: 'Diseño alternativo de remera Gatarsis',
+    //   width: 1402,
+    //   height: 1122,
+    // },
   ],
   variants: [
     { id: 'negra', name: 'Negra', color: 'black', available: true },
