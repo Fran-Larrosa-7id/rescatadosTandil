@@ -8,6 +8,7 @@ import type { RescueCase } from '../../core/models/rescue-case.model';
  * - 31/07/2026: evolución, análisis y PCR VIF/VILEF negativa.
  * - 03/08/2026: lesión en la otra patita y preparación para cirugía.
  * - 05/08/2026: amputación de la patita trasera izquierda, alta y recuperación.
+ * - 20/08/2026: retiro de puntos, alta definitiva y adopción.
  *
  * IMPORTANTE:
  * Los montos mencionados dentro de `updates` son fotografías históricas de la
@@ -19,14 +20,16 @@ import type { RescueCase } from '../../core/models/rescue-case.model';
 export const TIKY_CASE = {
   slug: 'tiky',
   name: 'Tiky',
+
   statuses: ['recovering', 'closed'],
+
   featured: true,
 
   summary:
-    'Tiky tenía apenas 3 meses cuando sufrió una fractura expuesta en una de sus patas traseras. Tras varios días de internación y estabilización, pudo ser operada: la amputación salió muy bien y hoy continúa recuperándose.',
+    'Tiky tenía apenas 3 meses cuando una máquina le destrozó una de sus patas traseras. Fue rescatada con una fractura expuesta, atravesó internación, infección y una cirugía de amputación. Después de semanas de recuperación recibió el alta definitiva y hoy vive adoptada, rodeada de amor y acompañada por Kele.',
 
   coverImage: {
-    src: 'images/cases/tiky/cover.avif',
+    src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1787505350/WhatsApp_Image_2026-08-23_at_13.05.56_2.jpg',
     width: 1600,
     height: 900,
     alt: 'Tiky durante su recuperación',
@@ -35,31 +38,61 @@ export const TIKY_CASE = {
 
   gallery: [
     {
-      src: 'images/cases/tiky/01.avif',
+      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1787505350/WhatsApp_Image_2026-08-23_at_13.05.54.jpg',
       width: 700,
       height: 1556,
       alt: 'Tiky durante su internación veterinaria',
     },
     {
-      src: 'images/cases/tiky/02.avif',
+      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1787505349/WhatsApp_Image_2026-08-23_at_13.05.54_1.jpg',
       width: 900,
       height: 1600,
       alt: 'Tiky con sus patitas vendadas durante el tratamiento',
     },
     {
-      src: 'images/cases/tiky/04.avif',
+      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1787505349/WhatsApp_Image_2026-08-23_at_13.05.54_2.jpg',
       width: 900,
       height: 1600,
       alt: 'Tiky después de la cirugía de amputación',
     },
     {
-      src: 'images/cases/tiky/05.avif',
+      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1787505350/WhatsApp_Image_2026-08-23_at_13.05.55.jpg',
       width: 1536,
       height: 2048,
       alt: 'Tiky durante su recuperación luego de recibir el alta',
     },
     {
-      src: 'images/cases/tiky/06.avif',
+      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1787505349/WhatsApp_Image_2026-08-23_at_13.05.55_1.jpg',
+      width: 900,
+      height: 1600,
+      alt: 'Tiky durante su recuperación luego de recibir el alta',
+    },
+    {
+      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1787505350/WhatsApp_Image_2026-08-23_at_13.05.55_2.jpg',
+      width: 900,
+      height: 1600,
+      alt: 'Tiky durante su recuperación luego de recibir el alta',
+    },
+    {
+      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1787505350/WhatsApp_Image_2026-08-23_at_13.05.55_3.jpg',
+      width: 900,
+      height: 1600,
+      alt: 'Tiky durante su recuperación luego de recibir el alta',
+    },
+    {
+      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1787505350/WhatsApp_Image_2026-08-23_at_13.05.55_4.jpg',
+      width: 900,
+      height: 1600,
+      alt: 'Tiky durante su recuperación luego de recibir el alta',
+    },
+    {
+      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1787505349/WhatsApp_Image_2026-08-23_at_13.05.56.jpg',
+      width: 900,
+      height: 1600,
+      alt: 'Tiky durante su recuperación luego de recibir el alta',
+    },
+    {
+      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1787505349/WhatsApp_Image_2026-08-23_at_13.05.56_1.jpg',
       width: 900,
       height: 1600,
       alt: 'Tiky durante su recuperación luego de recibir el alta',
@@ -79,32 +112,38 @@ export const TIKY_CASE = {
 
     'El 5 de agosto finalmente se realizó la cirugía de amputación de su patita trasera izquierda. La operación salió más que bien y Tiky pudo recibir el alta. Quedó bajo el cuidado de Facu y Bel, quienes continuaron acompañándola durante su recuperación.',
 
-    'Después de la cirugía todavía necesitaba controles y medicación durante varios días, hasta que pudieran retirarle los puntos. Su otra patita, que también había resultado lesionada, debía continuar cicatrizando.',
+    'Después de la cirugía todavía necesitaba controles y medicación mientras cicatrizaban sus heridas y llegaba el momento de retirar los puntos. Día a día comenzó a mostrarse más activa, a jugar y a disfrutar de una vida completamente distinta a la que había conocido durante sus primeros meses.',
 
-    'El caso de Tiky se sumó a otros rescates que durante el año requirieron cirugías de amputación, entre ellos Fénix (Gatoman) y Patán. En esos casos también hubo fracturas expuestas e infecciones asociadas al tiempo transcurrido sin atención inmediata.',
+    'Facu y Bel la cuidaron desde el primer día de su tránsito. Allí Tiky también encontró en Kele, otro gato adoptado, un compañero con quien compartir su nueva vida. Con el paso de los días empezó a quedar claro que aquel tránsito se estaba convirtiendo en algo mucho más grande.',
 
-    'Su historia muestra por qué muchos rescates no pueden esperar. Además de las urgencias veterinarias, los tratamientos, estudios, internaciones y cirugías, los tránsitos también generan gastos cotidianos de alimentación y piedritas. Cada ayuda y cada difusión permiten que estos animales tengan una oportunidad.',
+    'Finalmente llegaron las noticias que cerraron la etapa más difícil de su historia: le retiraron los puntos, recibió el alta y quedó oficialmente adoptada. Tiky pasó de ser una gatita herida e invisible a convertirse en la reina de una casa donde encontró cuidados, compañía y una familia para siempre.',
+
+    'Su historia empezó con una fractura, dolor y abandono, pero terminó con una segunda oportunidad. Después de luchar para sobrevivir, Tiky pudo empezar una nueva vida rodeada del amor que durante sus primeros meses nunca había conocido.',
   ],
 
-  currentNeeds: [
-    {
-      title: 'Controles veterinarios',
-      description:
-        'Después de la cirugía necesita continuar con controles durante su recuperación y hasta que los profesionales indiquen que pueden retirarle los puntos.',
-    },
-    {
-      title: 'Medicación',
-      description:
-        'Debe continuar con la medicación indicada por los profesionales durante los días posteriores a la cirugía.',
-    },
-    {
-      title: 'Cicatrización de sus heridas',
-      description:
-        'Además de la amputación, su otra patita también estaba lesionada y necesita continuar cicatrizando correctamente.',
-    },
-  ],
+  currentNeeds: [],
 
   updates: [
+    {
+      date: '2026-08-20',
+      title: 'Alta definitiva y una familia para siempre',
+      paragraphs: [
+        'Finalmente llegó uno de los días más esperados de toda la historia de Tiky: le retiraron los puntos y pudo dar por terminada la etapa más dura de su recuperación.',
+
+        'Con apenas tres meses había atravesado una fractura expuesta, infección, internación y la amputación de una de sus patas traseras. Después de todo ese camino, la pequeña luchadora recibió el alta y comenzó oficialmente una nueva etapa de su vida.',
+
+        'Y junto con el alta llegó otra noticia enorme: Tiky quedó definitivamente adoptada.',
+
+        'Desde el primer día de su tránsito, Bel, Facu y Kele la acompañaron y cuidaron permanentemente. Lo que comenzó como un lugar temporal para recuperarse terminó convirtiéndose en su hogar para siempre.',
+
+        'Tiky pasó de sobrevivir en el Parque Industrial a ser la reina de una casa, acompañada por Kele y rodeada de una familia que la cuida y la ama.',
+
+        'La rescatista destacó que todo el esfuerzo de Tiky por sobrevivir valió la pena y agradeció especialmente a Bel y Facu por transitarla, cuidarla, amarla y finalmente adoptarla.',
+
+        'En esta misma actualización informó que la deuda veterinaria general había logrado reducirse hasta aproximadamente $1.390.000 y expresó la intención de continuar bajándola durante las siguientes semanas.',
+      ],
+    },
+
     {
       date: '2026-08-16',
       title: 'Tiky está muchísimo mejor y casi con el alta',
@@ -208,8 +247,8 @@ export const TIKY_CASE = {
     },
   ],
 
-  updatedAt: '2026-08-16',
+  updatedAt: '2026-08-20',
 
   seoDescription:
-    'Conocé la historia de Tiky, rescatada con una fractura expuesta a los 3 meses, y su recuperación después de una cirugía de amputación.',
+    'Conocé la historia de Tiky: rescatada con una fractura expuesta a los 3 meses, sobrevivió a una amputación, se recuperó y hoy vive adoptada con una familia para siempre.',
 } satisfies RescueCase;

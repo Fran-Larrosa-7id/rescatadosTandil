@@ -37,7 +37,26 @@ type CaseSort = 'name-asc' | 'name-desc';
       <div
         appReveal
         [appRevealDelay]="80"
-        class="-mx-4 mt-8 flex gap-3 overflow-x-auto px-4 py-2"
+        class="mt-8 flex justify-end"
+      >
+        <label class="shrink-0">
+          <span class="sr-only">Ordenar historias</span>
+          <select
+            class="soft-chip min-h-11 max-w-full rounded-full border px-4 text-sm font-bold text-[var(--color-text)]"
+            [value]="sort()"
+            aria-label="Ordenar historias"
+            (change)="setSort($any($event.target).value)"
+          >
+            <option value="name-asc">Ordenar: A-Z</option>
+            <option value="name-desc">Ordenar: Z-A</option>
+          </select>
+        </label>
+      </div>
+
+      <div
+        appReveal
+        [appRevealDelay]="120"
+        class="-mx-4 mt-3 flex gap-3 overflow-x-auto overscroll-x-contain px-4 py-2"
         aria-label="Filtrar casos"
       >
         @for (filter of filters; track filter.value) {
@@ -50,18 +69,6 @@ type CaseSort = 'name-asc' | 'name-desc';
             {{ filter.label }}
           </button>
         }
-        <label class="ml-auto shrink-0">
-          <span class="sr-only">Ordenar historias</span>
-          <select
-            class="soft-chip min-h-11 rounded-full border px-4 text-sm font-bold text-[var(--color-text)]"
-            [value]="sort()"
-            aria-label="Ordenar historias"
-            (change)="setSort($any($event.target).value)"
-          >
-            <option value="name-asc">Ordenar: A-Z</option>
-            <option value="name-desc">Ordenar: Z-A</option>
-          </select>
-        </label>
       </div>
 
       <section class="mt-8">
