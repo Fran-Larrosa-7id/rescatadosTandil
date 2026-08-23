@@ -10,7 +10,6 @@ import { formatDateNumeric } from '../../core/utils/format-date';
 import { AppFooterComponent } from '../../shared/components/app-footer/app-footer.component';
 import { AppHeaderComponent } from '../../shared/components/app-header/app-header.component';
 import { CaseGalleryComponent } from '../../shared/components/case-gallery/case-gallery.component';
-import { CurrentNeedsComponent } from '../../shared/components/current-needs/current-needs.component';
 import { DonationCardComponent } from '../../shared/components/donation-card/donation-card.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { ShareButtonComponent } from '../../shared/components/share-button/share-button.component';
@@ -25,7 +24,6 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
     AppHeaderComponent,
     AppFooterComponent,
     CaseGalleryComponent,
-    CurrentNeedsComponent,
     DonationCardComponent,
     IconComponent,
     ShareButtonComponent,
@@ -143,12 +141,6 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
                 }
               </section>
 
-              @if (item.currentNeeds.length > 0) {
-                <div appReveal class="mt-12 max-w-[68ch]">
-                  <app-current-needs [needs]="item.currentNeeds" [updatedAt]="item.updatedAt" />
-                </div>
-              }
-
               @if (item.updates.length > 0) {
                 <div appReveal class="mt-12 max-w-[68ch]">
                   <app-updates-timeline [updates]="item.updates" />
@@ -175,7 +167,14 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           class="surface-glass fixed inset-x-0 bottom-0 z-40 border-t px-3 pb-[max(env(safe-area-inset-bottom),0.75rem)] pt-3 lg:hidden"
         >
           <div class="mx-auto flex max-w-md">
-            <app-share-button class="min-w-0 flex-1" [title]="shareTitle(item.name)" [text]="item.summary" [showLabel]="true" [fullWidth]="true" [variant]="'primary'" />
+            <app-share-button
+              class="min-w-0 flex-1"
+              [title]="shareTitle(item.name)"
+              [text]="item.summary"
+              [showLabel]="true"
+              [fullWidth]="true"
+              [variant]="'primary'"
+            />
           </div>
         </div>
       } @else {

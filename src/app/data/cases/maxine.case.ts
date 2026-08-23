@@ -96,6 +96,54 @@ export const MAXINE_CASE = {
       height: 1600,
       alt: 'Maxine acompañada durante la etapa final de su tratamiento',
     },
+    {
+      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1787423606/10.jpg',
+      width: 900,
+      height: 1600,
+      alt: 'Maxine acompañada durante la etapa final de su tratamiento',
+    },
+    {
+      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1787423606/11.jpg',
+      width: 900,
+      height: 1600,
+      alt: 'Maxine acompañada durante la etapa final de su tratamiento',
+    },
+    {
+      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1787423605/12.jpg',
+      width: 900,
+      height: 1600,
+      alt: 'Maxine acompañada durante la etapa final de su tratamiento',
+    },
+    {
+      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1787423605/13.jpg',
+      width: 900,
+      height: 1600,
+      alt: 'Maxine acompañada durante la etapa final de su tratamiento',
+    },
+    {
+      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1787423605/14.jpg',
+      width: 900,
+      height: 1600,
+      alt: 'Maxine acompañada durante la etapa final de su tratamiento',
+    },
+    {
+      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1787423605/15.jpg',
+      width: 900,
+      height: 1600,
+      alt: 'Maxine acompañada durante la etapa final de su tratamiento',
+    },
+    {
+      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1787423605/16.jpg',
+      width: 900,
+      height: 1600,
+      alt: 'Maxine acompañada durante la etapa final de su tratamiento',
+    },
+    {
+      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1787423605/17.jpg',
+      width: 900,
+      height: 1600,
+      alt: 'Maxine acompañada durante la etapa final de su tratamiento',
+    },
   ],
 
   story: [

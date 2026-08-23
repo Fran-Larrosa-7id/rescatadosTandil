@@ -86,6 +86,7 @@ import { IconComponent } from '../icon/icon.component';
           </button>
         </div>
       </div>
+
     </header>
   `,
 })

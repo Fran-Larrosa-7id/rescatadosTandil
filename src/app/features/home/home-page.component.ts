@@ -43,7 +43,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           class="relative aspect-[4/3] overflow-hidden rounded-xl bg-[var(--color-surface)] shadow-sm"
         >
           <img
-            ngSrc="images/cases/tiky/cover.avif"
+            ngSrc="favicon.jpeg"
             alt="Foto pendiente para la portada de Gatarsis"
             class="aspect-[4/3] h-full w-full object-cover"
             fill
@@ -53,7 +53,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
 
         <div appReveal="right" [appRevealDelay]="300">
           <h1 class="max-w-xl text-5xl font-black leading-[1.02] md:text-6xl">
-            Ayudanos a seguir salvando vidas.
+            Ayudanos a seguir salvando vidas
           </h1>
           <p class="mt-6 max-w-xl text-lg text-[var(--color-text-muted)] md:text-xl">
             Detrás de cada rescate hay una historia de supervivencia. Conocé a los animales que hoy
