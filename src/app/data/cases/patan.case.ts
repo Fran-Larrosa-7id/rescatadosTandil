@@ -27,7 +27,7 @@ import type { RescueCase } from '../../core/models/rescue-case.model';
 export const PATAN_CASE = {
   slug: 'patan',
   name: 'Patán',
-  statuses: ['closed'],
+  statuses: ['recovering', 'closed'],
   featured: true,
 
   summary:
