@@ -54,7 +54,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
                   }
                 </div>
                 <h1 class="mt-5 text-5xl font-black leading-tight">{{ item.name }}</h1>
-                <p class="mt-4 max-w-3xl text-lg text-[var(--color-text-muted)]">
+                <p class="mt-4 max-w-3xl text-lg text-[var(--color-text-muted)] text-justify">
                   {{ item.summary }}
                 </p>
                 @if (item.updatedAt) {

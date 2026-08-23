@@ -175,86 +175,6 @@
   background-color: color-mix(in srgb, var(--color-accent) 25%, var(--color-surface-elevated));
 }
 
-.paw-trail {
-  position: fixed;
-  inset: 5.25rem 0 1.5rem;
-  z-index: 40;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.paw-trail__print {
-  position: absolute;
-  width: 1.5rem;
-  height: 1.5rem;
-  color: color-mix(in srgb, var(--color-accent) 72%, transparent);
-  opacity: 0.32;
-  filter: drop-shadow(0 2px 4px color-mix(in srgb, var(--color-accent) 18%, transparent));
-  animation: paw-trail-step 12s ease-in-out infinite;
-}
-
-.paw-trail__print--one {
-  bottom: 7%;
-  left: 3vw;
-  animation-delay: 0s;
-  --paw-rotation: -18deg;
-}
-
-.paw-trail__print--two {
-  bottom: 23%;
-  left: 5.5vw;
-  animation-delay: 0.6s;
-  --paw-rotation: 9deg;
-}
-
-.paw-trail__print--three {
-  bottom: 39%;
-  left: 3.1vw;
-  animation-delay: 1.2s;
-  --paw-rotation: -13deg;
-}
-
-.paw-trail__print--four {
-  bottom: 55%;
-  left: 5.6vw;
-  animation-delay: 1.8s;
-  --paw-rotation: 16deg;
-}
-
-.paw-trail__print--five {
-  bottom: 71%;
-  left: 3.2vw;
-  animation-delay: 2.4s;
-  --paw-rotation: -8deg;
-}
-
-.paw-trail__print--six {
-  bottom: 87%;
-  left: 5.7vw;
-  animation-delay: 3s;
-  --paw-rotation: 14deg;
-}
-
-@keyframes paw-trail-step {
-  0%,
-  12% {
-    opacity: 0.2;
-    transform: translateY(0.5rem) rotate(var(--paw-rotation, 0deg));
-  }
-
-  19%,
-  40% {
-    opacity: 0.76;
-    transform: translateY(0) rotate(var(--paw-rotation, 0deg));
-  }
-
-  53%,
-  100% {
-    opacity: 0.2;
-    transform: translateY(-0.35rem) rotate(var(--paw-rotation, 0deg));
-  }
-}
-
 .mercado-pago-button {
   background-color: #ffe600;
   color: #2d3277;
@@ -481,6 +401,16 @@ body {
   line-height: 1.5;
 }
 
+p {
+  text-align: justify;
+  hyphens: auto;
+}
+
+.app-footer p,
+.cart-empty-state p {
+  text-align: center;
+}
+
 button,
 a {
   -webkit-tap-highlight-color: transparent;
@@ -550,10 +480,6 @@ a:focus-visible {
     scroll-snap-type: x mandatory;
   }
 
-  .paw-trail {
-    display: none;
-  }
-
   .home-merch-carousel {
     overflow-x: auto;
     mask-image: none;
@@ -590,11 +516,5 @@ a:focus-visible {
 
   .merch-hero-slide {
     scroll-snap-align: start;
-  }
-}
-
-@media (max-width: 767px) {
-  .paw-trail {
-    display: none;
   }
 }

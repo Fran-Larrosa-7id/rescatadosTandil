@@ -9,7 +9,7 @@ import { IconComponent } from '../icon/icon.component';
   imports: [RouterLink, IconComponent],
   template: `
     <footer
-      class="mt-auto border-t border-[var(--color-border)] bg-[var(--color-card)] pb-24 pt-7 md:pb-7"
+      class="app-footer mt-auto border-t border-[var(--color-border)] bg-[var(--color-card)] pb-24 pt-7 md:pb-7"
     >
       <div class="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
         <a
