@@ -8,10 +8,8 @@ import { MERCH_PRODUCTS } from '../../data/merch/merch-products.data';
 import { AppFooterComponent } from '../../shared/components/app-footer/app-footer.component';
 import { AppHeaderComponent } from '../../shared/components/app-header/app-header.component';
 import { BottomNavigationComponent } from '../../shared/components/bottom-navigation/bottom-navigation.component';
-import { CaseCardComponent } from '../../shared/components/case-card/case-card.component';
 import { CurrentDebtCardComponent } from '../../shared/components/current-debt-card/current-debt-card.component';
 import { DonationCardComponent } from '../../shared/components/donation-card/donation-card.component';
-import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 
@@ -25,8 +23,6 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
     BottomNavigationComponent,
     CurrentDebtCardComponent,
     DonationCardComponent,
-    CaseCardComponent,
-    EmptyStateComponent,
     IconComponent,
     RevealOnScrollDirective,
   ],
@@ -74,40 +70,50 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
       </section>
 
       <section class="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
-        <div appReveal [appRevealDelay]="300" class="mb-7 flex items-end justify-between gap-4">
+        <div
+          appReveal
+          [appRevealDelay]="300"
+          class="grid gap-7 rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 md:grid-cols-[0.9fr_1.1fr] md:items-center md:p-8"
+        >
           <div>
             <h2 class="text-4xl font-black">Por ellos estamos acá</h2>
             <p class="mt-2 text-[var(--color-text-muted)]">
               Conocé a los animales que actualmente están bajo nuestro cuidado y seguí de cerca su
               evolución.
             </p>
+            <a
+              routerLink="/casos"
+              class="button-primary mt-7 inline-flex min-h-12 items-center justify-center rounded-full px-7 font-extrabold shadow-sm"
+            >
+              Ver historias
+              <app-icon name="arrow" class="ml-2 size-4" />
+            </a>
           </div>
-          <a
-            routerLink="/casos"
-            class="hidden text-sm font-extrabold text-[var(--color-accent)] md:inline-flex"
-          >
-            Ver todos los casos
-            <app-icon name="arrow" class="size-4" />
-          </a>
+          <div class="case-cover-carousel overflow-hidden">
+            <div class="case-cover-track">
+              @for (item of caseCarouselCases; track $index) {
+                <figure
+                  class="case-cover-slide relative m-0 aspect-[4/5] overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)]"
+                >
+                  <img
+                    class="h-full w-full object-cover"
+                    [ngSrc]="item.coverImage.src"
+                    [alt]="item.coverImage.alt"
+                    [width]="item.coverImage.width"
+                    [height]="item.coverImage.height"
+                    loading="lazy"
+                    sizes="(min-width: 768px) 18vw, 40vw"
+                  />
+                  <figcaption
+                    class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-3 pb-3 pt-8 text-sm font-extrabold text-white"
+                  >
+                    {{ item.name }}
+                  </figcaption>
+                </figure>
+              }
+            </div>
+          </div>
         </div>
-
-        @if (featuredCases.length > 0) {
-          <div
-            class="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-4 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0"
-          >
-            @for (item of featuredCases; track item.slug) {
-              <div
-                appReveal
-                [appRevealDelay]="$index * 100"
-                class="w-[82vw] shrink-0 snap-start md:w-auto"
-              >
-                <app-case-card [item]="item" />
-              </div>
-            }
-          </div>
-        } @else {
-          <app-empty-state />
-        }
       </section>
       <section appReveal class="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
         <div
@@ -116,7 +122,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           <div>
             <h2 class="mt-5 text-4xl font-black">Tu compra también rescata</h2>
             <p class="mt-3 max-w-xl text-[var(--color-text-muted)]">
-              Productos creados para ayudar a sostener nuestros rescates
+              Productos creados para ayudar a sostener nuestros rescates.
             </p>
             <a
               routerLink="/merch"
@@ -156,7 +162,8 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
 export class HomePageComponent {
   private readonly casesService = inject(RescueCasesService);
   protected readonly donationConfig = DONATION_CONFIG;
-  protected readonly featuredCases = this.casesService.getFeatured();
+  private readonly caseImages = this.casesService.cases;
+  protected readonly caseCarouselCases = [...this.caseImages, ...this.caseImages];
   private readonly merchImages = MERCH_PRODUCTS.flatMap((product) => [
     product.coverImage,
     ...product.gallery,

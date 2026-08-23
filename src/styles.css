@@ -388,6 +388,28 @@
   flex: 0 0 auto;
 }
 
+.case-cover-carousel {
+  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+}
+
+.case-cover-track {
+  display: flex;
+  gap: 0.75rem;
+  width: max-content;
+  padding-right: 0.75rem;
+  will-change: transform;
+  animation: case-cover-carousel 30s linear infinite;
+}
+
+.case-cover-carousel:hover .case-cover-track {
+  animation-play-state: paused;
+}
+
+.case-cover-slide {
+  width: clamp(8.5rem, 16vw, 11rem);
+  flex: 0 0 auto;
+}
+
 .product-media-hover::after {
   position: absolute;
   top: -65%;
@@ -411,6 +433,12 @@
 }
 
 @keyframes home-merch-carousel {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes case-cover-carousel {
   to {
     transform: translateX(-50%);
   }
@@ -530,6 +558,21 @@ a:focus-visible {
     overflow-x: auto;
     mask-image: none;
     scroll-snap-type: x mandatory;
+  }
+
+  .case-cover-carousel {
+    overflow-x: auto;
+    mask-image: none;
+    scroll-snap-type: x mandatory;
+  }
+
+  .case-cover-track {
+    width: auto;
+    animation: none;
+  }
+
+  .case-cover-slide {
+    scroll-snap-align: start;
   }
 
   .home-merch-track {
