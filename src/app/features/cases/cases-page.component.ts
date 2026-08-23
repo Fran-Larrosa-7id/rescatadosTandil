@@ -10,6 +10,7 @@ import { EmptyStateComponent } from '../../shared/components/empty-state/empty-s
 import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scroll.directive';
 
 type CaseFilter = RescueCaseStatus | 'all';
+type CaseSort = 'name-asc' | 'name-desc';
 
 @Component({
   selector: 'app-cases-page',
@@ -49,6 +50,18 @@ type CaseFilter = RescueCaseStatus | 'all';
             {{ filter.label }}
           </button>
         }
+        <label class="ml-auto shrink-0">
+          <span class="sr-only">Ordenar historias</span>
+          <select
+            class="soft-chip min-h-11 rounded-full border px-4 text-sm font-bold text-[var(--color-text)]"
+            [value]="sort()"
+            aria-label="Ordenar historias"
+            (change)="setSort($any($event.target).value)"
+          >
+            <option value="name-asc">Ordenar: A-Z</option>
+            <option value="name-desc">Ordenar: Z-A</option>
+          </select>
+        </label>
       </div>
 
       <section class="mt-8">
@@ -72,6 +85,7 @@ export class CasesPageComponent {
   private readonly casesService = inject(RescueCasesService);
 
   protected readonly activeFilter = signal<CaseFilter>('all');
+  protected readonly sort = signal<CaseSort>('name-asc');
   protected readonly filters: readonly { readonly value: CaseFilter; readonly label: string }[] = [
     { value: 'all', label: 'Todos' },
     { value: 'treatment', label: 'En tratamiento' },
@@ -79,9 +93,16 @@ export class CasesPageComponent {
     { value: 'closed', label: 'Adoptados' },
     { value: 'memorial', label: 'En memoria' },
   ];
-  protected readonly filteredCases = computed(() =>
-    this.casesService.getByStatus(this.activeFilter()),
-  );
+  protected readonly filteredCases = computed(() => {
+    const direction = this.sort() === 'name-asc' ? 1 : -1;
+    return [...this.casesService.getByStatus(this.activeFilter())].sort(
+      (left, right) => direction * left.name.localeCompare(right.name, 'es', { sensitivity: 'base' }),
+    );
+  });
+
+  protected setSort(value: string): void {
+    if (value === 'name-asc' || value === 'name-desc') this.sort.set(value);
+  }
 
   protected filterClass(value: CaseFilter): string {
     const baseClasses = 'min-h-11 shrink-0 rounded-full border px-5 text-sm font-bold transition';

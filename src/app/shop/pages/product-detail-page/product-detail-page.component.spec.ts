@@ -148,6 +148,22 @@ describe('ProductDetailPageComponent variant pricing', () => {
     );
   });
 
+  it('orders apparel sizes from smallest to largest even when the API returns them out of order', () => {
+    const structured = makeStructuredProduct();
+    const whiteSmall = structured.variants[0];
+    const whiteMedium = structured.variants[1];
+    structured.variants = [
+      whiteSmall,
+      { ...whiteSmall, id: 'blanco-xl', attributes: { color: 'Blanco', size: 'XL' } },
+      { ...whiteSmall, id: 'blanco-l', attributes: { color: 'Blanco', size: 'L' } },
+      whiteMedium,
+    ];
+
+    component.selectAttribute(structured, 'color', 'Blanco');
+
+    expect(component.attributeOptions(structured, 'size')).toEqual(['S', 'M', 'L', 'XL']);
+  });
+
   it('does not turn a legacy CSV size into multiple purchasable sizes', () => {
     const invalid = makeStructuredProduct();
     invalid.variants = [{

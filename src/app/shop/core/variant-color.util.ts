@@ -18,6 +18,8 @@ const ATTRIBUTE_LABELS: Readonly<Record<string, string>> = {
   size: 'Talle',
 };
 
+const SIZE_ORDER = ['XXXS', 'XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', '4XL', '5XL'];
+
 export function variantColor(variant: PublicProductVariant): string | null {
   return colorSwatch(variantAttribute(variant, 'color'));
 }
@@ -70,6 +72,30 @@ export function colorSwatch(color: string | null): string | null {
 
 export function isValidAttributeValue(key: string, value: string | null): boolean {
   return !!value && (key !== 'size' || !/[,/]/.test(value));
+}
+
+export function sortAttributeValues(key: string, values: readonly string[]): string[] {
+  if (key !== 'size') return [...values];
+
+  return [...values].sort((left, right) => compareSizes(left, right));
+}
+
+function compareSizes(left: string, right: string): number {
+  const leftNormalized = left.trim().toUpperCase();
+  const rightNormalized = right.trim().toUpperCase();
+  const leftRank = SIZE_ORDER.indexOf(leftNormalized);
+  const rightRank = SIZE_ORDER.indexOf(rightNormalized);
+
+  if (leftRank !== -1 || rightRank !== -1) {
+    return (leftRank === -1 ? Number.MAX_SAFE_INTEGER : leftRank) -
+      (rightRank === -1 ? Number.MAX_SAFE_INTEGER : rightRank);
+  }
+
+  const leftNumber = Number(leftNormalized);
+  const rightNumber = Number(rightNormalized);
+  if (Number.isFinite(leftNumber) && Number.isFinite(rightNumber)) return leftNumber - rightNumber;
+
+  return leftNormalized.localeCompare(rightNormalized, 'es');
 }
 
 function effectiveAttributes(variant: PublicProductVariant): VariantAttributes {

@@ -24,6 +24,7 @@ import {
   hasStructuredAttributes,
   isValidAttributeValue,
   publicVariantLabel,
+  sortAttributeValues,
   variantAttribute,
 } from '../../core/variant-color.util';
 import { PublicCommerceApiService } from '../../core/public-commerce-api.service';
@@ -289,7 +290,7 @@ export class ProductDetailPageComponent implements OnInit {
   attributeOptions(product: PublicProduct, key: string): string[] {
     const keys = this.structuredAttributeKeys(product);
     const previousKeys = keys.slice(0, keys.indexOf(key));
-    return [
+    return sortAttributeValues(key, [
       ...new Set(
         product.variants
           .filter((variant) =>
@@ -301,7 +302,7 @@ export class ProductDetailPageComponent implements OnInit {
           .map((variant) => variantAttribute(variant, key))
           .filter((value): value is string => isValidAttributeValue(key, value)),
       ),
-    ];
+    ]);
   }
 
   isAttributeOptionDisabled(product: PublicProduct, key: string, value: string): boolean {
