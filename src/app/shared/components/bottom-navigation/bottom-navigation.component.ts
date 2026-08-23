@@ -56,7 +56,7 @@ import { IconComponent } from '../icon/icon.component';
           ariaCurrentWhenActive="page"
           class="relative flex min-h-12 flex-col items-center justify-center rounded-full px-2 text-xs font-bold text-[var(--color-text)]"
         >
-          <app-icon name="wallet" class="size-4" />
+          <app-icon name="cart" class="size-4" />
           Carrito
           @if (cart.totalItems()) {
             <span class="absolute right-1 top-0 inline-flex min-w-4 items-center justify-center rounded-full bg-[var(--color-accent)] px-1 text-[10px] leading-4 text-white">{{ cart.totalItems() }}</span>
