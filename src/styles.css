@@ -527,6 +527,7 @@
 }
 
 html {
+  overflow-x: clip;
   scroll-behavior: smooth;
   background: var(--color-bg);
 }
