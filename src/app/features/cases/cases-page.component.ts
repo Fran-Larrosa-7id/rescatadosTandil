@@ -29,16 +29,11 @@ type CaseSort = 'name-asc' | 'name-desc';
       <div appReveal class="max-w-3xl">
         <h1 class="text-5xl font-black leading-tight">Sus historias</h1>
         <p class="mt-3 text-lg text-[var(--color-text-muted)]">
-          Conocé a cada uno y seguí su evolución, tratamientos y recuperación desde el momento de su
-          rescate.
+          Seguí de cerca su evolución, tratamientos y recuperación desde el momento de su rescate.
         </p>
       </div>
 
-      <div
-        appReveal
-        [appRevealDelay]="80"
-        class="mt-8 flex justify-end"
-      >
+      <div appReveal [appRevealDelay]="80" class="mt-8 flex justify-end">
         <label class="shrink-0">
           <span class="sr-only">Ordenar historias</span>
           <select
@@ -103,7 +98,8 @@ export class CasesPageComponent {
   protected readonly filteredCases = computed(() => {
     const direction = this.sort() === 'name-asc' ? 1 : -1;
     return [...this.casesService.getByStatus(this.activeFilter())].sort(
-      (left, right) => direction * left.name.localeCompare(right.name, 'es', { sensitivity: 'base' }),
+      (left, right) =>
+        direction * left.name.localeCompare(right.name, 'es', { sensitivity: 'base' }),
     );
   });
 

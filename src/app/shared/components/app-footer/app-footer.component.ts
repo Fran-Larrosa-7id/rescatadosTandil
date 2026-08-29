@@ -7,6 +7,11 @@ import { IconComponent } from '../icon/icon.component';
 @Component({
   selector: 'app-footer',
   imports: [RouterLink, IconComponent],
+  styles: `
+    .copyright {
+      text-align: center !important;
+    }
+  `,
   template: `
     <footer
       class="text-center app-footer mt-auto border-t border-[var(--color-border)] bg-[var(--color-card)] pb-24 pt-7 md:pb-7"
@@ -20,7 +25,7 @@ import { IconComponent } from '../icon/icon.component';
           <span>{{ brandName }}</span>
         </a>
 
-        <p class="mt-5 text-xs text-[var(--color-text-muted)]">
+        <p class="mt-5 text-xs text-[var(--color-text-muted)] copyright">
           © 2026 {{ brandName }}. Hecho por
           <a
             href="https://github.com/FranciscoLarrosa96/"

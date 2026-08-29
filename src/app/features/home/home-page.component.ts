@@ -289,7 +289,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
             >
               <span class="block">Ayudanos a</span>
               <span class="block sm:whitespace-nowrap">seguir salvando</span>
-              <span class="block text-[var(--color-accent)]"
+              <span class="mt-[0.5rem] block text-[var(--color-accent)]"
                 >vidas
                 <span class="home-title-heart"
                   ><img
@@ -301,8 +301,8 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
             <p
               class="mt-6 max-w-md text-left text-base leading-7 text-[var(--color-text-muted)] sm:text-lg"
             >
-              Conocé a los gatos que hoy luchan por salir adelante y cómo podés ser parte de su
-              recuperación.
+              Rescatar es apenas el comienzo. Cada paso que sigue los acerca a la oportunidad de
+              volver a empezar.
             </p>
           </div>
 
@@ -444,8 +444,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
               Por ellos estamos acá <span class="text-[var(--color-accent)]">♡</span>
             </h2>
             <p class="mt-3 max-w-sm text-left text-sm leading-6 text-[var(--color-text-muted)]">
-              Conocé a los animales que actualmente están bajo nuestro cuidado y seguí de cerca su
-              evolución.
+              Conocé a quienes hoy están bajo nuestro cuidado.
             </p>
           </div>
           <div class="home-carousel-window overflow-hidden" aria-label="Historias destacadas">
