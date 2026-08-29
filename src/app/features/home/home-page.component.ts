@@ -44,20 +44,26 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
 
     .home-hero {
       isolation: isolate;
+      display: grid;
+      min-height: calc(100svh - 4rem);
+      align-items: center;
+      overflow: clip;
     }
 
-    .home-hero::before {
+    .home-hero::after {
       position: absolute;
-      z-index: -1;
-      top: auto;
-      right: 0;
-      bottom: 1.25rem;
-      width: min(42vw, 34rem);
-      height: min(42vw, calc(100% - 8rem));
+      z-index: -4;
+      top: 8%;
+      right: 8%;
+      width: min(48vw, 48rem);
+      aspect-ratio: 1;
       content: '';
-      border-radius: 58% 42% 50% 50% / 52% 56% 44% 48%;
-      background: color-mix(in srgb, var(--color-surface-strong) 72%, transparent);
-      transform: rotate(18deg);
+      background: radial-gradient(
+        circle,
+        color-mix(in srgb, var(--color-accent) 14%, transparent),
+        transparent 68%
+      );
+      filter: blur(2rem);
     }
 
     .home-title-heart {
@@ -69,8 +75,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
       vertical-align: -0.18em;
     }
 
-    .home-title-heart img,
-    .home-floating-heart img {
+    .home-title-heart img {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -79,45 +84,61 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
       transform: translate(-50%, -48%);
     }
 
-    .home-hero-photo {
+    .home-hero-art {
       isolation: isolate;
-      padding: 0.42rem;
-      clip-path: url('/images/ui/hero-blob-clip.svg#hero-blob');
-      background: color-mix(in srgb, var(--color-card) 94%, white);
-      box-shadow:
-        0 0 0 0.18rem color-mix(in srgb, var(--color-accent) 28%, transparent),
-        0 0.7rem 1.25rem color-mix(in srgb, var(--color-accent) 14%, transparent),
-        0 1.8rem 3.4rem color-mix(in srgb, var(--color-text) 13%, transparent);
+      width: min(108%, 42rem);
+      aspect-ratio: 1.08;
+      margin-inline: auto;
+      transform: translateX(0.75rem);
     }
 
-    .home-hero-photo-media {
-      width: 100%;
-      height: 100%;
-      clip-path: url('/images/ui/hero-blob-clip.svg#hero-blob');
-    }
-
-    .home-hero-photo::after {
+    .home-hero-art::before {
       position: absolute;
-      inset: 0;
+      z-index: -1;
+      inset: 10% 7% 6% 4%;
       content: '';
-      pointer-events: none;
-      z-index: 1;
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.18), transparent 38%);
+      border-radius: 46% 54% 52% 48% / 55% 42% 58% 45%;
+      background: color-mix(in srgb, var(--color-accent-soft) 54%, transparent);
+      filter: blur(1.6rem);
+      opacity: 0.7;
     }
 
-    .home-floating-heart {
+    .home-hero-art img {
       position: absolute;
-      z-index: 2;
-      right: -0.5rem;
-      top: 16%;
-      display: block;
-      width: 3.3rem;
-      height: 3.3rem;
-      overflow: hidden;
-      border: 0.35rem solid var(--color-card);
-      border-radius: 999px;
-      background: var(--color-card);
-      box-shadow: var(--shadow-elevated);
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: contain;
+      mix-blend-mode: multiply;
+      transform: scale(1.08);
+      -webkit-mask-image: radial-gradient(
+        ellipse 48% 55% at 50% 51%,
+        #000 0%,
+        #000 54%,
+        rgba(0, 0, 0, 0.82) 72%,
+        transparent 100%
+      );
+      mask-image: radial-gradient(
+        ellipse 48% 55% at 50% 51%,
+        #000 0%,
+        #000 54%,
+        rgba(0, 0, 0, 0.82) 72%,
+        transparent 100%
+      );
+    }
+
+    :host-context(.dark) .home-hero-art img {
+      mix-blend-mode: screen;
+      filter: brightness(0.8) saturate(0.8);
+      opacity: 0.82;
+    }
+
+    :host-context(.dark) .home-hero::before {
+      opacity: 0.24;
+    }
+
+    :host-context(.dark) .home-hero-art::before {
+      opacity: 0.35;
     }
 
     .home-decor-paw {
@@ -276,13 +297,13 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           class="home-decor-paw home-decor-paw--back right-[6%] top-[28rem] hidden rotate-12 md:block"
         />
         <div
-          class="mx-auto grid max-w-6xl gap-10 px-6 py-12 sm:px-8 md:grid-cols-2 md:items-start md:py-16 lg:px-8 lg:py-20"
+          class="mx-auto grid w-full max-w-6xl gap-10 px-6 py-12 sm:px-8 md:grid-cols-[0.95fr_1.05fr] md:items-center md:gap-8 md:py-16 lg:px-8 lg:py-20"
         >
           <div class="relative z-10">
             <p
               class="text-xs font-extrabold uppercase tracking-[0.09em] text-[var(--color-accent)]"
             >
-              Cada hisotria merece continuar
+              Cada historia merece continuar
             </p>
             <h1
               class="mt-5 max-w-xl text-[2.5rem] font-black leading-[0.98] sm:text-6xl lg:text-[3.5rem]"
@@ -306,26 +327,15 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
             </p>
           </div>
 
-          <div
-            appReveal="right"
-            class="relative mx-auto hidden w-full max-w-[34rem] md:block lg:max-w-[36rem]"
-          >
-            <span class="home-floating-heart" aria-hidden="true"
-              ><img src="images/extra/corazoncito-empty.png" alt=""
-            /></span>
-            <figure
-              class="home-hero-photo relative m-0 aspect-[1.14] overflow-hidden bg-[var(--color-surface)]"
-            >
-              <div class="home-hero-photo-media">
-                <img
-                  ngSrc="favicon.jpeg"
-                  alt="Logo de Gatarsis"
-                  class="h-full w-full object-cover"
-                  fill
-                  priority
-                  sizes="(min-width: 1024px) 43vw, (min-width: 768px) 46vw, 92vw"
-                />
-              </div>
+          <div appReveal="right" class="relative hidden min-w-0 md:block">
+            <figure class="home-hero-art relative m-0">
+              <img
+                ngSrc="images/ui/hero-concepto-1.jpg"
+                alt="Gatarsis - Donde una vida vuelve a empezar"
+                fill
+                priority
+                sizes="(min-width: 1024px) 44vw, (min-width: 768px) 48vw, 100vw"
+              />
             </figure>
           </div>
         </div>
@@ -333,7 +343,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
 
       <section
         id="aporte"
-        class="relative isolate mx-auto max-w-6xl px-6 pb-8 sm:px-6 md:pb-12 lg:px-8"
+        class="relative isolate mx-auto max-w-6xl px-6 pb-3 sm:px-6 md:pb-3 lg:px-8"
       >
         <span
           aria-hidden="true"
@@ -353,7 +363,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
         />
         <div
           appReveal
-          class="home-donation-shell dark-neon-card dark-neon-card--featured relative z-10 grid rounded-[2rem] border border-[var(--color-border)] p-6 md:grid-cols-[1.05fr_0.95fr] md:p-8 lg:p-10"
+          class="home-donation-shell dark-neon-card dark-neon-card--featured relative z-10 grid rounded-[2rem] border border-[var(--color-border)] p-6 md:grid-cols-[1.05fr_0.95fr]"
         >
           <div
             class="flex flex-col items-start gap-4 border-b border-[var(--color-border)] pb-7 md:flex-row md:items-center md:gap-5 md:border-b-0 md:border-r md:pb-0 md:pr-10"
@@ -437,7 +447,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           class="home-decor-paw home-decor-paw--soft home-decor-paw--tiny right-0 bottom-1 hidden -rotate-12 md:block"
         />
         <div
-          class="home-carousel-panel dark-neon-card dark-neon-card--soft relative z-10 grid gap-6 rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 md:grid-cols-[0.75fr_1.25fr] md:items-center"
+          class="home-carousel-panel dark-neon-card dark-neon-card--featured relative z-10 grid gap-6 rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 md:grid-cols-[0.75fr_1.25fr] md:items-center"
         >
           <div>
             <h2 class="text-2xl font-black">
@@ -489,7 +499,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           class="home-decor-paw home-decor-paw--soft right-8 top-8 hidden -rotate-12 md:block"
         />
         <div
-          class="home-carousel-panel dark-neon-card dark-neon-card--soft relative z-10 grid gap-6 rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 md:grid-cols-[0.75fr_1.25fr] md:items-center"
+          class="home-carousel-panel dark-neon-card dark-neon-card--featured relative z-10 grid gap-6 rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 md:grid-cols-[0.75fr_1.25fr] md:items-center"
         >
           <div>
             <h2 class="text-2xl font-black">
