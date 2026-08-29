@@ -190,6 +190,11 @@
   display: block;
 }
 
+.app-footer p {
+  text-align: left !important;
+  text-align-last: left;
+}
+
 .gallery-expand-control {
   background-color: color-mix(in srgb, var(--color-card) 88%, transparent);
   border: 1px solid color-mix(in srgb, var(--color-card) 65%, transparent);
