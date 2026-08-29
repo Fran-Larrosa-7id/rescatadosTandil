@@ -13,6 +13,7 @@ export type IconName =
   | 'copy'
   | 'document'
   | 'expand'
+  | 'heart'
   | 'home'
   | 'info'
   | 'menu'
@@ -72,6 +73,7 @@ export class IconComponent {
     copy: 'M8 8h11v13H8V8Zm-3 8H3V3h11v2',
     document: 'M6 3h8l4 4v14H6V3Zm8 0v5h4M9 12h6m-6 4h6',
     expand: 'M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3m8 0h3a2 2 0 0 0 2-2v-3',
+    heart: 'M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.9-8.6a5.5 5.5 0 0 0-.1-7.8Z',
     home: 'm3 11 9-8 9 8v10h-6v-6H9v6H3V11Z',
     info: 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Zm0-11v6m0-10h.01',
     menu: 'M4 7h16M4 12h16M4 17h16',

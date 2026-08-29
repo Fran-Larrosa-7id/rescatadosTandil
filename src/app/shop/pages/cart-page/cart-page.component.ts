@@ -24,8 +24,12 @@ type CheckoutState =
     IconComponent,
   ],
   template: `
-    <app-header />
-    <main id="contenido" class="mx-auto max-w-6xl px-4 py-8 pb-28 sm:px-6 sm:py-10 lg:px-8">
+    <div class="flex min-h-dvh flex-col">
+      <app-header />
+      <main
+        id="contenido"
+        class="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-8 pb-28 sm:px-6 sm:py-10 lg:px-8"
+      >
       <h1 class="text-4xl font-black">Tu carrito</h1>
       @if (cart.items().length) {
         <section class="mt-7 grid gap-8 lg:grid-cols-[1fr_24rem]">
@@ -223,8 +227,9 @@ type CheckoutState =
           >
         </div>
       }
-    </main>
-    <app-footer />
+      </main>
+      <app-footer />
+    </div>
     <app-bottom-navigation />
   `,
 })
