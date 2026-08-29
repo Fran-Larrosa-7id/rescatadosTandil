@@ -74,7 +74,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 5rem;
+      width: 4.7rem;
       max-width: none;
       transform: translate(-50%, -48%);
     }
@@ -143,6 +143,26 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
       opacity: 0.14;
     }
 
+    .home-decor-dots {
+      position: absolute;
+      z-index: -1;
+      width: clamp(8rem, 14vw, 13rem);
+      aspect-ratio: 1;
+      opacity: 0.46;
+      pointer-events: none;
+      background-image: radial-gradient(
+        circle,
+        color-mix(in srgb, var(--color-accent) 46%, transparent) 1.35px,
+        transparent 1.55px
+      );
+      background-size: 0.78rem 0.78rem;
+      mask-image: radial-gradient(circle, black 15%, transparent 70%);
+    }
+
+    :host-context(.dark) .home-decor-dots {
+      opacity: 0.28;
+    }
+
     .home-donation-shell {
       background: linear-gradient(135deg, var(--color-card), var(--color-surface));
       box-shadow: var(--shadow-elevated);
@@ -199,6 +219,10 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
         display: none;
       }
 
+      .home-decor-dots {
+        display: none;
+      }
+
       .home-carousel-window {
         margin-right: -1.5rem;
         mask-image: linear-gradient(to right, black 0%, black 86%, transparent 100%);
@@ -232,6 +256,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
 
     <main id="contenido" class="home-page">
       <section class="home-hero relative">
+        <span aria-hidden="true" class="home-decor-dots left-[42%] top-36 hidden md:block"></span>
         <img
           src="images/extra/paw.png"
           alt=""
@@ -257,7 +282,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
             <p
               class="text-xs font-extrabold uppercase tracking-[0.09em] text-[var(--color-accent)]"
             >
-              Cada vida merece una oportunidad
+              Cada hisotria merece continuar
             </p>
             <h1
               class="mt-5 max-w-xl text-[2.5rem] font-black leading-[0.98] sm:text-6xl lg:text-[3.5rem]"
@@ -267,18 +292,24 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
               <span class="block text-[var(--color-accent)]"
                 >vidas
                 <span class="home-title-heart"
-                  ><img src="images/extra/corazoncito-empty.png" alt="" /></span
+                  ><img
+                    class="w-[4.2rem]"
+                    src="images/extra/corazoncito-empty.png"
+                    alt="corazon" /></span
               ></span>
             </h1>
             <p
               class="mt-6 max-w-md text-left text-base leading-7 text-[var(--color-text-muted)] sm:text-lg"
             >
-              Detrás de cada rescate hay una historia de supervivencia. Conocé a los animales que
-              hoy necesitan una mano para salir adelante.
+              Conocé a los gatos que hoy luchan por salir adelante y cómo podés ser parte de su
+              recuperación.
             </p>
           </div>
 
-          <div appReveal="right" class="relative mx-auto hidden w-full max-w-[34rem] md:block lg:max-w-[36rem]">
+          <div
+            appReveal="right"
+            class="relative mx-auto hidden w-full max-w-[34rem] md:block lg:max-w-[36rem]"
+          >
             <span class="home-floating-heart" aria-hidden="true"
               ><img src="images/extra/corazoncito-empty.png" alt=""
             /></span>
@@ -304,6 +335,10 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
         id="aporte"
         class="relative isolate mx-auto max-w-6xl px-6 pb-8 sm:px-6 md:pb-12 lg:px-8"
       >
+        <span
+          aria-hidden="true"
+          class="home-decor-dots -left-16 top-1/2 hidden -translate-y-1/2 md:block"
+        ></span>
         <img
           src="images/extra/paw.png"
           alt=""
@@ -388,6 +423,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
       </section>
 
       <section appReveal class="relative isolate mx-auto max-w-6xl px-6 py-3 sm:px-6 lg:px-8">
+        <span aria-hidden="true" class="home-decor-dots right-[21%] -top-10 hidden md:block"></span>
         <img
           src="images/extra/paw.png"
           alt=""
@@ -440,6 +476,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
       </section>
 
       <section appReveal class="relative isolate mx-auto max-w-6xl px-6 py-3 sm:px-6 lg:px-8">
+        <span aria-hidden="true" class="home-decor-dots -right-14 bottom-0 hidden md:block"></span>
         <img
           src="images/extra/paw.png"
           alt=""
@@ -488,61 +525,6 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
               }
             </div>
           </div>
-        </div>
-      </section>
-
-      <section class="relative isolate mx-auto max-w-6xl px-6 py-12 sm:px-6 lg:px-8">
-        <img
-          src="images/extra/paw.png"
-          alt=""
-          aria-hidden="true"
-          class="home-decor-paw home-decor-paw--soft home-decor-paw--tiny -left-8 top-10 hidden -rotate-12 md:block"
-        />
-        <img
-          src="images/extra/paw.png"
-          alt=""
-          aria-hidden="true"
-          class="home-decor-paw home-decor-paw--soft right-[12%] bottom-4 hidden rotate-12 md:block"
-        />
-        <div
-          class="relative z-10 grid gap-7 border-y border-[var(--color-border)] py-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0"
-        >
-          <article class="flex gap-3 lg:pr-7">
-            <app-icon name="shield" class="mt-0.5 size-7 shrink-0 text-[var(--color-accent)]" />
-            <div>
-              <h2 class="font-black">Transparencia</h2>
-              <p class="mt-1 text-left text-sm leading-6 text-[var(--color-text-muted)]">
-                Mostramos cada gasto y cada historia con total transparencia.
-              </p>
-            </div>
-          </article>
-          <article class="flex gap-3 lg:border-l lg:border-[var(--color-border)] lg:px-7">
-            <app-icon name="heart" class="mt-0.5 size-7 shrink-0 text-[var(--color-accent)]" />
-            <div>
-              <h2 class="font-black">Compromiso</h2>
-              <p class="mt-1 text-left text-sm leading-6 text-[var(--color-text-muted)]">
-                Acompañamos cada caso hasta su recuperación o adopción.
-              </p>
-            </div>
-          </article>
-          <article class="flex gap-3 lg:border-l lg:border-[var(--color-border)] lg:px-7">
-            <app-icon name="briefcase" class="mt-0.5 size-7 shrink-0 text-[var(--color-accent)]" />
-            <div>
-              <h2 class="font-black">Infonunidad</h2>
-              <p class="mt-1 text-left text-sm leading-6 text-[var(--color-text-muted)]">
-                Nada de esto sería posible sin personas que eligen ayudar.
-              </p>
-            </div>
-          </article>
-          <article class="flex gap-3 lg:border-l lg:border-[var(--color-border)] lg:pl-7">
-            <app-icon name="paw" class="mt-0.5 size-7 shrink-0 text-[var(--color-accent)]" />
-            <div>
-              <h2 class="font-black">Amor real</h2>
-              <p class="mt-1 text-left text-sm leading-6 text-[var(--color-text-muted)]">
-                Detrás de cada rescate hay dedicación, tiempo y mucho amor.
-              </p>
-            </div>
-          </article>
         </div>
       </section>
     </main>
