@@ -229,7 +229,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
       </section>
 
       <section id="aporte" class="mx-auto max-w-6xl px-6 pb-8 sm:px-6 md:pb-12 lg:px-8">
-        <div appReveal class="home-donation-shell grid rounded-[2rem] border border-[var(--color-border)] p-6 md:grid-cols-[1.05fr_0.95fr] md:p-8 lg:p-10">
+        <div appReveal class="home-donation-shell dark-neon-card dark-neon-card--featured grid rounded-[2rem] border border-[var(--color-border)] p-6 md:grid-cols-[1.05fr_0.95fr] md:p-8 lg:p-10">
           <div class="flex flex-col items-start gap-4 border-b border-[var(--color-border)] pb-7 md:flex-row md:items-center md:gap-5 md:border-b-0 md:border-r md:pb-0 md:pr-10">
             <span class="grid size-16 shrink-0 place-items-center rounded-full bg-[var(--color-surface-strong)] text-[var(--color-accent)]">
               <app-icon name="wallet" class="size-7" />
@@ -241,7 +241,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
             </div>
           </div>
 
-          <section class="home-donation-card mt-7 rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 md:-my-3 md:ml-8 md:mt-0">
+          <section class="home-donation-card dark-neon-card dark-neon-card--soft mt-7 rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 md:-my-3 md:ml-8 md:mt-0">
             <h2 class="text-xl font-black">Tu aporte</h2>
             <p class="mt-2 text-left text-sm leading-6 text-[var(--color-text-muted)]">Transferencia directa a la cuenta de la rescatista para ayudar con los gastos veterinarios.</p>
             <dl class="mt-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3">
@@ -264,7 +264,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
       </section>
 
       <section appReveal class="mx-auto max-w-6xl px-6 py-3 sm:px-6 lg:px-8">
-        <div class="home-carousel-panel grid gap-6 rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 md:grid-cols-[0.75fr_1.25fr] md:items-center">
+        <div class="home-carousel-panel dark-neon-card dark-neon-card--soft grid gap-6 rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 md:grid-cols-[0.75fr_1.25fr] md:items-center">
           <div>
             <h2 class="text-2xl font-black">Por ellos estamos acá <span class="text-[var(--color-accent)]">♡</span></h2>
             <p class="mt-3 max-w-sm text-left text-sm leading-6 text-[var(--color-text-muted)]">Conocé a los animales que actualmente están bajo nuestro cuidado y seguí de cerca su evolución.</p>
@@ -283,7 +283,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
       </section>
 
       <section appReveal class="mx-auto max-w-6xl px-6 py-3 sm:px-6 lg:px-8">
-        <div class="home-carousel-panel grid gap-6 rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 md:grid-cols-[0.75fr_1.25fr] md:items-center">
+        <div class="home-carousel-panel dark-neon-card dark-neon-card--soft grid gap-6 rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 md:grid-cols-[0.75fr_1.25fr] md:items-center">
           <div>
             <h2 class="text-2xl font-black">Tu compra también rescata <span class="text-[var(--color-accent)]">♡</span></h2>
             <p class="mt-3 max-w-sm text-left text-sm leading-6 text-[var(--color-text-muted)]">Productos creados para ayudar a sostener nuestros rescates.</p>
