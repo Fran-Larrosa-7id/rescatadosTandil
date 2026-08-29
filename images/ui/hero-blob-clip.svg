@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1" aria-hidden="true">
+  <defs>
+    <clipPath id="hero-blob" clipPathUnits="objectBoundingBox">
+      <path d="M .1,.06 C .23,-.02 .38,.06 .52,.1 C .7,.02 .88,.08 .96,.24 C 1,.38 .91,.5 .96,.65 C 1,.82 .88,.95 .7,.94 C .54,1 .4,.9 .24,.96 C .08,.9 .02,.76 .07,.61 C .12,.46 .02,.3 .1,.06 Z" />
+    </clipPath>
+  </defs>
+</svg>
