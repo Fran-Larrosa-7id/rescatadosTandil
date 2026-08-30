@@ -51,8 +51,7 @@
 :root.dark .home-page {
   background:
     radial-gradient(circle at 92% 15%, rgba(168, 138, 224, 0.15), transparent 30rem),
-    radial-gradient(circle at 8% 72%, rgba(124, 92, 196, 0.12), transparent 28rem),
-    var(--color-bg);
+    radial-gradient(circle at 8% 72%, rgba(124, 92, 196, 0.12), transparent 28rem), var(--color-bg);
 }
 
 :root.dark .home-hero-photo {
@@ -75,8 +74,7 @@
   z-index: 0;
   isolation: isolate;
   border-color: var(--dark-neon-border);
-  background:
-    linear-gradient(145deg, rgba(41, 33, 57, 0.98), rgba(31, 25, 44, 0.98)) padding-box;
+  background: linear-gradient(145deg, rgba(41, 33, 57, 0.98), rgba(31, 25, 44, 0.98)) padding-box;
   box-shadow:
     0 0 5px var(--dark-neon-glow-close),
     0 0 14px var(--dark-neon-glow-mid),
@@ -126,8 +124,7 @@
 
 :root.dark .dark-neon-card--soft {
   border-color: rgba(190, 130, 255, 0.36);
-  background:
-    linear-gradient(145deg, rgba(40, 32, 55, 0.96), rgba(30, 24, 42, 0.96)) padding-box;
+  background: linear-gradient(145deg, rgba(40, 32, 55, 0.96), rgba(30, 24, 42, 0.96)) padding-box;
   box-shadow:
     0 0 4px rgba(191, 116, 255, 0.16),
     0 0 12px rgba(177, 91, 255, 0.1),
@@ -324,11 +321,6 @@
 
 .mercado-pago-button img {
   display: block;
-}
-
-.app-footer p {
-  text-align: left !important;
-  text-align-last: left;
 }
 
 .gallery-expand-control {

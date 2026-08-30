@@ -5,6 +5,7 @@ import { AppFooterComponent } from '../../../shared/components/app-footer/app-fo
 import { AppHeaderComponent } from '../../../shared/components/app-header/app-header.component';
 import { BottomNavigationComponent } from '../../../shared/components/bottom-navigation/bottom-navigation.component';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
+import { RevealOnScrollDirective } from '../../../shared/directives/reveal-on-scroll.directive';
 import { PublicCommerceApiService } from '../../core/public-commerce-api.service';
 import { PublicProduct } from '../../core/commerce.models';
 import { formatArsFromCents } from '../../core/money.util';
@@ -20,6 +21,7 @@ type ProductSort = 'name-asc' | 'name-desc' | 'price-asc' | 'price-desc';
     AppFooterComponent,
     BottomNavigationComponent,
     IconComponent,
+    RevealOnScrollDirective,
   ],
   template: `
     <app-header />
@@ -59,13 +61,13 @@ type ProductSort = 'name-asc' | 'name-desc' | 'price-asc' | 'price-desc';
       />
       <span aria-hidden="true" class="shop-decor shop-dots shop-dots--left hidden lg:block"></span>
       <span aria-hidden="true" class="shop-decor shop-dots shop-dots--right hidden lg:block"></span>
-      <section class="shop-intro max-w-none p-0">
+      <section appReveal="up" class="shop-intro max-w-none p-0">
         <p class="text-sm font-extrabold uppercase tracking-wide text-[var(--color-accent)]">
           Tienda online
         </p>
 
         <p class="mt-4 text-lg text-[var(--color-text-muted)]">
-          Elegí lo que más te guste y llevate un pedacito de
+          Elegí lo que más te guste y llevate <br />un pedacito de
           <span class="text-[var(--color-accent)]">Gatarsis</span> con vos.
           <img
             src="images/extra/corazon-lleno.png"
@@ -94,7 +96,11 @@ type ProductSort = 'name-asc' | 'name-desc' | 'price-asc' | 'price-desc';
           </button>
         </div>
       } @else if (products().length) {
-        <div class="shop-sort mt-8 flex flex-wrap items-center gap-3">
+        <div
+          appReveal="up"
+          [appRevealDelay]="90"
+          class="shop-sort mt-8 flex flex-wrap items-center gap-3"
+        >
           <label class="grid gap-1 text-sm font-bold text-[var(--color-text-muted)]">
             Ordenar por:
             <select
@@ -115,6 +121,8 @@ type ProductSort = 'name-asc' | 'name-desc' | 'price-asc' | 'price-desc';
         >
           @for (product of visibleProducts(); track product.id) {
             <article
+              appReveal="up"
+              [appRevealDelay]="$index * 65"
               class="shop-card dark-neon-card group overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] shadow-[0_12px_28px_rgba(58,45,72,0.08)]"
             >
               <a
@@ -168,6 +176,7 @@ type ProductSort = 'name-asc' | 'name-desc' | 'price-asc' | 'price-desc';
           }
         </section>
         <aside
+          appReveal="up"
           class="shop-thanks mt-9 flex items-center gap-4 overflow-hidden rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] px-5 py-4 shadow-[0_12px_30px_rgba(58,45,72,0.08)] dark-neon-card sm:px-7"
         >
           <span

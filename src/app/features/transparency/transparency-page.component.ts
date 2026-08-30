@@ -215,11 +215,8 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
       ></span>
 
       <div class="relative z-10 mx-auto max-w-7xl px-4 py-10 sm:px-6 md:py-14 lg:px-8">
-        <section
-          appReveal
-          class="grid items-center gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(25rem,.95fr)] lg:gap-16"
-        >
-          <div>
+        <section class="grid items-center gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(25rem,.95fr)] lg:gap-16">
+          <div appReveal="left">
             <p
               class="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-card)] px-4 py-2 text-xs font-extrabold uppercase text-[var(--color-accent)]"
             >
@@ -245,6 +242,8 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           </div>
 
           <section
+            appReveal="right"
+            [appRevealDelay]="120"
             class="transparency-debt-panel dark-neon-card dark-neon-card--featured rounded-3xl border border-[var(--color-border)] p-3 shadow-[var(--shadow-elevated)] md:p-4"
           >
             <div

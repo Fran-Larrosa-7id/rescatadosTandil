@@ -210,7 +210,6 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
 
     :host-context(.dark) .home-hero-art img {
       mix-blend-mode: screen;
-      opacity: 0.78;
     }
 
     .home-hero-art__dark {
