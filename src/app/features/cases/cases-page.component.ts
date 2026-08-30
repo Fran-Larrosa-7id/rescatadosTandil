@@ -216,6 +216,10 @@ type CaseSort = 'name-asc' | 'name-desc';
     @media (max-width: 767px) {
       .cases-page {
         min-height: calc(100svh - 7.5rem);
+        background:
+          linear-gradient(155deg, color-mix(in srgb, var(--color-accent-soft) 46%, transparent), transparent 48%),
+          linear-gradient(25deg, color-mix(in srgb, var(--color-surface-strong) 56%, transparent), transparent 56%),
+          var(--color-bg);
       }
       .cases-decor-paw--hero {
         top: 3.25rem;
@@ -233,6 +237,13 @@ type CaseSort = 'name-asc' | 'name-desc';
         right: -2rem;
         left: auto;
         width: 6.5rem;
+      }
+
+      :host-context(.dark) .cases-page {
+        background:
+          linear-gradient(155deg, rgba(139, 81, 211, 0.24), transparent 52%),
+          linear-gradient(25deg, rgba(81, 47, 132, 0.2), transparent 58%),
+          var(--color-bg);
       }
     }
   `,

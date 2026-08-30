@@ -618,6 +618,11 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
             <p class="mt-3 max-w-sm text-left text-sm leading-6 text-[var(--color-text-muted)]">
               Conocé a quienes hoy están bajo nuestro cuidado.
             </p>
+            <a
+              routerLink="/casos"
+              class="button-primary mt-5 inline-flex min-h-11 items-center gap-2 rounded-xl px-5 text-sm font-extrabold"
+              >Ver casos <app-icon name="arrow" class="size-4"
+            /></a>
           </div>
           <div class="home-carousel-window overflow-hidden" aria-label="Historias destacadas">
             <div class="home-carousel-track">

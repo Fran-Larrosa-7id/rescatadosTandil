@@ -49,6 +49,12 @@ export const MAXINE_CASE = {
       alt: 'Maxine descansando durante su recuperación',
     },
     {
+      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1788112483/WhatsApp_Image_2026-08-30_at_14.54.26.jpg',
+      width: 900,
+      height: 1600,
+      alt: 'Maxine junto a sus bebés durante su tránsito',
+    },
+    {
       src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1787423604/02.jpg',
       width: 900,
       height: 1600,

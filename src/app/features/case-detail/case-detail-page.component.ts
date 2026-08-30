@@ -324,13 +324,21 @@ export class CaseDetailPageComponent {
       this.meta.updateTag({ name: 'description', content: description });
       this.meta.updateTag({ property: 'og:title', content: pageTitle });
       this.meta.updateTag({ property: 'og:description', content: description });
+      this.meta.updateTag({ property: 'og:image', content: this.shareImageUrl() });
+      this.meta.updateTag({ property: 'og:image:alt', content: 'Gatarsis - Donde una vida vuelve a empezar' });
       this.meta.updateTag({ name: 'twitter:title', content: pageTitle });
       this.meta.updateTag({ name: 'twitter:description', content: description });
+      this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
+      this.meta.updateTag({ name: 'twitter:image', content: this.shareImageUrl() });
     });
   }
 
   protected shareTitle(name: string): string {
     return `${name} | ${SITE_CONFIG.brandName}`;
+  }
+
+  private shareImageUrl(): string {
+    return `${this.document.location.origin}/images/ui/hero-concepto-1.jpg`;
   }
 
   protected scrollToSection(id: string): void {

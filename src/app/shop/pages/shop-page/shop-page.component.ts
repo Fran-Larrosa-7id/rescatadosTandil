@@ -455,6 +455,12 @@ type ProductSort = 'name-asc' | 'name-desc' | 'price-asc' | 'price-desc';
     }
 
     @media (max-width: 639px) {
+      .shop-page {
+        background:
+          linear-gradient(155deg, color-mix(in srgb, var(--color-accent-soft) 44%, transparent), transparent 49%),
+          linear-gradient(28deg, color-mix(in srgb, var(--color-surface-strong) 55%, transparent), transparent 58%),
+          var(--color-bg);
+      }
       .shop-intro {
         padding-left: 0;
       }
@@ -468,6 +474,12 @@ type ProductSort = 'name-asc' | 'name-desc' | 'price-asc' | 'price-desc';
         top: 0;
         right: 0;
         margin: 0;
+      }
+      :host-context(.dark) .shop-page {
+        background:
+          linear-gradient(155deg, rgba(139, 81, 211, 0.22), transparent 52%),
+          linear-gradient(28deg, rgba(81, 47, 132, 0.18), transparent 58%),
+          var(--color-bg);
       }
       .shop-grid {
         grid-template-columns: minmax(0, 1fr);
