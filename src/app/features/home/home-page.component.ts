@@ -43,6 +43,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
     }
 
     .home-hero {
+      position: relative;
       isolation: isolate;
       display: grid;
       min-height: calc(100svh - 4rem);
@@ -53,24 +54,30 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
     .home-hero::after {
       position: absolute;
       z-index: -4;
-      top: 8%;
-      right: 8%;
-      width: min(48vw, 48rem);
+      top: 2%;
+      right: -4%;
+      width: min(58vw, 58rem);
       aspect-ratio: 1;
       content: '';
+      pointer-events: none;
       background: radial-gradient(
         circle,
-        color-mix(in srgb, var(--color-accent) 14%, transparent),
-        transparent 68%
+        color-mix(in srgb, var(--color-accent) 16%, transparent) 0%,
+        color-mix(in srgb, var(--color-accent-soft) 12%, transparent) 36%,
+        transparent 72%
       );
-      filter: blur(2rem);
+      filter: blur(2.75rem);
+    }
+
+    .home-hero-copy {
+      max-width: 47rem;
     }
 
     .home-title-heart {
       position: relative;
       display: inline-block;
-      width: 2.35rem;
-      height: 2.35rem;
+      width: 2.8rem;
+      height: 2.8rem;
       overflow: hidden;
       vertical-align: -0.18em;
     }
@@ -79,28 +86,149 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 4.7rem;
+      width: 5.55rem;
       max-width: none;
       transform: translate(-50%, -48%);
     }
 
+    /*
+     * La referencia del hero es un JPG cuadrado con un fondo muy parecido,
+     * pero no idéntico, al fondo de la página. El doble enmascarado hace que
+     * el archivo se funda antes de llegar a sus bordes físicos, evitando que
+     * se lean las líneas rectas superior/inferior.
+     */
     .home-hero-art {
+      position: relative;
       isolation: isolate;
-      width: min(108%, 42rem);
+
+      width: min(138%, 58rem);
       aspect-ratio: 1.08;
       margin-inline: auto;
-      transform: translateX(0.75rem);
+
+      /*
+   * IMPORTANTE:
+   * el propio contenedor se desvanece antes de alcanzar
+   * los límites físicos del JPG.
+   */
+      -webkit-mask-image: radial-gradient(
+        ellipse 68% 66% at 48% 50%,
+        #000 0%,
+        #000 48%,
+        rgba(0, 0, 0, 0.98) 57%,
+        rgba(0, 0, 0, 0.82) 66%,
+        rgba(0, 0, 0, 0.48) 74%,
+        rgba(0, 0, 0, 0.16) 82%,
+        transparent 91%
+      );
+
+      mask-image: radial-gradient(
+        ellipse 68% 66% at 48% 50%,
+        #000 0%,
+        #000 48%,
+        rgba(0, 0, 0, 0.98) 57%,
+        rgba(0, 0, 0, 0.82) 66%,
+        rgba(0, 0, 0, 0.48) 74%,
+        rgba(0, 0, 0, 0.16) 82%,
+        transparent 91%
+      );
+
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+
+      -webkit-mask-size: 100% 100%;
+      mask-size: 100% 100%;
+
+      transform: translateX(2.5rem);
     }
 
+    /*
+ * Halo detrás del logo.
+ * Esto ayuda a que el fade se sienta intencional,
+ * no como que simplemente borramos las puntas.
+ */
     .home-hero-art::before {
       position: absolute;
       z-index: -1;
-      inset: 10% 7% 6% 4%;
+      inset: 11% 7% 10% 5%;
+
       content: '';
-      border-radius: 46% 54% 52% 48% / 55% 42% 58% 45%;
-      background: color-mix(in srgb, var(--color-accent-soft) 54%, transparent);
-      filter: blur(1.6rem);
-      opacity: 0.7;
+
+      border-radius: 48% 52% 54% 46% / 45% 45% 55% 55%;
+
+      background: radial-gradient(
+        circle at 48% 48%,
+        color-mix(in srgb, var(--color-accent-soft) 72%, transparent) 0%,
+        color-mix(in srgb, var(--color-accent-soft) 38%, transparent) 38%,
+        transparent 72%
+      );
+
+      filter: blur(34px);
+      opacity: 0.72;
+      pointer-events: none;
+    }
+
+    .home-hero-art img {
+      position: absolute;
+
+      /*
+   * Sacamos físicamente los límites del JPG
+   * fuera del área útil del hero.
+   */
+      inset: -12% -13% -12% -10% !important;
+
+      width: 123% !important;
+      height: 124% !important;
+
+      max-width: none;
+
+      object-fit: contain;
+      object-position: center;
+
+      /*
+   * En light mode hace desaparecer todavía más
+   * el blanco residual del JPG contra el fondo.
+   */
+      mix-blend-mode: multiply;
+
+      filter: saturate(0.98) contrast(1.015) brightness(1.015);
+
+      /*
+   * Segundo fade, aplicado DIRECTAMENTE al JPG.
+   *
+   * Prestá atención al centro en 46%:
+   * dejamos morir un poco antes el lado derecho,
+   * que es justo donde ahora se ve el corte.
+   */
+      -webkit-mask-image: radial-gradient(
+        ellipse 66% 64% at 46% 50%,
+        #000 0%,
+        #000 50%,
+        rgba(0, 0, 0, 0.97) 58%,
+        rgba(0, 0, 0, 0.74) 67%,
+        rgba(0, 0, 0, 0.38) 75%,
+        rgba(0, 0, 0, 0.1) 83%,
+        transparent 91%
+      );
+
+      mask-image: radial-gradient(
+        ellipse 66% 64% at 46% 50%,
+        #000 0%,
+        #000 50%,
+        rgba(0, 0, 0, 0.97) 58%,
+        rgba(0, 0, 0, 0.74) 67%,
+        rgba(0, 0, 0, 0.38) 75%,
+        rgba(0, 0, 0, 0.1) 83%,
+        transparent 91%
+      );
+
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+
+      -webkit-mask-size: 100% 100%;
+      mask-size: 100% 100%;
+
+      pointer-events: none;
+      user-select: none;
     }
 
     .home-hero-art img {
@@ -110,35 +238,38 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
       height: 100% !important;
       object-fit: contain;
       mix-blend-mode: multiply;
-      transform: scale(1.08);
+      transform: scale(1.22);
+      filter: saturate(0.98) contrast(1.015) brightness(1.01);
       -webkit-mask-image: radial-gradient(
-        ellipse 48% 55% at 50% 51%,
+        ellipse 70% 66% at 50% 50%,
         #000 0%,
         #000 54%,
-        rgba(0, 0, 0, 0.82) 72%,
-        transparent 100%
+        rgba(0, 0, 0, 0.9) 69%,
+        rgba(0, 0, 0, 0.42) 80%,
+        transparent 94%
       );
       mask-image: radial-gradient(
-        ellipse 48% 55% at 50% 51%,
+        ellipse 70% 66% at 50% 50%,
         #000 0%,
         #000 54%,
-        rgba(0, 0, 0, 0.82) 72%,
-        transparent 100%
+        rgba(0, 0, 0, 0.9) 69%,
+        rgba(0, 0, 0, 0.42) 80%,
+        transparent 94%
       );
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-size: 100% 100%;
+      mask-size: 100% 100%;
     }
 
     :host-context(.dark) .home-hero-art img {
       mix-blend-mode: screen;
-      filter: brightness(0.8) saturate(0.8);
-      opacity: 0.82;
-    }
-
-    :host-context(.dark) .home-hero::before {
-      opacity: 0.24;
+      filter: brightness(0.72) saturate(0.82) contrast(1.02);
+      opacity: 0.78;
     }
 
     :host-context(.dark) .home-hero-art::before {
-      opacity: 0.35;
+      opacity: 0.38;
     }
 
     .home-decor-paw {
@@ -297,16 +428,16 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           class="home-decor-paw home-decor-paw--back right-[6%] top-[28rem] hidden rotate-12 md:block"
         />
         <div
-          class="mx-auto grid w-full max-w-6xl gap-10 px-6 py-12 sm:px-8 md:grid-cols-[0.95fr_1.05fr] md:items-center md:gap-8 md:py-16 lg:px-8 lg:py-20"
+          class="mx-auto grid w-full max-w-[90rem] gap-10 px-6 py-12 sm:px-8 md:grid-cols-[0.88fr_1.12fr] md:items-center md:gap-6 md:py-16 lg:px-10 lg:py-20 xl:px-12"
         >
-          <div class="relative z-10">
+          <div class="home-hero-copy relative z-10">
             <p
-              class="text-xs font-extrabold uppercase tracking-[0.09em] text-[var(--color-accent)]"
+              class="text-xs font-extrabold uppercase tracking-[0.11em] text-[var(--color-accent)] sm:text-sm"
             >
               Cada historia merece continuar
             </p>
             <h1
-              class="mt-5 max-w-xl text-[2.5rem] font-black leading-[0.98] sm:text-6xl lg:text-[3.5rem]"
+              class="mt-5 max-w-3xl text-[2.75rem] font-black leading-[0.96] sm:text-6xl lg:text-[4.85rem] xl:text-[5.35rem]"
             >
               <span class="block">Ayudanos a</span>
               <span class="block sm:whitespace-nowrap">seguir salvando</span>
@@ -320,7 +451,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
               ></span>
             </h1>
             <p
-              class="mt-6 max-w-md text-left text-base leading-7 text-[var(--color-text-muted)] sm:text-lg"
+              class="mt-7 max-w-xl text-left text-base leading-7 text-[var(--color-text-muted)] sm:text-lg lg:text-[1.2rem] lg:leading-8"
             >
               Rescatar es apenas el comienzo. Cada paso que sigue los acerca a la oportunidad de
               volver a empezar.
@@ -447,7 +578,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           class="home-decor-paw home-decor-paw--soft home-decor-paw--tiny right-0 bottom-1 hidden -rotate-12 md:block"
         />
         <div
-          class="home-carousel-panel dark-neon-card dark-neon-card--featured relative z-10 grid gap-6 rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 md:grid-cols-[0.75fr_1.25fr] md:items-center"
+          class="home-carousel-panel dark-neon-card dark-neon-card--soft relative z-10 grid gap-6 rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 md:grid-cols-[0.75fr_1.25fr] md:items-center dark-neon-card dark-neon-card--featured"
         >
           <div>
             <h2 class="text-2xl font-black">
@@ -499,7 +630,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           class="home-decor-paw home-decor-paw--soft right-8 top-8 hidden -rotate-12 md:block"
         />
         <div
-          class="home-carousel-panel dark-neon-card dark-neon-card--featured relative z-10 grid gap-6 rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 md:grid-cols-[0.75fr_1.25fr] md:items-center"
+          class="home-carousel-panel dark-neon-card dark-neon-card--soft relative z-10 grid gap-6 rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 md:grid-cols-[0.75fr_1.25fr] md:items-center"
         >
           <div>
             <h2 class="text-2xl font-black">
