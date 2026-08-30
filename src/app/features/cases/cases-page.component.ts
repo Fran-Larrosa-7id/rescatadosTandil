@@ -2,6 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 
 import { RescueCaseStatus } from '../../core/models/rescue-case.model';
 import { RescueCasesService } from '../../core/services/rescue-cases.service';
+import { ThemeService } from '../../core/services/theme.service';
 import { AppFooterComponent } from '../../shared/components/app-footer/app-footer.component';
 import { AppHeaderComponent } from '../../shared/components/app-header/app-header.component';
 import { BottomNavigationComponent } from '../../shared/components/bottom-navigation/bottom-navigation.component';
@@ -157,8 +158,8 @@ type CaseSort = 'name-asc' | 'name-desc';
           <button
             type="button"
                 [class]="filterClass(filter.value)"
-                [style.background-color]="activeFilter() === filter.value ? null : 'var(--color-card)'"
-                [style.color]="activeFilter() === filter.value ? null : 'var(--color-text)'"
+                [style.background-color]="activeFilter() === filter.value || !theme.isDark() ? null : '#282037'"
+                [style.color]="activeFilter() === filter.value || !theme.isDark() ? null : '#f8f4ff'"
                 (click)="activeFilter.set(filter.value)"
             [attr.aria-pressed]="activeFilter() === filter.value"
           >
@@ -188,6 +189,8 @@ type CaseSort = 'name-asc' | 'name-desc';
 })
 export class CasesPageComponent {
   private readonly casesService = inject(RescueCasesService);
+
+  protected readonly theme = inject(ThemeService);
 
   protected readonly activeFilter = signal<CaseFilter>('all');
   protected readonly sort = signal<CaseSort>('name-asc');
