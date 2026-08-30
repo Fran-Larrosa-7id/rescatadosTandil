@@ -656,7 +656,10 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
         </div>
       </section>
 
-      <section appReveal class="relative isolate mx-auto max-w-6xl px-6 py-3 sm:px-6 lg:px-8">
+      <section
+        appReveal
+        class="relative isolate mx-auto max-w-6xl px-6 py-3 sm:px-6 lg:px-8 pb-[18px]"
+      >
         <span aria-hidden="true" class="home-decor-dots -right-14 bottom-0 hidden md:block"></span>
         <img
           src="images/extra/paw.png"
@@ -678,7 +681,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
               Tu compra también rescata <span class="text-[var(--color-accent)]">♡</span>
             </h2>
             <p class="mt-3 max-w-sm text-left text-sm leading-6 text-[var(--color-text-muted)]">
-              Productos creados para ayudar a sostener nuestros rescates.
+              Productos creados para sostener lo que hacemos.
             </p>
             <a
               routerLink="/tienda"
