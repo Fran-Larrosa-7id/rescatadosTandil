@@ -233,33 +233,74 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
 
     .home-hero-art img {
       position: absolute;
-      inset: 0 !important;
-      width: 100% !important;
-      height: 100% !important;
+
+      inset: -18% -13% -12% -10% !important;
+
+      width: 123% !important;
+      height: 130% !important;
+
+      max-width: none;
+
       object-fit: contain;
+      object-position: center 52%;
+
       mix-blend-mode: multiply;
-      transform: scale(1.22);
-      filter: saturate(0.98) contrast(1.015) brightness(1.01);
+
+      filter: saturate(0.98) contrast(1.015) brightness(1.015);
+
       -webkit-mask-image: radial-gradient(
-        ellipse 70% 66% at 50% 50%,
+        ellipse 66% 64% at 46% 50%,
         #000 0%,
-        #000 54%,
-        rgba(0, 0, 0, 0.9) 69%,
-        rgba(0, 0, 0, 0.42) 80%,
-        transparent 94%
+        #000 50%,
+        rgba(0, 0, 0, 0.97) 58%,
+        rgba(0, 0, 0, 0.74) 67%,
+        rgba(0, 0, 0, 0.38) 75%,
+        rgba(0, 0, 0, 0.1) 83%,
+        transparent 91%
       );
+
       mask-image: radial-gradient(
-        ellipse 70% 66% at 50% 50%,
+        ellipse 66% 64% at 46% 50%,
         #000 0%,
-        #000 54%,
-        rgba(0, 0, 0, 0.9) 69%,
-        rgba(0, 0, 0, 0.42) 80%,
-        transparent 94%
+        #000 50%,
+        rgba(0, 0, 0, 0.97) 58%,
+        rgba(0, 0, 0, 0.74) 67%,
+        rgba(0, 0, 0, 0.38) 75%,
+        rgba(0, 0, 0, 0.1) 83%,
+        transparent 91%
       );
+
       -webkit-mask-repeat: no-repeat;
       mask-repeat: no-repeat;
       -webkit-mask-size: 100% 100%;
       mask-size: 100% 100%;
+
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .home-hero-art::after {
+      position: absolute;
+      z-index: 5;
+
+      top: -1px;
+      left: -12%;
+      right: -12%;
+
+      height: 26%;
+
+      content: '';
+      pointer-events: none;
+
+      background: linear-gradient(
+        to bottom,
+        var(--color-bg) 0%,
+        color-mix(in srgb, var(--color-bg) 98%, transparent) 18%,
+        color-mix(in srgb, var(--color-bg) 88%, transparent) 38%,
+        color-mix(in srgb, var(--color-bg) 55%, transparent) 58%,
+        color-mix(in srgb, var(--color-bg) 20%, transparent) 78%,
+        transparent 100%
+      );
     }
 
     :host-context(.dark) .home-hero-art img {
