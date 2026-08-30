@@ -6,6 +6,7 @@ import { AppFooterComponent } from '../../../shared/components/app-footer/app-fo
 import { AppHeaderComponent } from '../../../shared/components/app-header/app-header.component';
 import { BottomNavigationComponent } from '../../../shared/components/bottom-navigation/bottom-navigation.component';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
+import { RevealOnScrollDirective } from '../../../shared/directives/reveal-on-scroll.directive';
 import { CartStore } from '../../core/cart.store';
 import { formatArsFromCents } from '../../core/money.util';
 import { PublicCommerceApiService } from '../../core/public-commerce-api.service';
@@ -22,25 +23,33 @@ type CheckoutState =
     AppFooterComponent,
     BottomNavigationComponent,
     IconComponent,
+    RevealOnScrollDirective,
   ],
   template: `
     <div class="flex min-h-dvh flex-col">
       <app-header />
-      <main
-        id="contenido"
-        class="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-8 pb-28 sm:px-6 sm:py-10 lg:px-8"
-      >
-      <h1 class="text-4xl font-black">Tu carrito</h1>
+      <main id="contenido" class="cart-page relative isolate flex w-full max-w-none flex-1 flex-col overflow-hidden px-4 py-8 pb-28 sm:px-6 sm:py-10 lg:px-8">
+      <img src="images/extra/paw.png" alt="" aria-hidden="true" class="cart-decor cart-decor-paw cart-decor-paw--top-right hidden lg:block" />
+      <img src="images/extra/paw.png" alt="" aria-hidden="true" class="cart-decor cart-decor-paw cart-decor-paw--bottom-left hidden lg:block" />
+      <img src="images/extra/paw.png" alt="" aria-hidden="true" class="cart-decor cart-decor-paw cart-decor-paw--middle-right hidden lg:block" />
+      <img src="images/extra/corazoncito-empty.png" alt="" aria-hidden="true" class="cart-decor cart-decor-heart cart-decor-heart--left hidden lg:block" />
+      <img src="images/extra/corazon-lleno.png" alt="" aria-hidden="true" class="cart-decor cart-decor-heart cart-decor-heart--top hidden lg:block" />
+      <span aria-hidden="true" class="cart-decor cart-dots cart-dots--top hidden lg:block"></span>
+      <span aria-hidden="true" class="cart-decor cart-dots cart-dots--right hidden lg:block"></span>
+      <div class="cart-content relative z-10 mx-auto w-full max-w-7xl">
+      <h1 appReveal class="cart-title text-4xl font-black">Tu carrito</h1>
       @if (cart.items().length) {
-        <section class="mt-7 grid gap-8 lg:grid-cols-[1fr_24rem]">
+        <section class="cart-layout mt-7 grid gap-8 lg:grid-cols-[minmax(0,1.45fr)_minmax(25rem,.9fr)]">
           <div
-            class="divide-y divide-[var(--color-border)] rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] px-4 sm:px-5"
+            class="cart-items divide-y divide-[var(--color-border)] rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] px-5 shadow-[0_14px_34px_rgba(58,45,72,0.1)] dark-neon-card sm:px-6"
           >
             @for (item of cart.items(); track item.variantId) {
               <article
-                class="grid grid-cols-[4.75rem_1fr] gap-x-4 gap-y-2 py-4 sm:grid-cols-[5rem_1fr_auto] sm:items-center"
+                appReveal="up"
+                [appRevealDelay]="$index * 70"
+                class="cart-item grid grid-cols-[5.5rem_1fr] gap-x-5 gap-y-2 py-5 sm:grid-cols-[6.5rem_1fr_auto] sm:items-center"
               >
-                <div class="size-20 overflow-hidden rounded-xl bg-[var(--color-surface)]">
+                <div class="size-[5.5rem] overflow-hidden rounded-2xl bg-[var(--color-surface)] sm:size-[6.5rem]">
                   @if (item.imageUrl) {
                     <img
                       class="h-full w-full object-cover"
@@ -56,21 +65,21 @@ type CheckoutState =
                     {{ item.variantName }}
                   </p>
                   <button
-                    class="mt-2 grid size-10 place-items-center rounded-lg text-[var(--color-text-muted)] transition hover:bg-[var(--color-danger-bg)] hover:text-[#bd2944]"
+                    class="mt-2 inline-flex items-center gap-2 rounded-lg px-1 py-1 text-sm font-bold text-[var(--color-accent)] transition hover:bg-[var(--color-danger-bg)] hover:text-[#bd2944]"
                     type="button"
                     [attr.aria-label]="
                       'Eliminar ' + item.productName + ', variante ' + item.variantName
                     "
                     (click)="cart.remove(item.variantId)"
                   >
-                    <app-icon name="trash" class="size-4" />
+                    <app-icon name="trash" class="size-4" /> Eliminar
                   </button>
                 </div>
                 <div
                   class="col-span-2 mt-1 flex items-center justify-between gap-5 sm:col-span-1 sm:mt-0 sm:justify-end"
                 >
                   <div
-                    class="inline-flex items-center rounded-xl border border-[var(--color-border)] p-1"
+                    class="inline-flex items-center rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-1"
                   >
                     <button
                       class="grid size-9 place-items-center rounded-lg hover:bg-[var(--color-recovering-bg)]"
@@ -104,7 +113,9 @@ type CheckoutState =
           </div>
 
           <aside
-            class="h-max rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 lg:sticky lg:top-5"
+            appReveal="right"
+            [appRevealDelay]="100"
+            class="cart-summary h-max rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 shadow-[0_14px_34px_rgba(58,45,72,0.1)] dark-neon-card lg:sticky lg:top-5"
           >
             <p class="text-sm font-extrabold uppercase tracking-wide text-[var(--color-accent)]">
               Resumen
@@ -131,6 +142,7 @@ type CheckoutState =
                     [(ngModel)]="customer.name"
                     name="customerName"
                     autocomplete="name"
+                    placeholder="Ingresá tu nombre y apellido"
                   />
                 </label>
                 <label class="grid gap-1 text-sm font-bold"
@@ -141,6 +153,7 @@ type CheckoutState =
                     name="customerEmail"
                     type="email"
                     autocomplete="email"
+                    placeholder="ejemplo@correo.com"
                   />
                 </label>
                 <label class="grid gap-1 text-sm font-bold"
@@ -151,6 +164,7 @@ type CheckoutState =
                     name="customerPhone"
                     type="tel"
                     autocomplete="tel"
+                    placeholder="11 1234 5678"
                   />
                 </label>
                 <label class="grid gap-1 text-sm font-bold"
@@ -159,6 +173,7 @@ type CheckoutState =
                     class="min-h-20 rounded-xl border border-[var(--color-border)] px-3 py-2 font-normal"
                     [(ngModel)]="customer.note"
                     name="fulfillmentNote"
+                    placeholder="Dejanos cualquier detalle útil para el retiro..."
                   ></textarea>
                 </label>
               </div>
@@ -186,7 +201,7 @@ type CheckoutState =
             }
             @if (pendingCheckout(); as pending) {
               <section
-                class="mt-6 rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-4"
+                class="cart-pending mt-6 rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-4"
                 aria-live="polite"
               >
                 <p class="font-black">Tenés un pago en proceso</p>
@@ -227,10 +242,106 @@ type CheckoutState =
           >
         </div>
       }
+      </div>
       </main>
       <app-footer />
     </div>
     <app-bottom-navigation />
+  `,
+  styles: `
+    :host { display: block; min-height: 100dvh; }
+
+    .cart-page {
+      background:
+        radial-gradient(circle at 6% 80%, color-mix(in srgb, var(--color-accent-soft) 52%, transparent), transparent 19rem),
+        radial-gradient(circle at 94% 30%, color-mix(in srgb, var(--color-accent-soft) 36%, transparent), transparent 20rem),
+        var(--color-bg);
+    }
+
+    .cart-title::after {
+      display: block;
+      width: 2.25rem;
+      height: 0.25rem;
+      margin-top: 0.65rem;
+      border-radius: 999px;
+      background: var(--color-accent);
+      content: '';
+      box-shadow: 3rem 0 0 -0.05rem color-mix(in srgb, var(--color-accent) 45%, transparent);
+    }
+
+    .cart-decor {
+      position: absolute;
+      z-index: -1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .cart-decor-paw { width: clamp(5.5rem, 8vw, 8rem); opacity: 0.22; }
+    .cart-decor-paw--top-right { top: 8rem; right: clamp(2rem, 8vw, 10rem); transform: rotate(18deg); }
+    .cart-decor-paw--middle-right { top: 43%; right: clamp(1.5rem, 4vw, 6rem); transform: rotate(-18deg); }
+    .cart-decor-paw--bottom-left { bottom: 7rem; left: clamp(2rem, 5vw, 7rem); transform: rotate(22deg); }
+    .cart-decor-heart { width: clamp(2.5rem, 4vw, 4rem); opacity: 0.34; }
+    .cart-decor-heart--left { top: 17rem; left: clamp(2rem, 7vw, 9rem); transform: rotate(-18deg); }
+    .cart-decor-heart--top { top: 7rem; left: 24%; transform: rotate(18deg); }
+    .cart-dots { width: 10rem; aspect-ratio: 1; opacity: 0.32; background-image: radial-gradient(circle, color-mix(in srgb, var(--color-accent) 44%, transparent) 1.35px, transparent 1.65px); background-size: 0.8rem 0.8rem; mask-image: radial-gradient(circle, #000 20%, transparent 70%); }
+    .cart-dots--top { top: 0.5rem; left: -2rem; }
+    .cart-dots--right { top: 53%; right: -2rem; }
+
+    .cart-layout { align-items: start; }
+    .cart-items { min-height: 0; }
+    .cart-item:first-child { padding-top: 1.7rem; }
+    .cart-item:last-child { padding-bottom: 1.7rem; }
+    .cart-summary {
+      border: 0.8rem solid transparent;
+      background:
+        linear-gradient(145deg, color-mix(in srgb, var(--color-card) 93%, var(--color-accent-soft)), var(--color-card)) padding-box,
+        linear-gradient(135deg, #ead8ff, #cf9cff 48%, #e7c8ff) border-box;
+      box-shadow:
+        0 0.9rem 2.1rem rgba(58, 45, 72, 0.1),
+        inset 0 1px rgba(255, 255, 255, 0.6);
+    }
+    .cart-summary input,
+    .cart-summary textarea { background: color-mix(in srgb, var(--color-card) 94%, var(--color-surface)); }
+    .cart-summary input::placeholder,
+    .cart-summary textarea::placeholder { color: color-mix(in srgb, var(--color-text-muted) 62%, transparent); }
+    .cart-pending { background: linear-gradient(125deg, var(--color-accent-soft), color-mix(in srgb, var(--color-accent-soft) 46%, var(--color-card))); }
+
+    :host-context(.dark) .cart-page {
+      background:
+        radial-gradient(circle at 6% 80%, rgba(153, 94, 220, 0.15), transparent 19rem),
+        radial-gradient(circle at 94% 30%, rgba(153, 94, 220, 0.12), transparent 20rem),
+        var(--color-bg);
+    }
+
+    :host-context(.dark) .cart-decor-paw,
+    :host-context(.dark) .cart-decor-heart { opacity: 0.34; filter: drop-shadow(0 0 0.8rem rgba(183, 126, 255, 0.16)); }
+    :host-context(.dark) .cart-dots { opacity: 0.44; }
+    :host-context(.dark) .cart-summary {
+      border-color: transparent;
+      background:
+        linear-gradient(145deg, rgba(43, 31, 60, 0.98), rgba(28, 22, 42, 0.98)) padding-box,
+        linear-gradient(135deg, rgba(214, 170, 255, 0.78), rgba(121, 73, 184, 0.36) 52%, rgba(216, 173, 255, 0.64)) border-box;
+      box-shadow:
+        0 0 0.6rem rgba(193, 133, 255, 0.26),
+        0 0 1.8rem rgba(157, 94, 220, 0.2),
+        0 1.25rem 2.8rem rgba(0, 0, 0, 0.32),
+        inset 0 1px rgba(229, 205, 255, 0.16);
+    }
+    :host-context(.dark) .cart-pending { background: linear-gradient(125deg, rgba(86, 60, 119, 0.9), rgba(48, 36, 69, 0.96)); }
+
+    @media (max-width: 1023px) {
+      .cart-layout { max-width: 44rem; margin-inline: auto; }
+    }
+
+    @media (min-width: 1024px) {
+      :host-context(.dark) .cart-summary { margin-top: -1.25rem; }
+    }
+
+    @media (max-width: 639px) {
+      .cart-title { font-size: 2.2rem; }
+      .cart-item { column-gap: 1rem; }
+      .cart-summary { padding: 1.25rem; }
+    }
   `,
 })
 export class CartPageComponent {
