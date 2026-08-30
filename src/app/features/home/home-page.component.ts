@@ -214,6 +214,23 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
       opacity: 0.78;
     }
 
+    .home-hero-art__dark {
+      display: none;
+    }
+
+    :host-context(.dark) .home-hero-art__light {
+      display: none;
+    }
+
+    :host-context(.dark) .home-hero-art__dark {
+      display: block;
+      mix-blend-mode: normal;
+      filter: none;
+      opacity: 1;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+
     :host-context(.dark) .home-hero-art::before {
       opacity: 0.38;
     }
@@ -409,6 +426,16 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
               <img
                 ngSrc="images/ui/hero-concepto-1.jpg"
                 alt="Gatarsis - Donde una vida vuelve a empezar"
+                class="home-hero-art__light"
+                fill
+                priority
+                sizes="(min-width: 1024px) 44vw, (min-width: 768px) 48vw, 100vw"
+              />
+              <img
+                ngSrc="images/ui/hero-concepto-1-dark.jpg"
+                alt=""
+                aria-hidden="true"
+                class="home-hero-art__dark"
                 fill
                 priority
                 sizes="(min-width: 1024px) 44vw, (min-width: 768px) 48vw, 100vw"
@@ -468,7 +495,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           </div>
 
           <section
-            class="home-donation-card dark-neon-card dark-neon-card--soft mt-7 rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 md:-my-3 md:ml-8 md:mt-0"
+            class="home-donation-card dark-neon-card dark-neon-card--featured mt-7 rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 md:-my-3 md:ml-8 md:mt-0"
           >
             <h2 class="text-xl font-black">Tu aporte</h2>
             <p class="mt-2 text-left text-sm leading-6 text-[var(--color-text-muted)]">
@@ -524,7 +551,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           class="home-decor-paw home-decor-paw--soft home-decor-paw--tiny right-0 bottom-1 hidden -rotate-12 md:block"
         />
         <div
-          class="home-carousel-panel dark-neon-card dark-neon-card--soft relative z-10 grid gap-6 rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 md:grid-cols-[0.75fr_1.25fr] md:items-center dark-neon-card dark-neon-card--featured"
+          class="home-carousel-panel dark-neon-card dark-neon-card--featured relative z-10 grid gap-6 rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 md:grid-cols-[0.75fr_1.25fr] md:items-center dark-neon-card dark-neon-card--featured"
         >
           <div>
             <h2 class="text-2xl font-black">
@@ -579,7 +606,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
           class="home-decor-paw home-decor-paw--soft right-8 top-8 hidden -rotate-12 md:block"
         />
         <div
-          class="home-carousel-panel dark-neon-card dark-neon-card--soft relative z-10 grid gap-6 rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 md:grid-cols-[0.75fr_1.25fr] md:items-center"
+          class="home-carousel-panel dark-neon-card dark-neon-card--featured relative z-10 grid gap-6 rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 md:grid-cols-[0.75fr_1.25fr] md:items-center"
         >
           <div>
             <h2 class="text-2xl font-black">
