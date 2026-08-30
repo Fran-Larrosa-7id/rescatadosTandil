@@ -1,0 +1,1 @@
+import{E as Ia,H as O}from"./chunk-B8sAQR8u.js";var a=class e{current=Ia(null);show(r,n){this.current.set({kind:r,message:n})}clear(){this.current.set(null)}static ɵfac=function(n){return new(n||e)};static ɵprov=O({token:e,factory:e.ɵfac,providedIn:`root`})};export{a as t};
