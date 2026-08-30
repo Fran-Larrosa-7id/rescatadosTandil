@@ -9,7 +9,7 @@ import { IconComponent } from '../icon/icon.component';
   imports: [RouterLink, RouterLinkActive, IconComponent],
   template: `
     <nav
-      class="surface-glass fixed inset-x-0 bottom-0 z-40 border-t px-3 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-2 md:hidden"
+      class="surface-glass fixed inset-x-0 bottom-0 z-40 border-t px-3 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-2 lg:hidden"
       aria-label="Navegación móvil"
     >
       <div class="mx-auto grid max-w-md grid-cols-5 gap-1">

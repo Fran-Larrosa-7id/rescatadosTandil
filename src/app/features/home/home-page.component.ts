@@ -28,6 +28,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
   ],
   styles: `
     .home-page {
+      overflow-x: clip;
       background:
         radial-gradient(
           circle at 94% 13%,
@@ -286,6 +287,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
     }
 
     .home-carousel-panel {
+      background: linear-gradient(135deg, var(--color-card), var(--color-surface));
       box-shadow: var(--shadow-surface);
     }
 
@@ -346,6 +348,19 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
       }
     }
 
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .home-hero > div {
+        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+        gap: 1.5rem;
+      }
+
+      .home-hero-art {
+        width: 100%;
+        max-width: 30rem;
+        transform: none;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .home-carousel-window {
         overflow-x: auto;
@@ -369,24 +384,24 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
 
     <main id="contenido" class="home-page">
       <section class="home-hero relative">
-        <span aria-hidden="true" class="home-decor-dots left-[42%] top-36 hidden md:block"></span>
+        <span aria-hidden="true" class="home-decor-dots left-[42%] top-36 hidden lg:block"></span>
         <img
           src="images/extra/paw.png"
           alt=""
           aria-hidden="true"
-          class="home-decor-paw home-decor-paw--back left-[14%] top-7 hidden rotate-12 md:block"
+          class="home-decor-paw home-decor-paw--back left-[14%] top-7 hidden rotate-12 lg:block"
         />
         <img
           src="images/extra/paw.png"
           alt=""
           aria-hidden="true"
-          class="home-decor-paw home-decor-paw--back left-[38%] top-16 hidden -rotate-12 md:block"
+          class="home-decor-paw home-decor-paw--back left-[38%] top-16 hidden -rotate-12 lg:block"
         />
         <img
           src="images/extra/paw.png"
           alt=""
           aria-hidden="true"
-          class="home-decor-paw home-decor-paw--back right-[6%] top-[28rem] hidden rotate-12 md:block"
+          class="home-decor-paw home-decor-paw--back right-[6%] top-[28rem] hidden rotate-12 lg:block"
         />
         <div
           class="mx-auto grid w-full max-w-[90rem] gap-10 px-6 py-12 sm:px-8 md:grid-cols-[0.88fr_1.12fr] md:items-center md:gap-6 md:py-16 lg:px-10 lg:py-20 xl:px-12"
@@ -414,7 +429,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
             <p
               class="mt-7 max-w-xl text-left text-base leading-7 text-[var(--color-text-muted)] sm:text-lg lg:text-[1.2rem] lg:leading-8"
             >
-              Rescatar es apenas el comienzo. Cada paso que sigue los acerca a la oportunidad de
+              Rescatar es apenas el comienzo. Cada paso que sigue los acerca más a la oportunidad de
               volver a empezar.
             </p>
           </div>

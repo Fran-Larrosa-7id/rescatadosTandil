@@ -10,7 +10,7 @@ import { IconComponent } from '../icon/icon.component';
   selector: 'app-header',
   imports: [RouterLink, RouterLinkActive, IconComponent],
   template: `
-    <header class="surface-glass w-full border-b sm:sticky sm:top-0 z-50">
+    <header class="surface-glass w-full border-b lg:sticky lg:top-0 z-50">
       <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <a
           routerLink="/"
@@ -20,7 +20,7 @@ import { IconComponent } from '../icon/icon.component';
           <span>{{ brandName }}</span>
         </a>
 
-        <nav class="hidden items-center gap-5 text-sm font-semibold md:flex" aria-label="Principal">
+        <nav class="hidden items-center gap-5 text-sm font-semibold lg:flex" aria-label="Principal">
           <a
             routerLink="/"
             routerLinkActive="nav-active"
