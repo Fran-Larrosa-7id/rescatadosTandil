@@ -197,6 +197,12 @@
   box-shadow: var(--shadow-surface);
 }
 
+:root.dark .cases-filter-idle {
+  background-color: #282037 !important;
+  border-color: rgba(190, 130, 255, 0.36) !important;
+  color: var(--color-text) !important;
+}
+
 .surface-elevated {
   background-color: var(--color-surface-elevated);
   border-color: var(--color-border-subtle);
