@@ -91,70 +91,45 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
       transform: translate(-50%, -48%);
     }
 
-    /*
-     * La referencia del hero es un JPG cuadrado con un fondo muy parecido,
-     * pero no idéntico, al fondo de la página. El doble enmascarado hace que
-     * el archivo se funda antes de llegar a sus bordes físicos, evitando que
-     * se lean las líneas rectas superior/inferior.
-     */
+    /* El JPG incluye un lienzo claro; lo fundimos antes de sus bordes físicos. */
     .home-hero-art {
       position: relative;
       isolation: isolate;
-
       width: min(138%, 58rem);
       aspect-ratio: 1.08;
       margin-inline: auto;
-
-      /*
-   * IMPORTANTE:
-   * el propio contenedor se desvanece antes de alcanzar
-   * los límites físicos del JPG.
-   */
       -webkit-mask-image: radial-gradient(
-        ellipse 68% 66% at 48% 50%,
+        ellipse 63% 64% at 51% 52%,
         #000 0%,
-        #000 48%,
-        rgba(0, 0, 0, 0.98) 57%,
-        rgba(0, 0, 0, 0.82) 66%,
-        rgba(0, 0, 0, 0.48) 74%,
-        rgba(0, 0, 0, 0.16) 82%,
-        transparent 91%
+        #000 54%,
+        rgba(0, 0, 0, 0.9) 65%,
+        rgba(0, 0, 0, 0.48) 75%,
+        rgba(0, 0, 0, 0.12) 84%,
+        transparent 93%
       );
-
       mask-image: radial-gradient(
-        ellipse 68% 66% at 48% 50%,
+        ellipse 63% 64% at 51% 52%,
         #000 0%,
-        #000 48%,
-        rgba(0, 0, 0, 0.98) 57%,
-        rgba(0, 0, 0, 0.82) 66%,
-        rgba(0, 0, 0, 0.48) 74%,
-        rgba(0, 0, 0, 0.16) 82%,
-        transparent 91%
+        #000 54%,
+        rgba(0, 0, 0, 0.9) 65%,
+        rgba(0, 0, 0, 0.48) 75%,
+        rgba(0, 0, 0, 0.12) 84%,
+        transparent 93%
       );
-
       -webkit-mask-repeat: no-repeat;
       mask-repeat: no-repeat;
-
       -webkit-mask-size: 100% 100%;
       mask-size: 100% 100%;
-
       transform: translateX(2.5rem);
     }
 
-    /*
- * Halo detrás del logo.
- * Esto ayuda a que el fade se sienta intencional,
- * no como que simplemente borramos las puntas.
- */
+    /* Halo detrás del logo para que el fade se lea como luz ambiental. */
     .home-hero-art::before {
       position: absolute;
       z-index: -1;
       inset: 11% 7% 10% 5%;
-
       content: '';
-
       border-radius: 48% 52% 54% 46% / 45% 45% 55% 55%;
-
       background: radial-gradient(
         circle at 48% 48%,
         color-mix(in srgb, var(--color-accent-soft) 72%, transparent) 0%,
@@ -169,112 +144,35 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
 
     .home-hero-art img {
       position: absolute;
-
-      /*
-   * Sacamos físicamente los límites del JPG
-   * fuera del área útil del hero.
-   */
-      inset: -12% -13% -12% -10% !important;
-
-      width: 123% !important;
-      height: 124% !important;
-
-      max-width: none;
-
-      object-fit: contain;
-      object-position: center;
-
-      /*
-   * En light mode hace desaparecer todavía más
-   * el blanco residual del JPG contra el fondo.
-   */
-      mix-blend-mode: multiply;
-
-      filter: saturate(0.98) contrast(1.015) brightness(1.015);
-
-      /*
-   * Segundo fade, aplicado DIRECTAMENTE al JPG.
-   *
-   * Prestá atención al centro en 46%:
-   * dejamos morir un poco antes el lado derecho,
-   * que es justo donde ahora se ve el corte.
-   */
-      -webkit-mask-image: radial-gradient(
-        ellipse 66% 64% at 46% 50%,
-        #000 0%,
-        #000 50%,
-        rgba(0, 0, 0, 0.97) 58%,
-        rgba(0, 0, 0, 0.74) 67%,
-        rgba(0, 0, 0, 0.38) 75%,
-        rgba(0, 0, 0, 0.1) 83%,
-        transparent 91%
-      );
-
-      mask-image: radial-gradient(
-        ellipse 66% 64% at 46% 50%,
-        #000 0%,
-        #000 50%,
-        rgba(0, 0, 0, 0.97) 58%,
-        rgba(0, 0, 0, 0.74) 67%,
-        rgba(0, 0, 0, 0.38) 75%,
-        rgba(0, 0, 0, 0.1) 83%,
-        transparent 91%
-      );
-
-      -webkit-mask-repeat: no-repeat;
-      mask-repeat: no-repeat;
-
-      -webkit-mask-size: 100% 100%;
-      mask-size: 100% 100%;
-
-      pointer-events: none;
-      user-select: none;
-    }
-
-    .home-hero-art img {
-      position: absolute;
-
       inset: -18% -13% -12% -10% !important;
-
       width: 123% !important;
       height: 130% !important;
-
       max-width: none;
-
       object-fit: contain;
       object-position: center 52%;
-
       mix-blend-mode: multiply;
-
+      mix-blend-mode: multiply;
       filter: saturate(0.98) contrast(1.015) brightness(1.015);
-
       -webkit-mask-image: radial-gradient(
-        ellipse 66% 64% at 46% 50%,
+        ellipse 58% 60% at 49% 53%,
         #000 0%,
-        #000 50%,
-        rgba(0, 0, 0, 0.97) 58%,
-        rgba(0, 0, 0, 0.74) 67%,
-        rgba(0, 0, 0, 0.38) 75%,
-        rgba(0, 0, 0, 0.1) 83%,
+        #000 58%,
+        rgba(0, 0, 0, 0.82) 70%,
+        rgba(0, 0, 0, 0.34) 80%,
         transparent 91%
       );
-
       mask-image: radial-gradient(
-        ellipse 66% 64% at 46% 50%,
+        ellipse 58% 60% at 49% 53%,
         #000 0%,
-        #000 50%,
-        rgba(0, 0, 0, 0.97) 58%,
-        rgba(0, 0, 0, 0.74) 67%,
-        rgba(0, 0, 0, 0.38) 75%,
-        rgba(0, 0, 0, 0.1) 83%,
+        #000 58%,
+        rgba(0, 0, 0, 0.82) 70%,
+        rgba(0, 0, 0, 0.34) 80%,
         transparent 91%
       );
-
       -webkit-mask-repeat: no-repeat;
       mask-repeat: no-repeat;
       -webkit-mask-size: 100% 100%;
       mask-size: 100% 100%;
-
       pointer-events: none;
       user-select: none;
     }
@@ -282,25 +180,32 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
     .home-hero-art::after {
       position: absolute;
       z-index: 5;
-
-      top: -1px;
-      left: -12%;
-      right: -12%;
-
-      height: 26%;
-
       content: '';
+      inset: 0;
       pointer-events: none;
+      background:
+        linear-gradient(
+          to bottom,
+          var(--color-bg) 0%,
+          color-mix(in srgb, var(--color-bg) 88%, transparent) 12%,
+          transparent 26%
+        ),
+        linear-gradient(
+          to right,
+          var(--color-bg) 0%,
+          color-mix(in srgb, var(--color-bg) 76%, transparent) 14%,
+          transparent 30%
+        );
+      -webkit-mask-image: radial-gradient(ellipse 65% 68% at 52% 54%, transparent 52%, #000 100%);
+      mask-image: radial-gradient(ellipse 65% 68% at 52% 54%, transparent 52%, #000 100%);
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-size: 100% 100%;
+      mask-size: 100% 100%;
+    }
 
-      background: linear-gradient(
-        to bottom,
-        var(--color-bg) 0%,
-        color-mix(in srgb, var(--color-bg) 98%, transparent) 18%,
-        color-mix(in srgb, var(--color-bg) 88%, transparent) 38%,
-        color-mix(in srgb, var(--color-bg) 55%, transparent) 58%,
-        color-mix(in srgb, var(--color-bg) 20%, transparent) 78%,
-        transparent 100%
-      );
+    :host-context(.dark) .home-hero-art::after {
+      display: none;
     }
 
     :host-context(.dark) .home-hero-art img {
