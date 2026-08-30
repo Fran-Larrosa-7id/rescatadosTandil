@@ -110,9 +110,29 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
     }
 
     @media (max-width: 767px) {
-      .case-detail-heart,
-      .case-detail-dots,
       .case-detail-paw--bottom { display: none; }
+
+      .case-detail-paw--top {
+        top: 5.25rem;
+        right: -1.5rem;
+        width: 4.5rem;
+        opacity: 0.2;
+      }
+
+      .case-detail-heart {
+        top: 10rem;
+        right: -0.5rem;
+        left: auto;
+        width: 2.35rem;
+        opacity: 0.38;
+      }
+
+      .case-detail-dots {
+        top: 3.25rem;
+        right: -2rem;
+        width: 6rem;
+        opacity: 0.3;
+      }
 
       .case-story { border-radius: 1.25rem; }
     }

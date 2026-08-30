@@ -217,6 +217,23 @@ type CaseSort = 'name-asc' | 'name-desc';
       .cases-page {
         min-height: calc(100svh - 7.5rem);
       }
+      .cases-decor-paw--hero {
+        top: 3.25rem;
+        left: -4rem;
+        width: 4.75rem;
+        opacity: 0.2;
+      }
+      .cases-decor-heart {
+        top: 7rem;
+        right: -0.65rem;
+        width: 2.5rem;
+      }
+      .cases-decor-dots--top {
+        top: 2.25rem;
+        right: -2rem;
+        left: auto;
+        width: 6.5rem;
+      }
     }
   `,
   template: `
@@ -227,17 +244,17 @@ type CaseSort = 'name-asc' | 'name-desc';
         src="images/extra/paw.png"
         alt=""
         aria-hidden="true"
-        class="cases-decor-paw cases-decor-paw--hero hidden md:block"
+        class="cases-decor-paw cases-decor-paw--hero"
       />
       <img
         src="images/extra/corazoncito-empty.png"
         alt=""
         aria-hidden="true"
-        class="cases-decor-heart hidden md:block"
+        class="cases-decor-heart"
       />
       <span
         aria-hidden="true"
-        class="cases-decor-dots cases-decor-dots--top hidden md:block"
+        class="cases-decor-dots cases-decor-dots--top"
       ></span>
       <span
         aria-hidden="true"

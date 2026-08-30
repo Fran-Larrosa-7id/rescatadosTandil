@@ -36,7 +36,7 @@ type CheckoutState =
           src="images/extra/paw.png"
           alt=""
           aria-hidden="true"
-          class="cart-decor cart-decor-paw cart-decor-paw--top-right hidden lg:block"
+          class="cart-decor cart-decor-paw cart-decor-paw--top-right"
         />
         <img
           src="images/extra/paw.png"
@@ -60,9 +60,9 @@ type CheckoutState =
           src="images/extra/corazon-lleno.png"
           alt=""
           aria-hidden="true"
-          class="cart-decor cart-decor-heart cart-decor-heart--top hidden lg:block"
+          class="cart-decor cart-decor-heart cart-decor-heart--top"
         />
-        <span aria-hidden="true" class="cart-decor cart-dots cart-dots--top hidden lg:block"></span>
+        <span aria-hidden="true" class="cart-decor cart-dots cart-dots--top"></span>
         <span
           aria-hidden="true"
           class="cart-decor cart-dots cart-dots--right hidden lg:block"
@@ -425,6 +425,25 @@ type CheckoutState =
     }
     :host-context(.dark) .cart-dots {
       opacity: 0.44;
+    }
+
+    @media (max-width: 767px) {
+      .cart-decor-paw--top-right {
+        top: 2.5rem;
+        right: -1.2rem;
+        width: 4.5rem;
+      }
+      .cart-decor-heart--top {
+        top: 3.5rem;
+        left: -0.45rem;
+        width: 2.25rem;
+      }
+      .cart-dots--top {
+        top: 1rem;
+        right: -2rem;
+        left: auto;
+        width: 6.5rem;
+      }
     }
     :host-context(.dark) .cart-summary {
       border-color: transparent;

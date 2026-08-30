@@ -459,7 +459,15 @@ type ProductSort = 'name-asc' | 'name-desc' | 'price-asc' | 'price-desc';
         padding-left: 0;
       }
       .shop-intro > p:last-child {
+        position: relative;
+        padding-right: 4.75rem;
         font-size: 2rem;
+      }
+      .img-corazon-lleno {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
       }
       .shop-grid {
         grid-template-columns: minmax(0, 1fr);

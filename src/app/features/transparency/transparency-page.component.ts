@@ -178,6 +178,22 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
       .transparency-page {
         min-height: calc(100svh - 7.5rem);
       }
+      .transparency-decor-paw--top {
+        top: 1.75rem;
+        left: -1.25rem;
+        width: 4.5rem;
+      }
+      .transparency-decor-heart {
+        top: 12rem;
+        right: -0.5rem;
+        width: 2.75rem;
+      }
+      .transparency-dots--top {
+        top: 3rem;
+        right: -2rem;
+        left: auto;
+        width: 6rem;
+      }
       .transparency-total-paw {
         display: none;
       }
@@ -191,7 +207,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
         src="images/extra/paw.png"
         alt=""
         aria-hidden="true"
-        class="transparency-decor transparency-decor-paw transparency-decor-paw--top hidden md:block"
+        class="transparency-decor transparency-decor-paw transparency-decor-paw--top"
       />
       <img
         src="images/extra/paw.png"
@@ -203,11 +219,11 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
         src="images/extra/corazoncito-empty.png"
         alt=""
         aria-hidden="true"
-        class="transparency-decor transparency-decor-heart hidden md:block"
+        class="transparency-decor transparency-decor-heart"
       />
       <span
         aria-hidden="true"
-        class="transparency-decor transparency-dots transparency-dots--top hidden md:block"
+        class="transparency-decor transparency-dots transparency-dots--top"
       ></span>
       <span
         aria-hidden="true"

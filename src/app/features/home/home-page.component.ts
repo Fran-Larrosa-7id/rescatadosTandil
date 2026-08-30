@@ -74,6 +74,8 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
       max-width: 47rem;
     }
 
+    .home-mobile-decor { display: none; }
+
     .home-title-heart {
       position: relative;
       display: inline-block;
@@ -326,6 +328,46 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
     }
 
     @media (max-width: 767px) {
+      .home-mobile-decor {
+        position: absolute;
+        z-index: 0;
+        display: block;
+        pointer-events: none;
+        user-select: none;
+      }
+
+      .home-mobile-decor--paw-top {
+        top: 3.5rem;
+        right: -1.35rem;
+        width: 4.5rem;
+        opacity: 0.2;
+        transform: rotate(18deg);
+      }
+
+      .home-mobile-decor--paw-bottom {
+        bottom: 7rem;
+        left: -1.5rem;
+        width: 3.75rem;
+        opacity: 0.16;
+        transform: rotate(-18deg);
+      }
+
+      .home-mobile-decor--dots {
+        top: 11rem;
+        right: -2rem;
+        width: 6rem;
+        aspect-ratio: 1;
+        opacity: 0.3;
+        background-image: radial-gradient(circle, color-mix(in srgb, var(--color-accent) 46%, transparent) 1.25px, transparent 1.5px);
+        background-size: 0.72rem 0.72rem;
+        mask-image: radial-gradient(circle, #000 18%, transparent 72%);
+      }
+
+      :host-context(.dark) .home-mobile-decor {
+        opacity: 0.4;
+        filter: drop-shadow(0 0 0.75rem rgba(183, 126, 255, 0.16));
+      }
+
       .home-hero::before {
         display: none;
       }
@@ -384,6 +426,9 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
 
     <main id="contenido" class="home-page">
       <section class="home-hero relative">
+        <img src="images/extra/paw.png" alt="" aria-hidden="true" class="home-mobile-decor home-mobile-decor--paw-top" />
+        <img src="images/extra/paw.png" alt="" aria-hidden="true" class="home-mobile-decor home-mobile-decor--paw-bottom" />
+        <span aria-hidden="true" class="home-mobile-decor home-mobile-decor--dots"></span>
         <span aria-hidden="true" class="home-decor-dots left-[42%] top-36 hidden lg:block"></span>
         <img
           src="images/extra/paw.png"
