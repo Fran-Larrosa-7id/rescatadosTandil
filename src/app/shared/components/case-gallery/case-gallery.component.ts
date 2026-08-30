@@ -8,8 +8,20 @@ import { IconComponent } from '../icon/icon.component';
 @Component({
   selector: 'app-case-gallery',
   imports: [NgOptimizedImage, IconComponent],
+  styles: `
+    .case-gallery-frame {
+      background: linear-gradient(145deg, color-mix(in srgb, var(--color-card) 92%, transparent), color-mix(in srgb, var(--color-accent-soft) 21%, var(--color-card)));
+      box-shadow: 0 18px 38px color-mix(in srgb, var(--color-text) 10%, transparent);
+    }
+
+    :host-context(.dark) .case-gallery-frame {
+      border-color: var(--dark-neon-border);
+      background: linear-gradient(145deg, rgba(43, 34, 59, 0.97), rgba(29, 23, 42, 0.97));
+      box-shadow: 0 0 6px var(--dark-neon-glow-close), 0 0 24px var(--dark-neon-glow-wide), 0 18px 42px rgba(0, 0, 0, 0.28);
+    }
+  `,
   template: `
-    <div class="rounded-3xl border border-[var(--color-border)] bg-[var(--color-card)]/70 p-2 shadow-sm sm:p-3">
+    <div class="case-gallery-frame rounded-3xl border border-[var(--color-border)] p-2 sm:p-3">
       <button
         type="button"
         class="group relative block aspect-[4/3] w-full overflow-hidden rounded-2xl bg-[var(--color-surface)] text-left shadow-sm md:aspect-[16/10]"

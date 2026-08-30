@@ -57,8 +57,8 @@ type CaseSort = 'name-asc' | 'name-desc';
     }
 
     .cases-decor-paw--hero {
-      top: 2.25rem;
-      left: clamp(2rem, 6vw, 7rem);
+      top: 3rem;
+      left: -4.5rem;
       transform: rotate(-14deg);
     }
 
@@ -104,6 +104,33 @@ type CaseSort = 'name-asc' | 'name-desc';
       width: clamp(6rem, 9vw, 8rem);
       opacity: 0.18;
       transform: rotate(24deg);
+      z-index: 0;
+    }
+
+    .cases-decor-paw--cards-upper-right {
+      top: 4.5rem;
+      right: 2.5rem;
+      width: clamp(3.5rem, 5.5vw, 5rem);
+      opacity: 0.16;
+      transform: rotate(25deg);
+      z-index: 0;
+    }
+
+    .cases-decor-paw--cards-middle-left {
+      top: 34rem;
+      left: 1.5rem;
+      width: clamp(3.75rem, 6vw, 5.5rem);
+      opacity: 0.15;
+      transform: rotate(-20deg);
+      z-index: 0;
+    }
+
+    .cases-decor-paw--cards-middle-right {
+      top: 47rem;
+      right: 4rem;
+      width: clamp(3.25rem, 5vw, 4.75rem);
+      opacity: 0.14;
+      transform: rotate(15deg);
       z-index: 0;
     }
 
@@ -167,7 +194,12 @@ type CaseSort = 'name-asc' | 'name-desc';
 
     :host-context(.dark) .cases-decor-paw,
     :host-context(.dark) .cases-decor-heart {
-      opacity: 0.12;
+      opacity: 0.36;
+      filter: drop-shadow(0 0 0.9rem rgba(181, 118, 255, 0.18));
+    }
+
+    :host-context(.dark) .cases-decor-dots {
+      opacity: 0.42;
     }
 
     .cases-filter-idle {
@@ -279,6 +311,24 @@ type CaseSort = 'name-asc' | 'name-desc';
               alt=""
               aria-hidden="true"
               class="cases-decor-paw cases-decor-paw--cards-right hidden md:block"
+            />
+            <img
+              src="images/extra/paw.png"
+              alt=""
+              aria-hidden="true"
+              class="cases-decor-paw cases-decor-paw--cards-upper-right hidden md:block"
+            />
+            <img
+              src="images/extra/paw.png"
+              alt=""
+              aria-hidden="true"
+              class="cases-decor-paw cases-decor-paw--cards-middle-left hidden md:block"
+            />
+            <img
+              src="images/extra/paw.png"
+              alt=""
+              aria-hidden="true"
+              class="cases-decor-paw cases-decor-paw--cards-middle-right hidden md:block"
             />
             <img
               src="images/extra/paw.png"

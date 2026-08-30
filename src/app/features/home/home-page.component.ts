@@ -578,21 +578,21 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
             <div class="home-carousel-track">
               @for (item of caseCarousel; track $index) {
                 <a
-                  [routerLink]="['/casos', item.slug]"
+                  [routerLink]="['/casos', item!.slug]"
                   class="home-case-slide group relative aspect-[1.06] overflow-hidden rounded-2xl bg-[var(--color-surface)]"
                 >
                   <img
                     class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.05]"
-                    [ngSrc]="item.coverImage.src"
-                    [alt]="item.coverImage.alt"
-                    [width]="item.coverImage.width"
-                    [height]="item.coverImage.height"
+                    [ngSrc]="item!.coverImage.src"
+                    [alt]="item!.coverImage.alt"
+                    [width]="item!.coverImage.width"
+                    [height]="item!.coverImage.height"
                     loading="lazy"
                     sizes="(min-width: 768px) 17vw, 52vw"
                   />
                   <span
                     class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent px-4 pb-3 pt-10 text-base font-black text-white"
-                    >{{ item.name }}</span
+                    >{{ item!.name }}</span
                   >
                 </a>
               }
@@ -667,9 +667,16 @@ export class HomePageComponent {
 
   protected readonly donationConfig = DONATION_CONFIG;
   protected readonly formattedDebt = formatArs(DONATION_CONFIG.currentDebt);
-  private readonly highlightedCases = ['pochoclo', 'patan', 'gina']
-    .map((slug) => this.casesService.getBySlug(slug))
-    .filter((item): item is RescueCase => item !== undefined);
+  private readonly highlightedCases = [
+    'fenix',
+    'gina',
+    'matilda',
+    'maxine',
+    'patan',
+    'pochoclo',
+    'rafa',
+    'tiky',
+  ].map((slug) => this.casesService.getBySlug(slug));
   protected readonly caseCarousel = [...this.highlightedCases, ...this.highlightedCases];
   private readonly productImages = MERCH_PRODUCTS.flatMap((product) => [
     product.coverImage,

@@ -31,15 +31,105 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
     UpdatesTimelineComponent,
     RevealOnScrollDirective,
   ],
+  styles: `
+    .case-detail-page {
+      min-height: calc(100svh - 4rem);
+      overflow-x: clip;
+      background:
+        radial-gradient(circle at 91% 10%, color-mix(in srgb, var(--color-accent-soft) 42%, transparent), transparent 23rem),
+        radial-gradient(circle at 7% 70%, color-mix(in srgb, var(--color-surface-strong) 52%, transparent), transparent 26rem),
+        var(--color-bg);
+    }
+
+    .case-detail-shell { isolation: isolate; }
+
+    .case-detail-decor {
+      position: absolute;
+      z-index: -1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .case-detail-paw {
+      width: clamp(5rem, 9vw, 8.5rem);
+      opacity: 0.2;
+    }
+
+    .case-detail-paw--top { top: 2.75rem; right: 4%; transform: rotate(18deg); }
+    .case-detail-paw--bottom { bottom: 10rem; left: -2.5rem; transform: rotate(-20deg); opacity: 0.15; }
+    .case-detail-heart { top: 9rem; left: clamp(1rem, 6vw, 6rem); width: clamp(2.4rem, 4vw, 4rem); opacity: 0.58; transform: rotate(-16deg); }
+
+    .case-detail-dots {
+      top: 4rem;
+      right: 31%;
+      width: clamp(8rem, 14vw, 13rem);
+      aspect-ratio: 1;
+      opacity: 0.35;
+      background-image: radial-gradient(circle, color-mix(in srgb, var(--color-accent) 48%, transparent) 1.3px, transparent 1.55px);
+      background-size: 0.78rem 0.78rem;
+      mask-image: radial-gradient(circle, #000 18%, transparent 72%);
+    }
+
+    .case-back-link { transition: color 180ms ease, transform 180ms ease; }
+    .case-back-link:hover { transform: translateX(-0.2rem); }
+
+    .case-intro { position: relative; }
+    .case-intro::after {
+      display: block;
+      width: 3.2rem;
+      height: 0.22rem;
+      margin-top: 1.35rem;
+      content: '';
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--color-accent), color-mix(in srgb, var(--color-accent-soft) 64%, transparent));
+    }
+
+    .case-summary { text-wrap: pretty; }
+
+    .case-tabs {
+      border-radius: 1rem;
+      background: color-mix(in srgb, var(--color-card) 72%, transparent);
+      box-shadow: 0 12px 28px color-mix(in srgb, var(--color-text) 6%, transparent);
+    }
+
+    .case-story {
+      border: 1px solid color-mix(in srgb, var(--color-border) 86%, transparent);
+      background: linear-gradient(145deg, color-mix(in srgb, var(--color-card) 92%, transparent), color-mix(in srgb, var(--color-surface) 58%, transparent));
+      box-shadow: var(--shadow-surface);
+    }
+
+    :host-context(.dark) .case-detail-paw,
+    :host-context(.dark) .case-detail-heart,
+    :host-context(.dark) .case-detail-dots { opacity: 0.42; }
+
+    :host-context(.dark) .case-story,
+    :host-context(.dark) .case-tabs {
+      border-color: var(--dark-neon-border);
+      background: linear-gradient(145deg, rgba(42, 34, 59, 0.94), rgba(30, 24, 43, 0.94));
+      box-shadow: 0 0 16px var(--dark-neon-glow-wide), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    @media (max-width: 767px) {
+      .case-detail-heart,
+      .case-detail-dots,
+      .case-detail-paw--bottom { display: none; }
+
+      .case-story { border-radius: 1.25rem; }
+    }
+  `,
   template: `
     <app-header />
 
-    <main id="contenido" class="pb-28 md:pb-0">
+    <main id="contenido" class="case-detail-page pb-28 md:pb-0">
       @if (caseData(); as item) {
-        <section class="mx-auto max-w-7xl px-4 py-6 sm:px-6 md:py-12 lg:px-8">
+        <section class="case-detail-shell relative mx-auto max-w-7xl px-4 py-6 sm:px-6 md:py-12 lg:px-8">
+          <img src="images/extra/paw.png" alt="" aria-hidden="true" class="case-detail-decor case-detail-paw case-detail-paw--top" />
+          <img src="images/extra/paw.png" alt="" aria-hidden="true" class="case-detail-decor case-detail-paw case-detail-paw--bottom" />
+          <img src="images/extra/corazoncito-empty.png" alt="" aria-hidden="true" class="case-detail-decor case-detail-heart" />
+          <span aria-hidden="true" class="case-detail-decor case-detail-dots"></span>
           <a
             routerLink="/casos"
-            class="inline-flex items-center gap-2 text-sm font-bold text-[var(--color-text-muted)] hover:text-[var(--color-accent)]"
+            class="case-back-link inline-flex items-center gap-2 text-sm font-bold text-[var(--color-text-muted)] hover:text-[var(--color-accent)]"
           >
             <app-icon name="arrow" class="size-4 rotate-180" />
             Casos
@@ -47,14 +137,14 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
 
           <div class="mt-6 grid gap-8 lg:grid-cols-[1fr_360px] lg:items-start">
             <div>
-              <div appReveal class="mb-6">
+              <div appReveal class="case-intro mb-7">
                 <div class="flex flex-wrap gap-2">
                   @for (status of item.statuses; track status) {
                     <app-status-badge [status]="status" />
                   }
                 </div>
-                <h1 class="mt-5 text-5xl font-black leading-tight">{{ item.name }}</h1>
-                <p class="mt-4 max-w-3xl text-lg text-[var(--color-text-muted)] text-justify">
+                <h1 class="mt-5 text-5xl font-black leading-tight sm:text-6xl">{{ item.name }}</h1>
+                <p class="case-summary mt-4 max-w-3xl text-lg text-[var(--color-text-muted)] text-justify">
                   {{ item.summary }}
                 </p>
                 @if (item.updatedAt) {
@@ -64,18 +154,15 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
                 }
               </div>
 
-              <app-case-gallery
-                appReveal
-                [appRevealDelay]="80"
-                [cover]="item.coverImage"
-                [gallery]="item.gallery"
-              />
+              <div appReveal [appRevealDelay]="80" class="case-gallery-wrap">
+                <app-case-gallery [cover]="item.coverImage" [gallery]="item.gallery" />
+              </div>
 
               <nav
                 aria-label="Navegación del caso"
                 appReveal
                 [appRevealDelay]="120"
-                class="mt-8 overflow-x-auto border-b border-[var(--color-border)]"
+                class="case-tabs mt-8 overflow-x-auto border border-[var(--color-border)] px-4"
               >
                 <div
                   class="flex w-max min-w-full gap-6 text-sm font-bold text-[var(--color-text-muted)]"
@@ -100,7 +187,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
               <section
                 id="historia"
                 appReveal
-                class="mt-12 max-w-[68ch] scroll-mt-24 rounded-2xl bg-[var(--color-card)] p-6 shadow-sm md:bg-transparent md:p-0 md:shadow-none"
+                class="case-story mt-12 max-w-[68ch] scroll-mt-24 rounded-2xl p-6 md:p-8"
               >
                 <h2 class="text-3xl font-extrabold">Su historia</h2>
                 <div class="mt-5 space-y-6 leading-7 text-[var(--color-text)] sm:text-justify">

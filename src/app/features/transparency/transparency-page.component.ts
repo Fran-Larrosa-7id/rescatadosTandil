@@ -240,7 +240,6 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
               Cada número refleja una vida en recuperación. Nuestra prioridad es saldar las cuentas
               de quienes ya están sanando para poder ayudar a los que siguen esperando.
             </p>
-            <span class="mt-5 block h-1 w-14 rounded-full bg-[var(--color-accent)]"></span>
           </div>
 
           <section
@@ -352,7 +351,9 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
               </span>
               <p>
                 Cada aporte, por pequeño que sea, cambia una vida.
-                <strong class="block text-[var(--color-text)]">¡Gracias por ser parte!</strong>
+                <strong class="block text-[var(--color-text)]"
+                  >¡Gracias por ser parte de esta comunidad!</strong
+                >
               </p>
               <img
                 src="images/extra/corazoncito-empty.png"

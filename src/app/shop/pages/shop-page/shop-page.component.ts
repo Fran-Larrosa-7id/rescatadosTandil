@@ -188,9 +188,10 @@ type ProductSort = 'name-asc' | 'name-desc' | 'price-asc' | 'price-desc';
               class="size-8 object-contain brightness-0 invert"
           /></span>
           <p class="text-sm leading-5 text-[var(--color-text-muted)]">
-            <strong class="block text-base text-[var(--color-text)]"
-              >Cada compra nos ayuda a seguir rescatando vidas.</strong
-            >Gracias por ser parte de esta comunidad.
+            Cada compra nos ayuda a seguir rescatando vidas.<strong
+              class="block text-base text-[var(--color-text)]"
+              >¡Gracias por ser parte de esta comunidad!</strong
+            >
           </p>
           <img
             src="images/extra/paw.png"
