@@ -10,9 +10,9 @@ import { StatusBadgeComponent } from '../status-badge/status-badge.component';
   selector: 'app-case-card',
   imports: [RouterLink, NgOptimizedImage, IconComponent, StatusBadgeComponent],
   template: `
-    <article class="case-card surface-card overflow-hidden rounded-2xl border transition duration-200 hover:-translate-y-0.5 hover:border-[var(--color-accent)]">
+    <article class="case-card surface-card dark-neon-card dark-neon-card--featured relative rounded-2xl border transition duration-200 hover:-translate-y-0.5 hover:border-[var(--color-accent)]">
       <a [routerLink]="['/casos', item().slug]" class="group block">
-        <div class="relative aspect-[7/5] overflow-hidden bg-[var(--color-surface)]">
+        <div class="relative aspect-[7/5] overflow-hidden rounded-t-2xl bg-[var(--color-surface)]">
           <img
             class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
             [ngSrc]="item().coverImage.src"
@@ -51,15 +51,6 @@ import { StatusBadgeComponent } from '../status-badge/status-badge.component';
 
     .case-card-heart {
       background: color-mix(in srgb, var(--color-card) 88%, transparent);
-    }
-
-    :host-context(.dark) .case-card {
-      background: linear-gradient(145deg, rgba(40, 32, 55, 0.98), rgba(30, 24, 42, 0.98)) !important;
-      border-color: rgba(190, 130, 255, 0.38);
-      box-shadow:
-        0 0 4px rgba(191, 116, 255, 0.16),
-        0 0 18px rgba(157, 95, 220, 0.1),
-        0 10px 26px color-mix(in srgb, #000 30%, transparent);
     }
 
     :host-context(.dark) .case-card-heart {

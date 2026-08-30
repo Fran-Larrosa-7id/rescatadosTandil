@@ -29,8 +29,16 @@ type CaseSort = 'name-asc' | 'name-desc';
     .cases-page {
       min-height: calc(100svh - 4rem);
       background:
-        radial-gradient(circle at 94% 15%, color-mix(in srgb, var(--color-accent-soft) 36%, transparent), transparent 23rem),
-        radial-gradient(circle at 5% 72%, color-mix(in srgb, var(--color-surface-strong) 65%, transparent), transparent 21rem),
+        radial-gradient(
+          circle at 94% 15%,
+          color-mix(in srgb, var(--color-accent-soft) 36%, transparent),
+          transparent 23rem
+        ),
+        radial-gradient(
+          circle at 5% 72%,
+          color-mix(in srgb, var(--color-surface-strong) 65%, transparent),
+          transparent 21rem
+        ),
         var(--color-bg);
     }
 
@@ -54,6 +62,51 @@ type CaseSort = 'name-asc' | 'name-desc';
       transform: rotate(-14deg);
     }
 
+    .cases-decor-paw--cards-left {
+      top: 13rem;
+      left: -4.5rem;
+      width: clamp(5.5rem, 9vw, 8rem);
+      opacity: 0.16;
+      transform: rotate(-25deg);
+      z-index: 0;
+    }
+
+    .cases-decor-paw--cards-right {
+      top: 28rem;
+      right: -3.5rem;
+      width: clamp(5rem, 8vw, 7.5rem);
+      opacity: 0.14;
+      transform: rotate(22deg);
+      z-index: 0;
+    }
+
+    .cases-decor-paw--cards-bottom-left {
+      bottom: -3.5rem;
+      left: -3rem;
+      width: clamp(5rem, 8vw, 7rem);
+      opacity: 0.16;
+      transform: rotate(-18deg);
+      z-index: 0;
+    }
+
+    .cases-decor-paw--cards-bottom-middle {
+      bottom: 3rem;
+      left: 46%;
+      width: clamp(3.5rem, 6vw, 5.25rem);
+      opacity: 0.13;
+      transform: rotate(16deg);
+      z-index: 0;
+    }
+
+    .cases-decor-paw--cards-bottom-right {
+      right: -2.75rem;
+      bottom: -1.25rem;
+      width: clamp(6rem, 9vw, 8rem);
+      opacity: 0.18;
+      transform: rotate(24deg);
+      z-index: 0;
+    }
+
     .cases-decor-heart {
       top: 4.5rem;
       right: clamp(5rem, 13vw, 14rem);
@@ -66,7 +119,11 @@ type CaseSort = 'name-asc' | 'name-desc';
       width: clamp(11rem, 17vw, 16rem);
       aspect-ratio: 1;
       opacity: 0.32;
-      background-image: radial-gradient(circle, color-mix(in srgb, var(--color-accent) 40%, transparent) 1.3px, transparent 1.55px);
+      background-image: radial-gradient(
+        circle,
+        color-mix(in srgb, var(--color-accent) 40%, transparent) 1.3px,
+        transparent 1.55px
+      );
       background-size: 0.78rem 0.78rem;
       mask-image: radial-gradient(circle, #000 20%, transparent 71%);
     }
@@ -81,14 +138,30 @@ type CaseSort = 'name-asc' | 'name-desc';
       left: -5rem;
     }
 
+    .cases-decor-dots--cards {
+      right: -3.5rem;
+      bottom: -4rem;
+      width: 11rem;
+      opacity: 0.22;
+      z-index: 0;
+    }
+
     .cases-sort {
       appearance: auto;
     }
 
     :host-context(.dark) .cases-page {
       background:
-        radial-gradient(circle at 93% 17%, color-mix(in srgb, var(--color-accent) 10%, transparent), transparent 25rem),
-        radial-gradient(circle at 5% 68%, color-mix(in srgb, var(--color-accent) 8%, transparent), transparent 23rem),
+        radial-gradient(
+          circle at 93% 17%,
+          color-mix(in srgb, var(--color-accent) 10%, transparent),
+          transparent 25rem
+        ),
+        radial-gradient(
+          circle at 5% 68%,
+          color-mix(in srgb, var(--color-accent) 8%, transparent),
+          transparent 23rem
+        ),
         var(--color-bg);
     }
 
@@ -118,68 +191,131 @@ type CaseSort = 'name-asc' | 'name-desc';
     <app-header />
 
     <main id="contenido" class="cases-page relative isolate overflow-hidden">
-      <img src="images/extra/paw.png" alt="" aria-hidden="true" class="cases-decor-paw cases-decor-paw--hero hidden md:block" />
-      <img src="images/extra/corazoncito-empty.png" alt="" aria-hidden="true" class="cases-decor-heart hidden md:block" />
-      <span aria-hidden="true" class="cases-decor-dots cases-decor-dots--top hidden md:block"></span>
-      <span aria-hidden="true" class="cases-decor-dots cases-decor-dots--left hidden md:block"></span>
+      <img
+        src="images/extra/paw.png"
+        alt=""
+        aria-hidden="true"
+        class="cases-decor-paw cases-decor-paw--hero hidden md:block"
+      />
+      <img
+        src="images/extra/corazoncito-empty.png"
+        alt=""
+        aria-hidden="true"
+        class="cases-decor-heart hidden md:block"
+      />
+      <span
+        aria-hidden="true"
+        class="cases-decor-dots cases-decor-dots--top hidden md:block"
+      ></span>
+      <span
+        aria-hidden="true"
+        class="cases-decor-dots cases-decor-dots--left hidden md:block"
+      ></span>
       <div class="relative z-10 mx-auto max-w-7xl px-4 py-10 sm:px-6 md:py-16 lg:px-8">
-      <div appReveal class="max-w-2xl">
-        <h1 class="text-5xl font-black leading-[0.98] md:text-6xl">
-          Sus historias
-          <span class="hidden align-middle text-[var(--color-accent)] sm:inline-flex"><app-icon name="heart" class="ml-2 size-9 md:size-10" /></span>
-        </h1>
-        <p class="mt-4 max-w-xl text-lg leading-7 text-[var(--color-text-muted)]">
-          Seguí de cerca su evolución, tratamientos y recuperación desde el momento de su rescate.
-        </p>
-      </div>
+        <div appReveal class="max-w-2xl">
+          <h1 class="text-5xl font-black leading-[0.98] md:text-6xl">
+            Sus historias
+            <span class="hidden align-middle text-[var(--color-accent)] sm:inline-flex"
+              ><app-icon name="heart" class="ml-2 size-9 md:size-10"
+            /></span>
+          </h1>
+          <p class="mt-4 max-w-xl text-lg leading-7 text-[var(--color-text-muted)]">
+            Seguí de cerca su evolución, tratamientos y recuperación desde el momento de su rescate.
+          </p>
+        </div>
 
-      <div appReveal [appRevealDelay]="80" class="mt-9 flex justify-end md:absolute md:right-8 md:top-[13.5rem] md:mt-0">
-        <label class="shrink-0">
-          <span class="sr-only">Ordenar historias</span>
-          <select
-            class="cases-sort min-h-12 max-w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] px-4 pr-10 text-sm font-bold text-[var(--color-text)] shadow-sm"
-            [value]="sort()"
-            aria-label="Ordenar historias"
-            (change)="setSort($any($event.target).value)"
-          >
-            <option value="name-asc">Ordenar: A-Z</option>
-            <option value="name-desc">Ordenar: Z-A</option>
-          </select>
-        </label>
-      </div>
+        <div
+          appReveal
+          [appRevealDelay]="80"
+          class="mt-9 flex justify-end md:absolute md:right-8 md:top-[13.5rem] md:mt-0"
+        >
+          <label class="shrink-0">
+            <span class="sr-only">Ordenar historias</span>
+            <select
+              class="cases-sort min-h-12 max-w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] px-4 pr-10 text-sm font-bold text-[var(--color-text)] shadow-sm"
+              [value]="sort()"
+              aria-label="Ordenar historias"
+              (change)="setSort($any($event.target).value)"
+            >
+              <option value="name-asc">Ordenar: A-Z</option>
+              <option value="name-desc">Ordenar: Z-A</option>
+            </select>
+          </label>
+        </div>
 
-      <div
-        appReveal
-        [appRevealDelay]="120"
-        class="-mx-4 mt-3 flex gap-3 overflow-x-auto overscroll-x-contain px-4 py-2 sm:mx-0 sm:px-0"
-        aria-label="Filtrar casos"
-      >
-        @for (filter of filters; track filter.value) {
-          <button
-            type="button"
-                [class]="filterClass(filter.value)"
-                [style.background-color]="activeFilter() === filter.value || !theme.isDark() ? null : '#282037'"
-                [style.color]="activeFilter() === filter.value || !theme.isDark() ? null : '#f8f4ff'"
-                (click)="activeFilter.set(filter.value)"
-            [attr.aria-pressed]="activeFilter() === filter.value"
-          >
-            <app-icon [name]="filter.icon" class="size-4" />
-            {{ filter.label }}
-          </button>
-        }
-      </div>
+        <div
+          appReveal
+          [appRevealDelay]="120"
+          class="-mx-4 mt-3 flex gap-3 overflow-x-auto overscroll-x-contain px-4 py-2 sm:mx-0 sm:px-0"
+          aria-label="Filtrar casos"
+        >
+          @for (filter of filters; track filter.value) {
+            <button
+              type="button"
+              [class]="filterClass(filter.value)"
+              [style.background-color]="
+                activeFilter() === filter.value || !theme.isDark() ? null : '#282037'
+              "
+              [style.color]="activeFilter() === filter.value || !theme.isDark() ? null : '#f8f4ff'"
+              (click)="activeFilter.set(filter.value)"
+              [attr.aria-pressed]="activeFilter() === filter.value"
+            >
+              <app-icon [name]="filter.icon" class="size-4" />
+              {{ filter.label }}
+            </button>
+          }
+        </div>
 
-      <section class="mt-7 md:mt-8">
-        @if (filteredCases().length > 0) {
-          <div class="grid gap-7 md:grid-cols-2 lg:grid-cols-3">
-            @for (item of filteredCases(); track item.slug) {
-              <app-case-card appReveal [appRevealDelay]="$index * 90" [item]="item" />
-            }
-          </div>
-        } @else {
-          <app-empty-state message="No hay casos con este estado por el momento." />
-        }
-      </section>
+        <section class="relative mt-7 md:mt-8">
+          @if (filteredCases().length > 0) {
+            <img
+              src="images/extra/paw.png"
+              alt=""
+              aria-hidden="true"
+              class="cases-decor-paw cases-decor-paw--cards-left hidden md:block"
+            />
+            <img
+              src="images/extra/paw.png"
+              alt=""
+              aria-hidden="true"
+              class="cases-decor-paw cases-decor-paw--cards-right hidden md:block"
+            />
+            <img
+              src="images/extra/paw.png"
+              alt=""
+              aria-hidden="true"
+              class="cases-decor-paw cases-decor-paw--cards-bottom-left hidden md:block"
+            />
+            <img
+              src="images/extra/paw.png"
+              alt=""
+              aria-hidden="true"
+              class="cases-decor-paw cases-decor-paw--cards-bottom-middle hidden md:block"
+            />
+            <img
+              src="images/extra/paw.png"
+              alt=""
+              aria-hidden="true"
+              class="cases-decor-paw cases-decor-paw--cards-bottom-right hidden md:block"
+            />
+            <span
+              aria-hidden="true"
+              class="cases-decor-dots cases-decor-dots--cards hidden md:block"
+            ></span>
+            <div class="relative z-10 grid gap-7 md:grid-cols-2 lg:grid-cols-3">
+              @for (item of filteredCases(); track item.slug) {
+                <app-case-card
+                  appReveal
+                  class="relative z-10"
+                  [appRevealDelay]="$index * 90"
+                  [item]="item"
+                />
+              }
+            </div>
+          } @else {
+            <app-empty-state message="No hay casos con este estado por el momento." />
+          }
+        </section>
       </div>
     </main>
 
@@ -200,7 +336,7 @@ export class CasesPageComponent {
     readonly icon: IconName;
   }[] = [
     { value: 'all', label: 'Todos', icon: 'paw' },
-    { value: 'treatment', label: 'En tratamiento', icon: 'paw' },
+    { value: 'treatment', label: 'En tratamiento', icon: 'stethoscope' },
     { value: 'recovering', label: 'Recuperados', icon: 'heart' },
     { value: 'closed', label: 'Adoptados', icon: 'home' },
     { value: 'memorial', label: 'En memoria', icon: 'spark' },
@@ -218,7 +354,8 @@ export class CasesPageComponent {
   }
 
   protected filterClass(value: CaseFilter): string {
-    const baseClasses = 'inline-flex min-h-12 shrink-0 items-center gap-2 rounded-full border px-5 text-sm font-bold transition';
+    const baseClasses =
+      'inline-flex min-h-12 shrink-0 items-center gap-2 rounded-full border px-5 text-sm font-bold transition';
     const stateClasses =
       this.activeFilter() === value
         ? 'bg-[var(--color-accent)] text-white border-[var(--color-accent)] shadow-sm'
