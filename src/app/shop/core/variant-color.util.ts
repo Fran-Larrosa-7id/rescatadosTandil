@@ -5,12 +5,17 @@ const VARIANT_COLOR_MAP: Record<string, string> = {
   white: '#f6f2ed',
   negro: '#161616',
   black: '#161616',
+  gris: '#8b8f98',
+  gray: '#8b8f98',
+  grey: '#8b8f98',
   lila: '#a56bdc',
   lilac: '#a56bdc',
   violeta: '#725a9c',
   purple: '#725a9c',
   rosa: '#e58a9e',
   pink: '#e58a9e',
+  naranja: '#f28c28',
+  orange: '#f28c28',
 };
 
 const ATTRIBUTE_LABELS: Readonly<Record<string, string>> = {
