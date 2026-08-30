@@ -36,13 +36,13 @@ export const MATILDA_CASE = {
 
   gallery: [
     {
-      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1788008637/WhatsApp_Image_2026-08-23_at_19.39.20.jpg',
+      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1788008637/WhatsApp_Image_2026-08-23_at_19.39.19.jpg',
       width: 900,
       height: 1600,
       alt: 'Matilda durante sus primeros días de tratamiento',
     },
     {
-      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1788008637/WhatsApp_Image_2026-08-23_at_19.39.19.jpg',
+      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1788008637/WhatsApp_Image_2026-08-23_at_19.39.20.jpg',
       width: 900,
       height: 1600,
       alt: 'Matilda recuperándose de la sarna sarcóptica',
