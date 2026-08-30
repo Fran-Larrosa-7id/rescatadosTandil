@@ -67,13 +67,13 @@ type ProductSort = 'name-asc' | 'name-desc' | 'price-asc' | 'price-desc';
         </p>
 
         <p class="mt-4 text-lg text-[var(--color-text-muted)]">
-          Elegí lo que más te guste y llevate <br />un pedacito de
+          Elegí lo que más te guste y llevate <br />un pedacito de <br />
           <span class="text-[var(--color-accent)]">Gatarsis</span> con vos.
           <img
             src="images/extra/corazon-lleno.png"
             alt=""
             aria-hidden="true"
-            class="ml-2 inline-block size-10 align-middle object-contain w-20 h-20"
+            class="ml-2 inline-block size-10 align-middle object-contain w-20 h-20 img-corazon-lleno"
           />
         </p>
       </section>
@@ -475,6 +475,14 @@ type ProductSort = 'name-asc' | 'name-desc' | 'price-asc' | 'price-desc';
       }
       .shop-card > a > div:nth-child(3) {
         padding: 0.45rem 0.1rem 0.7rem;
+      }
+    }
+
+    @media (max-width: 639px) {
+      .img-corazon-lleno {
+        position: absolute !important;
+        top: 0 !important;
+        right: 0 !important;
       }
     }
   `,
