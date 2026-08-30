@@ -210,7 +210,6 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
 
     :host-context(.dark) .home-hero-art img {
       mix-blend-mode: screen;
-      filter: brightness(0.72) saturate(0.82) contrast(1.02);
       opacity: 0.78;
     }
 
@@ -225,7 +224,7 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
     :host-context(.dark) .home-hero-art__dark {
       display: block;
       mix-blend-mode: normal;
-      filter: none;
+      filter: brightness(1.28) contrast(1.06) saturate(1.08);
       opacity: 1;
       -webkit-mask-image: none;
       mask-image: none;
