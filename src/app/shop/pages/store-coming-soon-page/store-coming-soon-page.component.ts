@@ -83,29 +83,27 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
               <span>algo muy especial</span>
             </h1>
 
-            <p class="message mx-auto mt-5 max-w-xl text-base leading-7 text-[var(--color-text-muted)] sm:text-lg lg:mx-0">
-              Muy pronto vas a poder encontrar productos solidarios y ayudarnos a seguir
-              rescatando vidas con cada compra.
+            <p
+              class="message mx-auto mt-5 max-w-xl text-base leading-7 text-[var(--color-text-muted)] sm:text-lg lg:mx-0"
+            >
+              Muy pronto podrás encontrar nuestros productos.
             </p>
 
-            <div class="divider mx-auto my-7 flex max-w-md items-center gap-3 lg:mx-0" aria-hidden="true">
+            <div
+              class="divider mx-auto my-7 flex max-w-md items-center gap-3 lg:mx-0"
+              aria-hidden="true"
+            >
               <span></span>
               <app-icon name="heart" class="size-5" />
               <span></span>
             </div>
 
             <p class="return-note text-sm font-extrabold uppercase tracking-[0.16em]">
-              Volvé pronto, ¡se vienen cosas lindas!
+              Falta poquito. <br />
+              ¡Se vienen cosas lindas!
             </p>
 
             <div class="mt-7 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
-              <a
-                routerLink="/casos"
-                class="button-primary inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 font-extrabold"
-              >
-                Conocé nuestros casos
-                <app-icon name="arrow" class="size-4" />
-              </a>
               <a
                 routerLink="/"
                 class="secondary-button inline-flex min-h-12 items-center justify-center gap-2 rounded-full border px-6 font-extrabold"
