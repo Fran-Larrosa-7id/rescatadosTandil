@@ -74,7 +74,9 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
       max-width: 47rem;
     }
 
-    .home-mobile-decor { display: none; }
+    .home-mobile-decor {
+      display: none;
+    }
 
     .home-title-heart {
       position: relative;
@@ -358,7 +360,11 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
         width: 6rem;
         aspect-ratio: 1;
         opacity: 0.3;
-        background-image: radial-gradient(circle, color-mix(in srgb, var(--color-accent) 46%, transparent) 1.25px, transparent 1.5px);
+        background-image: radial-gradient(
+          circle,
+          color-mix(in srgb, var(--color-accent) 46%, transparent) 1.25px,
+          transparent 1.5px
+        );
         background-size: 0.72rem 0.72rem;
         mask-image: radial-gradient(circle, #000 18%, transparent 72%);
       }
@@ -426,8 +432,18 @@ import { RevealOnScrollDirective } from '../../shared/directives/reveal-on-scrol
 
     <main id="contenido" class="home-page">
       <section class="home-hero relative">
-        <img src="images/extra/paw.png" alt="" aria-hidden="true" class="home-mobile-decor home-mobile-decor--paw-top" />
-        <img src="images/extra/paw.png" alt="" aria-hidden="true" class="home-mobile-decor home-mobile-decor--paw-bottom" />
+        <img
+          src="images/extra/paw.png"
+          alt=""
+          aria-hidden="true"
+          class="home-mobile-decor home-mobile-decor--paw-top"
+        />
+        <img
+          src="images/extra/paw.png"
+          alt=""
+          aria-hidden="true"
+          class="home-mobile-decor home-mobile-decor--paw-bottom"
+        />
         <span aria-hidden="true" class="home-mobile-decor home-mobile-decor--dots"></span>
         <span aria-hidden="true" class="home-decor-dots left-[42%] top-36 hidden lg:block"></span>
         <img
@@ -726,6 +742,7 @@ export class HomePageComponent {
     'pochoclo',
     'rafa',
     'tiky',
+    'tom',
   ].map((slug) => this.casesService.getBySlug(slug));
   protected readonly caseCarousel = [...this.highlightedCases, ...this.highlightedCases];
   private readonly productImages = MERCH_PRODUCTS.flatMap((product) => [

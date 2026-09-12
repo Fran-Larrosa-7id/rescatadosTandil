@@ -17,14 +17,7 @@ export const TOM_CASE = {
     objectPosition: 'center',
   },
 
-  gallery: [
-    {
-      src: 'https://res.cloudinary.com/r7yd5dny/image/upload/v1789223625/WhatsApp_Image_2026-09-12_at_11.32.52.jpg',
-      width: 1200,
-      height: 1200,
-      alt: 'Tom luego de ser rescatado',
-    },
-  ],
+  gallery: [],
 
   story: [
     'Tom tenía una familia. Durante años vivió con un matrimonio y su hija, quienes lo cuidaban con muchísimo amor.',

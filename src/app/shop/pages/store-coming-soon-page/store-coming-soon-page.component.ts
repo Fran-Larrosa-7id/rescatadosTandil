@@ -86,7 +86,7 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
             <p
               class="message mx-auto mt-5 max-w-xl text-base leading-7 text-[var(--color-text-muted)] sm:text-lg lg:mx-0"
             >
-              Muy pronto podrás encontrar nuestros productos.
+              Muy pronto vas a poder encontrar productos creados para sostener lo que hacemos.
             </p>
 
             <div
