@@ -8,6 +8,7 @@ import { POCHOCLO_CASE } from './cases/pochoclo.case';
 import { RAFA_CASE } from './cases/rafa.case';
 
 import { TIKY_CASE } from './cases/tiky.case';
+import { TOM_CASE } from './cases/tom.case';
 
 export const RESCUE_CASES = [
   TIKY_CASE,
@@ -18,4 +19,5 @@ export const RESCUE_CASES = [
   GINA_CASE,
   RAFA_CASE,
   MATILDA_CASE,
+  TOM_CASE,
 ] satisfies readonly RescueCase[];
