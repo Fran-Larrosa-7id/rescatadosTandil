@@ -31,15 +31,15 @@ import { AdminDashboard } from '../core/admin.models';
             <p>Catálogo y existencias.</p>
           </div>
           <div class="summary-band">
-            <a routerLink="/admin/products">
+            <a routerLink="/admin/products" class="is-ok">
               <strong>{{ dashboard.products.active }}</strong>
               <span>Productos activos</span>
             </a>
-            <a routerLink="/admin/inventory">
+            <a routerLink="/admin/inventory" [class.is-alert]="dashboard.inventory.lowStockVariants > 0">
               <strong>{{ dashboard.inventory.lowStockVariants }}</strong>
               <span>Stock bajo</span>
             </a>
-            <a routerLink="/admin/inventory">
+            <a routerLink="/admin/inventory" [class.is-alert]="dashboard.inventory.outOfStockVariants > 0">
               <strong>{{ dashboard.inventory.outOfStockVariants }}</strong>
               <span>Sin stock</span>
             </a>

@@ -2,50 +2,48 @@
   display: block;
 }
 
-.audit-page {
-  --audit-line: color-mix(in srgb, var(--color-border) 82%, transparent);
-}
-
 .audit-toolbar {
   display: grid;
   grid-template-columns: minmax(11rem, 1.1fr) minmax(12rem, 1.1fr) minmax(10rem, 1fr) 10rem auto;
   gap: 0.85rem;
   align-items: end;
-  padding: 1rem;
-  border: 1px solid var(--audit-line);
-  border-radius: 0.75rem;
-  background: var(--color-card);
-  box-shadow: 0 16px 40px rgba(29, 23, 34, 0.05);
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius-card);
+  background: var(--adm-bg-raised);
+  box-shadow: var(--adm-shadow-card);
 }
 
 .audit-toolbar label span {
   font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--color-text-muted);
+  letter-spacing: 0.06em;
+  color: var(--adm-ink-muted);
 }
 
 .audit-count {
   align-self: start;
-  border: 1px solid var(--audit-line);
-  border-radius: 999px;
+  border: 1px solid var(--adm-border);
+  border-radius: 0.3rem;
   padding: 0.35rem 0.65rem;
-  background: var(--color-card);
-  font-size: 0.78rem;
-  font-weight: 800;
+  background: var(--adm-bg-sunken);
+  font-family: var(--adm-font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--adm-ink-muted);
 }
 
 .clear-filter {
-  height: 2.75rem;
+  height: 2.7rem;
 }
 
 .audit-log {
   display: grid;
   overflow: hidden;
-  border: 1px solid var(--audit-line);
-  border-radius: 0.85rem;
-  background: var(--color-card);
-  box-shadow: 0 18px 45px rgba(29, 23, 34, 0.06);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius-card);
+  background: var(--adm-bg-raised);
+  box-shadow: var(--adm-shadow-card);
 }
 
 .audit-entry {
@@ -54,12 +52,12 @@
   gap: 1rem;
   align-items: center;
   width: 100%;
-  min-height: 4.5rem;
-  padding: 0.95rem 1rem;
+  min-height: 4.4rem;
+  padding: 0.9rem 1.1rem;
   border: 0;
-  border-bottom: 1px solid var(--audit-line);
+  border-bottom: 1px solid var(--adm-border);
   background: transparent;
-  color: var(--color-text);
+  color: var(--adm-ink);
   font: inherit;
   text-align: left;
   cursor: pointer;
@@ -70,12 +68,13 @@
 }
 
 .audit-entry:hover {
-  background: color-mix(in srgb, var(--color-accent) 5%, var(--color-card));
+  background: color-mix(in srgb, var(--adm-accent) 5%, transparent);
 }
 
 .audit-entry time {
-  color: var(--color-text-muted);
-  font-size: 0.82rem;
+  color: var(--adm-ink-muted);
+  font-family: var(--adm-font-mono);
+  font-size: 0.78rem;
 }
 
 .audit-action {
@@ -85,7 +84,7 @@
 
 .audit-action small,
 .audit-detail {
-  color: var(--color-text-muted);
+  color: var(--adm-ink-muted);
   font-size: 0.82rem;
 }
 
@@ -102,9 +101,9 @@
 
 .audit-open {
   justify-self: end;
-  color: var(--color-accent);
-  font-size: 0.82rem;
-  font-weight: 800;
+  color: var(--adm-accent);
+  font-size: 0.8rem;
+  font-weight: 700;
 }
 
 .audit-dialog {
@@ -125,10 +124,11 @@
 
 .audit-dialog dt,
 .metadata-card dt {
-  font-size: 0.68rem;
-  font-weight: 850;
+  font-family: var(--adm-font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
   text-transform: uppercase;
-  color: var(--color-text-muted);
+  color: var(--adm-ink-muted);
 }
 
 .audit-dialog dd,
@@ -141,10 +141,10 @@
 .metadata-card {
   display: grid;
   gap: 0.85rem;
-  padding: 1rem;
-  border: 1px solid var(--audit-line);
-  border-radius: 0.75rem;
-  background: color-mix(in srgb, var(--color-surface) 65%, var(--color-card));
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--adm-border);
+  border-radius: 0.6rem;
+  background: var(--adm-bg-sunken);
 }
 
 .metadata-card h3 {
@@ -159,18 +159,18 @@
 .metadata-card div {
   min-width: 0;
   padding-bottom: 0.7rem;
-  border-bottom: 1px solid var(--audit-line);
+  border-bottom: 1px solid var(--adm-border);
 }
 
 .raw-json {
-  border-top: 1px solid var(--audit-line);
+  border-top: 1px dashed var(--adm-border-strong);
   padding-top: 0.85rem;
 }
 
 .raw-json summary {
-  color: var(--color-accent);
+  color: var(--adm-accent);
   font-size: 0.85rem;
-  font-weight: 800;
+  font-weight: 700;
   cursor: pointer;
 }
 
@@ -179,9 +179,10 @@
   overflow: auto;
   margin: 0.75rem 0 0;
   padding: 1rem;
-  border-radius: 0.65rem;
-  background: #17131c;
-  color: #f6eefc;
+  border-radius: 0.55rem;
+  background: var(--adm-ink);
+  color: var(--adm-bg-raised);
+  font-family: var(--adm-font-mono);
   font-size: 0.78rem;
 }
 
