@@ -35,7 +35,23 @@ describe('CartPageComponent checkout', () => {
       imageUrl: null,
     });
     fixture.detectChanges();
-    component.customer = { name: 'Ada Lovelace', email: 'ada@example.com', phone: '249 400 0000', note: 'Llamar por la tarde' };
+    http.expectOne(`${PUBLIC_API_BASE_URL}/products`).flush([
+      {
+        id: 'product-id',
+        slug: 'producto',
+        name: 'Producto',
+        media: [],
+        variants: [
+          { id: 'variant-id', sku: 'SKU', name: 'Variante', priceInCents: 100, availableStock: 2 },
+        ],
+      },
+    ]);
+    component.customer = {
+      name: 'Ada Lovelace',
+      email: 'ada@example.com',
+      phone: '249 400 0000',
+      note: 'Llamar por la tarde',
+    };
   });
 
   afterEach(() => {
@@ -63,9 +79,20 @@ describe('CartPageComponent checkout', () => {
       customer: { name: 'Ada Lovelace', email: 'ada@example.com', phone: '249 400 0000' },
       fulfillment: { method: 'PICKUP', note: 'Llamar por la tarde' },
     });
-    requests[0].flush({ orderId: 'order-id', status: 'awaiting_payment', totalInCents: 200, reservationExpiresAt: '2026-01-01T00:10:00Z' });
-    const preference = http.expectOne(`${PUBLIC_API_BASE_URL}/checkout/order-id/mercado-pago/preference`);
-    preference.flush({ orderId: 'order-id', preferenceId: 'provider-preference', initPoint: 'https://mp.test/init' });
+    requests[0].flush({
+      orderId: 'order-id',
+      status: 'awaiting_payment',
+      totalInCents: 200,
+      reservationExpiresAt: '2026-01-01T00:10:00Z',
+    });
+    const preference = http.expectOne(
+      `${PUBLIC_API_BASE_URL}/checkout/order-id/mercado-pago/preference`,
+    );
+    preference.flush({
+      orderId: 'order-id',
+      preferenceId: 'provider-preference',
+      initPoint: 'https://mp.test/init',
+    });
     expect(redirect).toHaveBeenCalledWith('https://mp.test/init');
   });
 
@@ -90,6 +117,73 @@ describe('CartPageComponent checkout', () => {
     expect(component.state()).toBe('ERROR');
   });
 
+  it('identifies and highlights an exhausted variant from the reserve error', () => {
+    component.checkout();
+    const reserve = http.expectOne(`${PUBLIC_API_BASE_URL}/checkout/reserve`);
+    reserve.flush(
+      {
+        code: 'OUT_OF_STOCK',
+        details: { variantId: 'variant-id', requested: 1, available: 0 },
+      },
+      { status: 409, statusText: 'Conflict' },
+    );
+    fixture.detectChanges();
+
+    expect(component.stockIssue()).toEqual({ variantId: 'variant-id', requested: 1, available: 0 });
+    expect(component.cart.items()[0].availableStock).toBe(0);
+    expect(component.ctaLabel()).toBe('Revisar carrito');
+    expect(fixture.nativeElement.textContent).toContain(
+      'Este producto se agotó mientras estabas comprando.',
+    );
+    expect(fixture.nativeElement.textContent).toContain('Producto · Variante');
+    expect(fixture.nativeElement.textContent).toContain('Sin stock');
+
+    component.removeUnavailable('variant-id');
+    fixture.detectChanges();
+    expect(cart.items()).toHaveLength(0);
+  });
+
+  it('shows reduced stock and allows the user to adjust the requested quantity', () => {
+    component.checkout();
+    const reserve = http.expectOne(`${PUBLIC_API_BASE_URL}/checkout/reserve`);
+    reserve.flush(
+      {
+        code: 'OUT_OF_STOCK',
+        details: { variantId: 'variant-id', requested: 3, available: 1 },
+      },
+      { status: 409, statusText: 'Conflict' },
+    );
+    fixture.detectChanges();
+
+    expect(component.hasInvalidAvailability()).toBe(true);
+    expect(fixture.nativeElement.textContent).toContain('Pediste 3 unidades, pero ahora quedan 1.');
+    expect(fixture.nativeElement.textContent).toContain('Solo quedan 1');
+
+    component.adjustToAvailable('variant-id', 1);
+    fixture.detectChanges();
+    expect(cart.items()[0].quantity).toBe(1);
+    expect(component.hasInvalidAvailability()).toBe(false);
+    expect(component.stockIssue()).toBeNull();
+  });
+
+  it('falls back to the generic message when the reported variant is not in the cart', () => {
+    component.checkout();
+    const reserve = http.expectOne(`${PUBLIC_API_BASE_URL}/checkout/reserve`);
+    reserve.flush(
+      {
+        code: 'OUT_OF_STOCK',
+        details: { variantId: 'other-variant', requested: 1, available: 0 },
+      },
+      { status: 409, statusText: 'Conflict' },
+    );
+    fixture.detectChanges();
+
+    expect(component.stockIssue()).toBeNull();
+    expect(fixture.nativeElement.textContent).toContain(
+      'Algunos productos cambiaron de disponibilidad',
+    );
+  });
+
   it('does not reserve when the name is empty or whitespace only', () => {
     component.customer.name = '   ';
     component.checkout();
@@ -111,7 +205,12 @@ describe('CartPageComponent checkout', () => {
   });
 
   it('trims customer data in the reserve payload and never persists it in the cart', () => {
-    component.customer = { name: ' Ada Lovelace ', email: ' ada@example.com ', phone: ' 249 400 0000 ', note: ' retiro por la tarde ' };
+    component.customer = {
+      name: ' Ada Lovelace ',
+      email: ' ada@example.com ',
+      phone: ' 249 400 0000 ',
+      note: ' retiro por la tarde ',
+    };
     component.checkout();
     const request = http.expectOne(`${PUBLIC_API_BASE_URL}/checkout/reserve`);
     expect(request.request.body).toEqual({

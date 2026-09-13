@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { finalize, switchMap, tap } from 'rxjs';
@@ -7,12 +7,20 @@ import { AppHeaderComponent } from '../../../shared/components/app-header/app-he
 import { BottomNavigationComponent } from '../../../shared/components/bottom-navigation/bottom-navigation.component';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { RevealOnScrollDirective } from '../../../shared/directives/reveal-on-scroll.directive';
+import { CartItem } from '../../core/cart.models';
 import { CartStore } from '../../core/cart.store';
+import { PublicProduct } from '../../core/commerce.models';
 import { formatArsFromCents } from '../../core/money.util';
 import { PublicCommerceApiService } from '../../core/public-commerce-api.service';
 
 type CheckoutState =
   'IDLE' | 'RESERVING' | 'RESERVED' | 'CREATING_PREFERENCE' | 'REDIRECTING' | 'ERROR';
+
+interface StockIssue {
+  variantId: string;
+  requested: number;
+  available: number;
+}
 
 @Component({
   standalone: true,
@@ -69,6 +77,11 @@ type CheckoutState =
         ></span>
         <div class="cart-content relative z-10 mx-auto w-full max-w-7xl">
           <h1 appReveal class="cart-title text-4xl font-black">Tu carrito</h1>
+          @if (availabilityRefreshing()) {
+            <p class="mt-2 text-sm font-bold text-[var(--color-text-muted)]" aria-live="polite">
+              Actualizando disponibilidad...
+            </p>
+          }
           @if (cart.items().length) {
             <section
               class="cart-layout mt-7 grid gap-8 lg:grid-cols-[minmax(0,1.45fr)_minmax(25rem,.9fr)]"
@@ -81,6 +94,12 @@ type CheckoutState =
                     appReveal="up"
                     [appRevealDelay]="$index * 70"
                     class="cart-item grid grid-cols-[5.5rem_1fr] gap-x-5 gap-y-2 py-5 sm:grid-cols-[6.5rem_1fr_auto] sm:items-center"
+                    [class.cart-item--unavailable]="item.availableStock <= 0"
+                    [class.cart-item--reduced]="
+                      item.availableStock > 0 && item.quantity > item.availableStock
+                    "
+                    [id]="cartItemId(item.variantId)"
+                    tabindex="-1"
                   >
                     <div
                       class="size-[5.5rem] overflow-hidden rounded-2xl bg-[var(--color-surface)] sm:size-[6.5rem]"
@@ -99,28 +118,60 @@ type CheckoutState =
                       <p class="mt-1 text-sm font-bold text-[var(--color-text-muted)]">
                         {{ item.variantName }}
                       </p>
-                      <button
-                        class="mt-2 inline-flex items-center gap-2 rounded-lg px-1 py-1 text-sm font-bold text-[var(--color-accent)] transition hover:bg-[var(--color-danger-bg)] hover:text-[#bd2944]"
-                        type="button"
-                        [attr.aria-label]="
-                          'Eliminar ' + item.productName + ', variante ' + item.variantName
-                        "
-                        (click)="cart.remove(item.variantId)"
-                      >
-                        <app-icon name="trash" class="size-4" /> Eliminar
-                      </button>
+                      @if (item.availableStock <= 0) {
+                        <span class="stock-badge stock-badge--empty mt-2">Sin stock</span>
+                      } @else if (item.quantity > item.availableStock) {
+                        <span class="stock-badge stock-badge--reduced mt-2"
+                          >Solo quedan {{ item.availableStock }}</span
+                        >
+                      }
+                      <div class="cart-item-actions mt-2">
+                        <button
+                          class="inline-flex items-center gap-2 rounded-lg px-1 py-1 text-sm font-bold text-[var(--color-accent)] transition hover:bg-[var(--color-danger-bg)] hover:text-[#bd2944]"
+                          type="button"
+                          [attr.aria-label]="
+                            (item.availableStock <= 0 ? 'Quitar ' : 'Eliminar ') +
+                            item.productName +
+                            ', variante ' +
+                            item.variantName
+                          "
+                          (click)="removeUnavailable(item.variantId)"
+                        >
+                          <app-icon name="trash" class="size-4" />
+                          {{ item.availableStock <= 0 ? 'Quitar del carrito' : 'Eliminar' }}
+                        </button>
+                        @if (item.availableStock > 0 && item.quantity > item.availableStock) {
+                          <button
+                            type="button"
+                            class="stock-action"
+                            [attr.aria-label]="
+                              'Ajustar ' +
+                              item.productName +
+                              ' a ' +
+                              item.availableStock +
+                              ' unidades'
+                            "
+                            (click)="adjustToAvailable(item.variantId, item.availableStock)"
+                          >
+                            <app-icon name="check" class="size-4" /> Ajustar a
+                            {{ item.availableStock }}
+                          </button>
+                        }
+                      </div>
                     </div>
                     <div
                       class="col-span-2 mt-1 flex items-center justify-between gap-5 sm:col-span-1 sm:mt-0 sm:justify-end"
                     >
                       <div
-                        class="inline-flex items-center rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-1"
+                        class="cart-quantity inline-flex items-center rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-1"
+                        [class.cart-quantity--disabled]="item.availableStock <= 0"
                       >
                         <button
                           class="grid size-9 place-items-center rounded-lg hover:bg-[var(--color-recovering-bg)]"
                           type="button"
                           aria-label="Disminuir cantidad"
-                          (click)="cart.setQuantity(item.variantId, item.quantity - 1)"
+                          [disabled]="item.availableStock <= 0"
+                          (click)="setQuantity(item.variantId, item.quantity - 1)"
                         >
                           <app-icon name="minus" class="size-4" />
                         </button>
@@ -129,7 +180,10 @@ type CheckoutState =
                           class="grid size-9 place-items-center rounded-lg hover:bg-[var(--color-recovering-bg)]"
                           type="button"
                           aria-label="Aumentar cantidad"
-                          (click)="cart.setQuantity(item.variantId, item.quantity + 1)"
+                          [disabled]="
+                            item.availableStock <= 0 || item.quantity >= item.availableStock
+                          "
+                          (click)="setQuantity(item.variantId, item.quantity + 1)"
                         >
                           <app-icon name="plus" class="size-4" />
                         </button>
@@ -227,9 +281,37 @@ type CheckoutState =
                   }
                 </section>
                 @if (message()) {
-                  <p class="mt-4 rounded-xl bg-[var(--color-danger-bg)] p-3 font-bold" role="alert">
+                  <p
+                    class="mt-4 rounded-xl bg-[var(--color-danger-bg)] p-3 font-bold"
+                    role="alert"
+                    aria-live="polite"
+                  >
                     {{ message() }}
                   </p>
+                }
+                @if (stockIssue(); as issue) {
+                  @if (affectedItem(); as item) {
+                    <section class="stock-issue mt-4 rounded-2xl border p-4" aria-live="polite">
+                      @if (issue.available === 0) {
+                        <p class="font-black">Este producto se agotó mientras estabas comprando.</p>
+                      } @else {
+                        <p class="font-black">Cambió la disponibilidad de este producto.</p>
+                      }
+                      <p class="mt-1 text-sm font-extrabold">
+                        {{ item.productName }} · {{ item.variantName }}
+                      </p>
+                      @if (issue.available === 0) {
+                        <p class="mt-2 text-sm text-[var(--color-text-muted)]">
+                          Revisá tu carrito para continuar.
+                        </p>
+                      } @else {
+                        <p class="mt-2 text-sm text-[var(--color-text-muted)]">
+                          Pediste {{ issue.requested }} unidades, pero ahora quedan
+                          {{ issue.available }}.
+                        </p>
+                      }
+                    </section>
+                  }
                 }
                 @if (reservationText()) {
                   <p class="mt-4 rounded-xl bg-[#e7f6eb] p-3 font-bold text-[#23623a]">
@@ -257,8 +339,10 @@ type CheckoutState =
                   <button
                     class="button-primary mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-6 font-extrabold disabled:opacity-50"
                     type="button"
-                    [disabled]="state() !== 'IDLE' && state() !== 'ERROR'"
-                    (click)="checkout()"
+                    [disabled]="
+                      (state() !== 'IDLE' && state() !== 'ERROR') || availabilityRefreshing()
+                    "
+                    (click)="stockIssue() || hasInvalidAvailability() ? reviewCart() : checkout()"
                   >
                     <app-icon name="arrow" class="size-4" /> {{ ctaLabel() }}
                   </button>
@@ -381,6 +465,77 @@ type CheckoutState =
     .cart-item:last-child {
       padding-bottom: 1.7rem;
     }
+    .cart-item--unavailable,
+    .cart-item--reduced {
+      background: transparent;
+    }
+    .cart-item--unavailable {
+      box-shadow: none;
+    }
+    .stock-badge {
+      display: inline-flex;
+      width: max-content;
+      align-items: center;
+      gap: 0.35rem;
+      border: 1px solid color-mix(in srgb, #b27c21 28%, var(--color-border));
+      border-radius: 999px;
+      padding: 0.2rem 0.55rem;
+      font-size: 0.7rem;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+    }
+    .stock-badge::before {
+      width: 0.35rem;
+      height: 0.35rem;
+      border-radius: 50%;
+      background: currentColor;
+      content: '';
+      opacity: 0.8;
+    }
+    .stock-badge--empty {
+      background: color-mix(in srgb, #b27c21 10%, var(--color-card));
+      color: color-mix(in srgb, #8b641c 82%, var(--color-text));
+    }
+    .stock-badge--reduced {
+      background: color-mix(in srgb, #d99628 17%, var(--color-card));
+      color: color-mix(in srgb, #a76500 75%, var(--color-text));
+    }
+    .cart-quantity--disabled {
+      opacity: 0.58;
+    }
+    .cart-item-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem 0.65rem;
+    }
+    .stock-action {
+      display: inline-flex;
+      min-height: 2.25rem;
+      align-items: center;
+      gap: 0.4rem;
+      border: 1px solid color-mix(in srgb, var(--color-accent) 35%, var(--color-border));
+      border-radius: 999px;
+      padding: 0.4rem 0.75rem;
+      color: var(--color-accent);
+      font-size: 0.78rem;
+      font-weight: 900;
+      transition:
+        background-color 180ms ease,
+        border-color 180ms ease;
+    }
+    .stock-action:hover {
+      border-color: var(--color-accent);
+      background: var(--color-accent-soft);
+    }
+    .stock-issue {
+      border-color: color-mix(in srgb, var(--color-accent) 36%, var(--color-border));
+      background: linear-gradient(
+        125deg,
+        color-mix(in srgb, var(--color-accent-soft) 44%, var(--color-card)),
+        var(--color-card)
+      );
+    }
     .cart-summary {
       border: 0.8rem solid transparent;
       background:
@@ -425,6 +580,25 @@ type CheckoutState =
     }
     :host-context(.dark) .cart-dots {
       opacity: 0.44;
+    }
+    :host-context(.dark) .cart-item--unavailable,
+    :host-context(.dark) .cart-item--reduced {
+      background: transparent;
+    }
+    :host-context(.dark) .stock-badge {
+      border-color: rgba(224, 183, 103, 0.3);
+    }
+    :host-context(.dark) .stock-badge--empty {
+      color: #edc879;
+      background: rgba(187, 126, 37, 0.16);
+    }
+    :host-context(.dark) .stock-badge--reduced {
+      color: #f1c879;
+      background: rgba(187, 126, 37, 0.2);
+    }
+    :host-context(.dark) .stock-issue {
+      border-color: rgba(202, 158, 255, 0.42);
+      background: linear-gradient(125deg, rgba(92, 64, 127, 0.92), rgba(43, 33, 59, 0.98));
     }
 
     @media (max-width: 767px) {
@@ -492,11 +666,22 @@ type CheckoutState =
     }
   `,
 })
-export class CartPageComponent {
+export class CartPageComponent implements OnInit {
   readonly state = signal<CheckoutState>('IDLE');
   readonly message = signal('');
   readonly reservationText = signal('');
   readonly customerError = signal('');
+  readonly stockIssue = signal<StockIssue | null>(null);
+  readonly availabilityRefreshing = signal(false);
+  readonly affectedItem = computed(() => {
+    const issue = this.stockIssue();
+    return issue
+      ? (this.cart.items().find((item) => item.variantId === issue.variantId) ?? null)
+      : null;
+  });
+  readonly hasInvalidAvailability = computed(() =>
+    this.cart.items().some((item) => item.quantity > Math.max(0, item.availableStock)),
+  );
   readonly pendingCheckout = computed(() => {
     const checkout = this.cart.activeCheckout();
     return checkout?.status === 'AWAITING_PAYMENT' || checkout?.status === 'PAYMENT_PENDING'
@@ -511,6 +696,10 @@ export class CartPageComponent {
     private readonly api: PublicCommerceApiService,
   ) {}
 
+  ngOnInit(): void {
+    this.refreshAvailability();
+  }
+
   checkout(): void {
     if (
       !this.cart.items().length ||
@@ -519,6 +708,11 @@ export class CartPageComponent {
       this.state() === 'CREATING_PREFERENCE'
     )
       return;
+    if (this.hasInvalidAvailability()) {
+      this.state.set('ERROR');
+      this.message.set('Revisá las cantidades disponibles antes de volver a intentar.');
+      return;
+    }
     this.message.set('');
     this.reservationText.set('');
     this.customerError.set('');
@@ -556,8 +750,19 @@ export class CartPageComponent {
           this.state.set('REDIRECTING');
           this.redirectTo(preference.initPoint);
         },
-        error: () => {
+        error: (error: unknown) => {
           this.state.set('ERROR');
+          const issue = parseStockIssue(error);
+          const affectedItem = issue
+            ? this.cart.items().find((item) => item.variantId === issue.variantId)
+            : null;
+          if (issue && affectedItem) {
+            this.cart.updateAvailability(issue.variantId, issue.available);
+            this.stockIssue.set(issue);
+            this.message.set('');
+            return;
+          }
+          this.stockIssue.set(null);
           this.message.set(
             'Algunos productos cambiaron de disponibilidad mientras comprabas. Revisá el carrito para continuar.',
           );
@@ -566,6 +771,12 @@ export class CartPageComponent {
   }
 
   ctaLabel(): string {
+    if (
+      (this.state() === 'ERROR' && (this.stockIssue() || this.hasInvalidAvailability())) ||
+      (this.state() === 'IDLE' && this.hasInvalidAvailability())
+    ) {
+      return 'Revisar carrito';
+    }
     return {
       IDLE: 'Finalizar compra',
       RESERVING: 'Reservando productos...',
@@ -574,6 +785,42 @@ export class CartPageComponent {
       REDIRECTING: 'Te estamos llevando a Mercado Pago...',
       ERROR: 'Intentar nuevamente',
     }[this.state()];
+  }
+
+  cartItemId(variantId: string): string {
+    return `cart-item-${variantId}`;
+  }
+
+  reviewCart(): void {
+    this.refreshAvailability();
+    const variantId = this.stockIssue()?.variantId;
+    if (!variantId || typeof document === 'undefined') return;
+    window.setTimeout(() => {
+      const item = document.getElementById(this.cartItemId(variantId));
+      item?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      item?.focus({ preventScroll: true });
+    }, 0);
+  }
+
+  adjustToAvailable(variantId: string, available: number): void {
+    this.setQuantity(variantId, available);
+  }
+
+  setQuantity(variantId: string, quantity: number): void {
+    this.cart.setQuantity(variantId, quantity);
+    const issue = this.stockIssue();
+    const item = this.cart.items().find((current) => current.variantId === variantId);
+    if (issue?.variantId === variantId && item && item.quantity <= item.availableStock) {
+      this.clearStockIssueIfResolved(variantId);
+    } else if (!issue && !this.hasInvalidAvailability()) {
+      this.message.set('');
+      if (this.state() === 'ERROR') this.state.set('IDLE');
+    }
+  }
+
+  removeUnavailable(variantId: string): void {
+    this.cart.remove(variantId);
+    this.clearStockIssueIfResolved(variantId);
   }
 
   money(value: number): string {
@@ -605,4 +852,71 @@ export class CartPageComponent {
   protected redirectTo(initPoint: string): void {
     window.location.assign(initPoint);
   }
+
+  private refreshAvailability(): void {
+    if (!this.cart.items().length || this.availabilityRefreshing()) return;
+    this.availabilityRefreshing.set(true);
+    this.api
+      .products()
+      .pipe(finalize(() => this.availabilityRefreshing.set(false)))
+      .subscribe({
+        next: (products) => {
+          for (const item of this.cart.items()) {
+            const variant = findVariant(products, item);
+            if (variant) this.cart.updateAvailability(item.variantId, variant.availableStock);
+          }
+          const issue = this.stockIssue();
+          if (issue) {
+            const item = this.cart.items().find((current) => current.variantId === issue.variantId);
+            if (!item || item.quantity <= item.availableStock) {
+              this.stockIssue.set(null);
+              this.message.set('');
+              if (this.state() === 'ERROR') this.state.set('IDLE');
+            }
+          }
+        },
+        error: () => undefined,
+      });
+  }
+
+  private clearStockIssueIfResolved(variantId: string): void {
+    if (this.stockIssue()?.variantId !== variantId) return;
+    this.stockIssue.set(null);
+    this.message.set('');
+    this.state.set('IDLE');
+  }
+}
+
+function findVariant(products: PublicProduct[], item: CartItem) {
+  return products
+    .find((product) => product.id === item.productId || product.slug === item.productSlug)
+    ?.variants.find((variant) => variant.id === item.variantId);
+}
+
+function parseStockIssue(error: unknown): StockIssue | null {
+  const nestedError = isRecord(error) ? error['error'] : undefined;
+  const payload = isRecord(nestedError) ? nestedError : error;
+  if (!isRecord(payload) || payload['code'] !== 'OUT_OF_STOCK' || !isRecord(payload['details'])) {
+    return null;
+  }
+  const details = payload['details'];
+  const { variantId, requested, available } = details;
+  if (
+    typeof variantId !== 'string' ||
+    typeof requested !== 'number' ||
+    typeof available !== 'number' ||
+    !Number.isFinite(requested) ||
+    !Number.isFinite(available)
+  ) {
+    return null;
+  }
+  return {
+    variantId,
+    requested: Math.max(1, Math.floor(requested)),
+    available: Math.max(0, Math.floor(available)),
+  };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === 'object';
 }

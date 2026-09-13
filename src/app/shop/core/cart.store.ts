@@ -15,7 +15,9 @@ export interface CheckoutContext {
 export class CartStore {
   readonly items = signal<CartItem[]>(restoreCart());
   readonly activeCheckout = signal<CheckoutContext | null>(restoreCheckoutContext());
-  readonly totalItems = computed(() => this.items().reduce((total, item) => total + item.quantity, 0));
+  readonly totalItems = computed(() =>
+    this.items().reduce((total, item) => total + item.quantity, 0),
+  );
   readonly subtotalInCents = computed(() =>
     this.items().reduce((total, item) => total + item.unitPriceInCents * item.quantity, 0),
   );
@@ -23,7 +25,11 @@ export class CartStore {
   add(item: CartItem): void {
     this.items.update((items) => {
       const index = items.findIndex((current) => current.variantId === item.variantId);
-      if (index === -1) return persist([...items, { ...item, quantity: clampQuantity(item.quantity, item.availableStock) }]);
+      if (index === -1)
+        return persist([
+          ...items,
+          { ...item, quantity: clampQuantity(item.quantity, item.availableStock) },
+        ]);
       const next = [...items];
       const current = next[index];
       next[index] = {
@@ -42,6 +48,20 @@ export class CartStore {
           item.variantId === variantId
             ? { ...item, quantity: clampQuantity(quantity, item.availableStock) }
             : item,
+        ),
+      ),
+    );
+  }
+
+  updateAvailability(variantId: string, availableStock: number): void {
+    const normalizedStock = Math.max(
+      0,
+      Math.floor(Number.isFinite(availableStock) ? availableStock : 0),
+    );
+    this.items.update((items) =>
+      persist(
+        items.map((item) =>
+          item.variantId === variantId ? { ...item, availableStock: normalizedStock } : item,
         ),
       ),
     );
@@ -143,5 +163,12 @@ function isUuid(value: string): boolean {
 }
 
 function isOrderStatus(value: unknown): value is PublicOrderStatus {
-  return value === 'AWAITING_PAYMENT' || value === 'PAYMENT_PENDING' || value === 'PAID' || value === 'EXPIRED' || value === 'CANCELLED' || value === 'REFUNDED';
+  return (
+    value === 'AWAITING_PAYMENT' ||
+    value === 'PAYMENT_PENDING' ||
+    value === 'PAID' ||
+    value === 'EXPIRED' ||
+    value === 'CANCELLED' ||
+    value === 'REFUNDED'
+  );
 }
